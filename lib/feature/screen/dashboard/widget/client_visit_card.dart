@@ -24,10 +24,10 @@ class ClientVisitCard extends StatelessWidget {
                 width: 90,
                 height: 60,
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: const [
                     Text(
                       'No Active Client Visit',
@@ -37,7 +37,6 @@ class ClientVisitCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 4),
                     Text(
                       'You are not currently visiting any client.',
                       style: TextStyle(
