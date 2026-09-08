@@ -9,6 +9,10 @@ class AppImagesPng {
   static const powerButtonIcon = "assets/images/powerButton.png";
   static const notificationIcon = "assets/images/notification.png";
   static const persionIcon = "assets/images/person.png";
+  static const location = "assets/images/location.png";
+  static const map = "assets/images/map.png";
+  static const notLocation = "assets/images/notLocation.png";
+  static const building = "assets/images/building.png";
 
 
 }

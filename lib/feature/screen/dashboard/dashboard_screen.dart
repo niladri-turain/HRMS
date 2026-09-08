@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
+import 'package:hrms_app/feature/screen/dashboard/widget/live_tracking_card.dart';
 import 'package:hrms_app/feature/screen/dashboard/widget/login_logout_card.dart';
+import 'package:hrms_app/feature/screen/dashboard/widget/client_visit_card.dart';
 import '../../../core/common_functions/timing.dart';
 import '../../../core/constants/app_images_png.dart';
 
@@ -11,6 +13,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -141,6 +144,11 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 const LoginLogoutCard(),
+                const SizedBox(height: 16),
+                const LiveTrackingCard(isOnline: true),
+                const SizedBox(height: 16),
+                const ClientVisitCard(),
+                const SizedBox(height: 20),
               ],
             ),
           ),

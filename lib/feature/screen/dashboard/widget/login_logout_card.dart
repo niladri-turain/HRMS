@@ -13,7 +13,8 @@ class _LoginLogoutCardState extends State<LoginLogoutCard> {
   bool isLoggedIn = false;
   String loginTime = "--:-- --";
   String logoutTime = "--:-- --";
-  String currentTime = "";
+  String currentTimeOnly = "";
+  String currentAmPm = "";
   late var timer;
   double _dragPosition = 0;
   final double _sliderHeight = 52;
@@ -39,23 +40,20 @@ class _LoginLogoutCardState extends State<LoginLogoutCard> {
   }
 
   void _updateTime() {
-    currentTime = DateFormat('hh:mm a').format(DateTime.now());
+    DateTime now = DateTime.now();
+    currentTimeOnly = DateFormat('hh:mm').format(now);
+    currentAmPm = DateFormat('a').format(now);
   }
 
   void _onSlideComplete() {
+    String timeStr = DateFormat('hh:mm a').format(DateTime.now());
     setState(() {
       if (!isLoggedIn) {
-        // Logging In
         isLoggedIn = true;
-        loginTime = currentTime;
+        loginTime = timeStr;
         logoutTime = "--:-- --";
       } else {
-        // Logging Out
-        logoutTime = currentTime;
-        // The user said "reset hoye blue ta chole asbe" - meaning it returns to login state?
-        // Let's wait a bit then reset or just reset immediately. 
-        // Usually, logout time is shown, then it resets for the next day or shift.
-        // For now, let's keep the logout time visible but reset the button to "Login" state.
+        logoutTime = timeStr;
         isLoggedIn = false;
       }
       _dragPosition = 0;
@@ -95,26 +93,55 @@ class _LoginLogoutCardState extends State<LoginLogoutCard> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  Text(
-                    currentTime,
-                    style: const TextStyle(
-                      color: Color(0xFF2E2E3E),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: currentTimeOnly,
+                          style: const TextStyle(
+                            color: Color(0xFF2E2E3E),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const TextSpan(text: ' '),
+                        TextSpan(
+                          text: currentAmPm,
+                          style: const TextStyle(
+                            color: AppColors.grey200,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Text(
-                    isLoggedIn ? '01:37:20 Work Time' : '10:30 - 19:00 Work Schedule',
-                    style: TextStyle(
-                      color: isLoggedIn ? AppColors.green200 : AppColors.blue150,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: isLoggedIn ? '01:37:20 ' : '10:30 - 19:00 ',
+                          style: TextStyle(
+                            color: isLoggedIn ? AppColors.green200 : AppColors.blue150,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(
+                          text: isLoggedIn ? 'Work Time' : 'Work Schedule',
+                          style: const TextStyle(
+                            color: AppColors.grey50,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: AppColors.green200.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(6),
@@ -136,7 +163,7 @@ class _LoginLogoutCardState extends State<LoginLogoutCard> {
                       style: TextStyle(
                         color: AppColors.green200,
                         fontSize: 10,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -144,16 +171,16 @@ class _LoginLogoutCardState extends State<LoginLogoutCard> {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           // Custom Slider Button
           LayoutBuilder(builder: (context, constraints) {
-            double maxDrag = constraints.maxWidth - _handleWidth - 8;
+            double maxDrag = constraints.maxWidth - _handleWidth - 16;
             return Container(
               width: double.infinity,
               height: _sliderHeight,
               decoration: BoxDecoration(
                 color: isLoggedIn ? AppColors.red200 : AppColors.blue200,
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Stack(
                 children: [
@@ -169,9 +196,9 @@ class _LoginLogoutCardState extends State<LoginLogoutCard> {
                   ),
                   AnimatedPositioned(
                     duration: const Duration(milliseconds: 100),
-                    left: 10 + _dragPosition,
-                    top: 5,
-                    bottom: 5,
+                    left: 8 + _dragPosition,
+                    top: 6,
+                    bottom: 6,
                     child: GestureDetector(
                       onHorizontalDragUpdate: (details) {
                         setState(() {
@@ -202,7 +229,7 @@ class _LoginLogoutCardState extends State<LoginLogoutCard> {
                             Icon(
                               Icons.arrow_forward,
                               color: Colors.white,
-                              size: 20,
+                              size: 18,
                             ),
                           ],
                         ),
@@ -225,7 +252,6 @@ class _LoginLogoutCardState extends State<LoginLogoutCard> {
                     style: TextStyle(
                       color: isLoggedIn ? AppColors.green200 : AppColors.grey200,
                       fontWeight: FontWeight.w500,
-                      fontSize: 12
                     ),
                   ),
                 ],
@@ -244,7 +270,7 @@ class _LoginLogoutCardState extends State<LoginLogoutCard> {
                       ),
                     )),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
