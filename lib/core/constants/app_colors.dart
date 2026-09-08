@@ -9,6 +9,12 @@ class AppColors {
   static const primary200= Color(0xFF901AEA);
   static const grey100= Color(0xFF6B7280);
   static const greyLight= Color(0xFFF9F9F9);
+  static const blue200= Color(0xFF2F69E6);
+  static const red200= Color(0xFFE70D0D);
+  static const green200= Color(0xFF03C95A);
+  static const grey200= Color(0xFF9CA3AF);
+  static const grey50= Color(0xFF746F77);
+  static const blue150= Color(0xFF0049E7);
 
 
 }
