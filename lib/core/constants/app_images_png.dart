@@ -13,6 +13,8 @@ class AppImagesPng {
   static const map = "assets/images/map.png";
   static const notLocation = "assets/images/notLocation.png";
   static const building = "assets/images/building.png";
+  static const light = "assets/images/light.png";
+
 
 
 }

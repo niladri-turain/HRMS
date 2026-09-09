@@ -3,6 +3,8 @@ import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/feature/screen/dashboard/widget/live_tracking_card.dart';
 import 'package:hrms_app/feature/screen/dashboard/widget/login_logout_card.dart';
 import 'package:hrms_app/feature/screen/dashboard/widget/client_visit_card.dart';
+import 'package:hrms_app/feature/screen/dashboard/widget/client_meeting_card.dart';
+import 'package:hrms_app/feature/screen/dashboard/widget/task_tracking_card.dart';
 import '../../../core/common_functions/timing.dart';
 import '../../../core/constants/app_images_png.dart';
 
@@ -148,6 +150,28 @@ class DashboardScreen extends StatelessWidget {
                 const LiveTrackingCard(isOnline: true),
                 const SizedBox(height: 16),
                 const ClientVisitCard(),
+                const SizedBox(height: 16),
+                const ClientMeetingCard(
+                  meetings: [
+                    {
+                      'company': 'ABC Enterprises',
+                      'address': 'Salt Lake Sector V, Kolkata',
+                      'requirement': '1 Lac Bulksms & Whatsapp api requirement',
+                    },
+                    {
+                      'company': 'XYZ Solutions',
+                      'address': 'New Town, Kolkata',
+                      'requirement': '1 Lac Bulksms & Whatsapp api requirement',
+                    },
+                    {
+                      'company': 'Acme Pvt. Ltd.',
+                      'address': 'Howrah Maidan, Howrah',
+                      'requirement': 'Billtrack Demo and installation',
+                    },
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const TaskTrackingCard(),
                 const SizedBox(height: 20),
               ],
             ),
