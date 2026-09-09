@@ -64,6 +64,7 @@ class ClientMeetingCard extends StatelessWidget {
                 company: meeting['company'] ?? '',
                 address: meeting['address'] ?? '',
                 requirement: meeting['requirement'] ?? '',
+                status: meeting['status'] ?? 'Upcoming',
               ),
             );
           }).toList(),
@@ -78,6 +79,7 @@ class ClientMeetingItem extends StatelessWidget {
   final String company;
   final String address;
   final String requirement;
+  final String status;
 
   const ClientMeetingItem({
     super.key,
@@ -85,7 +87,50 @@ class ClientMeetingItem extends StatelessWidget {
     required this.company,
     required this.address,
     required this.requirement,
+    this.status = 'Upcoming',
   });
+
+  Widget _buildStatusTag() {
+    Color textColor;
+    Color bgColor;
+    Color borderColor;
+
+    switch (status.toLowerCase()) {
+      case 'completed':
+        textColor = AppColors.green200;
+        bgColor = AppColors.green200.withOpacity(0.05);
+        borderColor = AppColors.green200.withOpacity(0.2);
+        break;
+      case 'postponed':
+        textColor = AppColors.purple200;
+        bgColor = AppColors.purple200.withOpacity(0.05);
+        borderColor = AppColors.purple200.withOpacity(0.2);
+        break;
+      case 'upcoming':
+      default:
+        textColor = AppColors.blue300;
+        bgColor = const Color(0xFFEFF6FF);
+        borderColor = const Color(0xFFDBEAFE);
+        break;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: borderColor),
+      ),
+      child: Text(
+        status,
+        style: TextStyle(
+          color: textColor,
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,22 +187,7 @@ class ClientMeetingItem extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEFF6FF),
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: const Color(0xFFDBEAFE)),
-                ),
-                child: const Text(
-                  'Upcoming',
-                  style: TextStyle(
-                    color: AppColors.blue300,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+              _buildStatusTag(),
             ],
           ),
           const SizedBox(height: 12),
