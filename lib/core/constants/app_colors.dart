@@ -20,6 +20,10 @@ class AppColors {
   static const yellow200= Color(0xFFDFAF00);
   static const grey400= Color(0xFF6B7280);
   static const purple200 = Color(0xFF5A4AA4);
+  static const pink200 = Color(0xFFEA1A7B);
+  static const lightBlue200 = Color(0xFFD9DCF7);
+  static const darkBlue200 = Color(0xFF144098);
+  static const brightBlue200 = Color(0xFF1B2CF1);
 
 
 
