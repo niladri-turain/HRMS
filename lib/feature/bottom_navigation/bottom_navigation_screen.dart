@@ -19,7 +19,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   final List<Widget> _screens = [
     const DashboardScreen(),
-    const ClientVisitScreen(),
+    const ClientVisitScreen(role: "manager"),
     const AttendanceScreen(),
     const TasksScreen(),
     const AccountScreen(),

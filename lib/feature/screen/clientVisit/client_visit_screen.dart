@@ -4,9 +4,11 @@ import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 import '../../../core/common_functions/timing.dart';
 import 'client_details/client_details_screen.dart';
+import 'manager_client_visit_screen.dart';
 
 class ClientVisitScreen extends StatefulWidget {
-  const ClientVisitScreen({super.key});
+  final String role;
+  const ClientVisitScreen({super.key, this.role = "employee"});
 
   @override
   State<ClientVisitScreen> createState() => _ClientVisitScreenState();
@@ -17,6 +19,10 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.role == "manager") {
+      return const ManagerClientVisitScreen();
+    }
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -30,7 +36,7 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              // Header Section (Copied from Dashboard)
+              // Header Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                 child: Row(
@@ -85,9 +91,9 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
                               ),
                             ],
                           ),
-                          Text(
+                          const Text(
                             'Niladri Roy, 09 Sep, 2026',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
@@ -146,7 +152,10 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     color: Colors.white,
-
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
                   ),
                   child: Column(
                     children: [
@@ -420,7 +429,14 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
               const SizedBox(height: 12),
               GestureDetector(
                 onTap: () {
-
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ClientDetailsScreen(
+                        status: _selectedTab == 0 ? 'Upcoming' : 'Completed',
+                      ),
+                    ),
+                  );
                 },
                 child: Container(
                   width: double.infinity,
