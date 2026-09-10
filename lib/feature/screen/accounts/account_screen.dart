@@ -15,7 +15,7 @@ class AccountScreen extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(AppImagesPng.dashboardBackground),
+            image: AssetImage(AppImagesPng.accountsBackground),
             fit: BoxFit.cover,
           ),
         ),

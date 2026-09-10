@@ -34,6 +34,7 @@ class AppImagesPng {
   static const notifications = "assets/images/notifications.png";
   static const profileSettings = "assets/images/profileSettings.png";
   static const report = "assets/images/report.png";
+  static const accountsBackground = "assets/images/accountsBackground.png";
 
 
 

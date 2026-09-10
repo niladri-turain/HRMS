@@ -159,8 +159,8 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
                             const Text(
                               'Filter Search',
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
                                 color: Colors.black,
                               ),
                             ),
@@ -208,7 +208,7 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
                           child: TextField(
                             decoration: InputDecoration(
                               hintText: 'Search by Name, Client name, Location...',
-                              hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),
+                              hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
                               prefixIcon: const Icon(Icons.search, color: Color(0xFF9CA3AF)),
                               contentPadding: const EdgeInsets.symmetric(vertical: 0),
                               border: OutlineInputBorder(
@@ -246,8 +246,8 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
                                     'Upcoming (5)',
                                     style: TextStyle(
                                       color: _selectedTab == 0 ? Colors.white : AppColors.primary200,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ),
@@ -271,8 +271,8 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
                                     'Completed (0)',
                                     style: TextStyle(
                                       color: _selectedTab == 1 ? Colors.white : AppColors.primary200,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ),
@@ -349,9 +349,9 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
       child: CustomPaint(
         foregroundPainter: DashedBorderPainter(
           color: const Color(0xFFD1D5DB),
-          borderRadius: 12,
-          dashWidth: 4,
-          dashSpace: 3,
+          borderRadius: 5,
+          dashWidth: 3,
+          dashSpace: 2,
         ),
         child: Container(
           padding: const EdgeInsets.all(16),
