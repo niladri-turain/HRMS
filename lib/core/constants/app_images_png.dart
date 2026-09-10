@@ -23,6 +23,18 @@ class AppImagesPng {
   static const scheduleTime = "assets/images/scheduleTime.png";
   static const locationTrack = "assets/images/locationTrack.png";
   static const playIcon = "assets/images/playIcon.png";
+  static const announcement = "assets/images/announcement.png";
+  static const applyLeave = "assets/images/applyLeave.png";
+  static const appSettings = "assets/images/appSettings.png";
+  static const deleteAccount = "assets/images/deleteAccount.png";
+  static const help = "assets/images/help.png";
+  static const leaveHistory = "assets/images/leaveHistory.png";
+  static const logout = "assets/images/logout.png";
+  static const myTask = "assets/images/myTask.png";
+  static const notifications = "assets/images/notifications.png";
+  static const profileSettings = "assets/images/profileSettings.png";
+  static const report = "assets/images/report.png";
+
 
 
 
