@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
@@ -85,7 +86,7 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
                             ],
                           ),
                           Text(
-                            'Subrata Poriya, 08 Sep, 2026',
+                            'Niladri Roy, 09 Sep, 2026',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
@@ -145,7 +146,7 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+
                   ),
                   child: Column(
                     children: [
@@ -172,7 +173,7 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
                               ),
                               child: Row(
                                 children: const [
-                                  Icon(Icons.calendar_today_outlined, size: 14, color: AppColors.primary200),
+                                  Icon(Icons.calendar_today_outlined, size: 14, color: AppColors.black),
                                   SizedBox(width: 6),
                                   Text('01 Aug 2026', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
                                 ],
@@ -226,56 +227,58 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
                       // Tabs
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Container(
-                          height: 40,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.primary200.withOpacity(0.3)),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () => setState(() => _selectedTab = 0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: _selectedTab == 0 ? AppColors.primary200 : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(6),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => setState(() => _selectedTab = 0),
+                                child: Container(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: _selectedTab == 0 ? AppColors.primary200 : Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: _selectedTab == 0 ? AppColors.primary200 : AppColors.primary200.withOpacity(0.3),
                                     ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'Upcoming (5)',
-                                      style: TextStyle(
-                                        color: _selectedTab == 0 ? Colors.white : AppColors.primary200,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
-                                      ),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Upcoming (5)',
+                                    style: TextStyle(
+                                      color: _selectedTab == 0 ? Colors.white : AppColors.primary200,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
                                     ),
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () => setState(() => _selectedTab = 1),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: _selectedTab == 1 ? AppColors.primary200 : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(6),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => setState(() => _selectedTab = 1),
+                                child: Container(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: _selectedTab == 1 ? AppColors.primary200 : Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: _selectedTab == 1 ? AppColors.primary200 : AppColors.primary200.withOpacity(0.3),
                                     ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'Completed (0)',
-                                      style: TextStyle(
-                                        color: _selectedTab == 1 ? Colors.white : AppColors.primary200,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
-                                      ),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Completed (0)',
+                                    style: TextStyle(
+                                      color: _selectedTab == 1 ? Colors.white : AppColors.primary200,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -343,100 +346,152 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
   ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E7EB), style: BorderStyle.solid),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      companyName,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1F2937),
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      location,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF6B7280),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Text(
-                    'Schedule Time',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Color(0xFF9CA3AF),
-                    ),
-                  ),
-                  Text(
-                    time,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF111827),
-                    ),
-                  ),
-                ],
+      child: CustomPaint(
+        foregroundPainter: DashedBorderPainter(
+          color: const Color(0xFFD1D5DB),
+          borderRadius: 12,
+          dashWidth: 4,
+          dashSpace: 3,
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.02),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ClientDetailsScreen(status: 'Upcoming'),
-                ),
-              );
-            },
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFEFF6FF), // Light blue background
-                borderRadius: BorderRadius.circular(6),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          companyName,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1F2937),
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          location,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF6B7280),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text(
+                        'Schedule Time',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Color(0xFF9CA3AF),
+                        ),
+                      ),
+                      Text(
+                        time,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF111827),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              child: Text(
-                purpose,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E40AF), // Dark blue text
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () {
+
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A79D7).withOpacity(0.1), // Light blue background
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    purpose,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1C2263), // Dark blue text
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
+}
+
+class DashedBorderPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double dashWidth;
+  final double dashSpace;
+  final double borderRadius;
+
+  DashedBorderPainter({
+    required this.color,
+    this.strokeWidth = 1.0,
+    this.dashWidth = 5.0,
+    this.dashSpace = 3.0,
+    this.borderRadius = 12.0,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    final RRect rrect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(0, 0, size.width, size.height),
+      Radius.circular(borderRadius),
+    );
+
+    final Path path = Path()..addRRect(rrect);
+
+    final Path dashedPath = Path();
+    for (final PathMetric metric in path.computeMetrics()) {
+      double distance = 0.0;
+      while (distance < metric.length) {
+        dashedPath.addPath(
+          metric.extractPath(distance, distance + dashWidth),
+          Offset.zero,
+        );
+        distance += dashWidth + dashSpace;
+      }
+    }
+
+    canvas.drawPath(dashedPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
