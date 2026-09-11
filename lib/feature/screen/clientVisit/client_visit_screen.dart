@@ -152,7 +152,10 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     color: Colors.white,
-
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
                   ),
                   child: Column(
                     children: [

@@ -5,12 +5,14 @@ import 'package:hrms_app/feature/screen/dashboard/widget/login_logout_card.dart'
 import 'package:hrms_app/feature/screen/dashboard/widget/client_visit_card.dart';
 import 'package:hrms_app/feature/screen/dashboard/widget/client_meeting_card.dart';
 import 'package:hrms_app/feature/screen/dashboard/widget/task_tracking_card.dart';
+import 'package:hrms_app/feature/screen/dashboard/widget/employee_tracking_card.dart';
 import '../../../core/common_functions/timing.dart';
 import '../../../core/constants/app_images_png.dart';
 
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  final String role;
+  const DashboardScreen({super.key, this.role = "employee"});
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +151,10 @@ class DashboardScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 const LiveTrackingCard(isOnline: true),
                 const SizedBox(height: 16),
+                if (role == "manager") ...[
+                  const EmployeeTrackingCard(),
+                  const SizedBox(height: 16),
+                ],
                 const ClientVisitCard(),
                 const SizedBox(height: 16),
                 const ClientMeetingCard(

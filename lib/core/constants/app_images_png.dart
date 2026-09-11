@@ -35,6 +35,7 @@ class AppImagesPng {
   static const profileSettings = "assets/images/profileSettings.png";
   static const report = "assets/images/report.png";
   static const accountsBackground = "assets/images/accountsBackground.png";
+  static const trackmap = "assets/images/trackmap.png";
 
 
 

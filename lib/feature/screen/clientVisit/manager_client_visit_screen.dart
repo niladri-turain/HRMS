@@ -147,7 +147,7 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
                 child: Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
-                    color: Colors.transparent,
+                    color: Colors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
@@ -162,15 +162,9 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: const Color(0xFFF9FAFB),
                             borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
+                            border: Border.all(color: const Color(0xFFE5E7EB)),
                           ),
                           child: Column(
                             children: [
@@ -178,8 +172,9 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
                               Container(
                                 padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFF5F3FF),
+                                  color: Colors.white,
                                   borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: const Color(0xFFE5E7EB)),
                                 ),
                                 child: Row(
                                   children: [
@@ -191,9 +186,6 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
                                           decoration: BoxDecoration(
                                             color: !_isTeamVisit ? AppColors.primary200 : Colors.white,
                                             borderRadius: BorderRadius.circular(8),
-                                            border: Border.all(
-                                              color: !_isTeamVisit ? AppColors.primary200 : const Color(0xFFE5E7EB),
-                                            ),
                                           ),
                                           alignment: Alignment.center,
                                           child: Text(
@@ -216,9 +208,6 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
                                           decoration: BoxDecoration(
                                             color: _isTeamVisit ? AppColors.primary200 : Colors.white,
                                             borderRadius: BorderRadius.circular(8),
-                                            border: Border.all(
-                                              color: _isTeamVisit ? AppColors.primary200 : const Color(0xFFE5E7EB),
-                                            ),
                                           ),
                                           alignment: Alignment.center,
                                           child: Text(
@@ -322,108 +311,101 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF9FAFB),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 20),
-                                // Manager Team Visit Sub-tabs
-                                if (_isTeamVisit)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                                    child: Row(
-                                      children: [
-                                        _buildSubTab('Total', '05', 0),
-                                        const SizedBox(width: 8),
-                                        _buildSubTab('Upcoming', '0', 1),
-                                        const SizedBox(width: 8),
-                                        _buildSubTab('Completed', '0', 2),
-                                      ],
-                                    ),
-                                  ),
-                                if (_isTeamVisit) const SizedBox(height: 16),
-
-                                // List of Visits
-                                Expanded(
-                                  child: ListView(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              // Manager Team Visit Sub-tabs
+                              if (_isTeamVisit)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                                  child: Row(
                                     children: [
-                                      if (_isTeamVisit) ...[
-                                        _buildTeamVisitCard(
-                                          context,
-                                          'ABC Enterprises',
-                                          'Salt Lake Sector V, Kolkata',
-                                          '10:15 AM - 11:00 AM',
-                                          '1 Lac Bulksms & Whatsapp api requirement',
-                                          'Goutam Mazumder',
-                                          'Sales Executive',
-                                          'In Progress',
-                                        ),
-                                        _buildTeamVisitCard(
-                                          context,
-                                          'ABC Enterprises',
-                                          'Salt Lake Sector V, Kolkata',
-                                          '10:15 AM - 11:00 AM',
-                                          '1 Lac Bulksms & Whatsapp api requirement',
-                                          'Santanu Das',
-                                          'Sales Executive',
-                                          'Upcoming',
-                                        ),
-                                        _buildTeamVisitCard(
-                                          context,
-                                          'ABC Enterprises',
-                                          'Salt Lake Sector V, Kolkata',
-                                          '10:15 AM - 11:00 AM',
-                                          '1 Lac Bulksms & Whatsapp api requirement',
-                                          'Goutam Mazumder',
-                                          'Sales Executive',
-                                          'Completed',
-                                        ),
-                                        _buildTeamVisitCard(
-                                          context,
-                                          'ABC Enterprises',
-                                          'Salt Lake Sector V, Kolkata',
-                                          '10:15 AM - 11:00 AM',
-                                          '1 Lac Bulksms & Whatsapp api requirement',
-                                          'Priyanka Ghosh',
-                                          'Sales Executive',
-                                          'Postponed',
-                                        ),
-                                        _buildTeamVisitCard(
-                                          context,
-                                          'ABC Enterprises',
-                                          'Salt Lake Sector V, Kolkata',
-                                          '10:15 AM - 11:00 AM',
-                                          '1 Lac Bulksms & Whatsapp api requirement',
-                                          'Goutam Mazumder',
-                                          'Sales Executive',
-                                          'Cancel',
-                                        ),
-                                      ] else ...[
-                                        _buildMyVisitCard(
-                                          context,
-                                          'ABC Enterprises',
-                                          'Salt Lake Sector V, Kolkata',
-                                          '10:15 AM - 11:00 AM',
-                                          '1 Lac Bulksms & Whatsapp api requirement',
-                                        ),
-                                        _buildMyVisitCard(
-                                          context,
-                                          'XYZ Solutions',
-                                          'New Town, Kolkata',
-                                          '12:15 PM - 13:00 PM',
-                                          '1 Lac Bulksms & Whatsapp api requirement',
-                                        ),
-                                      ],
+                                      _buildSubTab('Total', '05', 0),
+                                      const SizedBox(width: 8),
+                                      _buildSubTab('Upcoming', '0', 1),
+                                      const SizedBox(width: 8),
+                                      _buildSubTab('Completed', '0', 2),
                                     ],
                                   ),
                                 ),
-                              ],
-                            ),
+                              if (_isTeamVisit) const SizedBox(height: 16),
+
+                              // List of Visits
+                              Expanded(
+                                child: ListView(
+                                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                                  children: [
+                                    if (_isTeamVisit) ...[
+                                      _buildTeamVisitCard(
+                                        context,
+                                        'ABC Enterprises',
+                                        'Salt Lake Sector V, Kolkata',
+                                        '10:15 AM - 11:00 AM',
+                                        '1 Lac Bulksms & Whatsapp api requirement',
+                                        'Goutam Mazumder',
+                                        'Sales Executive',
+                                        'In Progress',
+                                      ),
+                                      _buildTeamVisitCard(
+                                        context,
+                                        'ABC Enterprises',
+                                        'Salt Lake Sector V, Kolkata',
+                                        '10:15 AM - 11:00 AM',
+                                        '1 Lac Bulksms & Whatsapp api requirement',
+                                        'Santanu Das',
+                                        'Sales Executive',
+                                        'Upcoming',
+                                      ),
+                                      _buildTeamVisitCard(
+                                        context,
+                                        'ABC Enterprises',
+                                        'Salt Lake Sector V, Kolkata',
+                                        '10:15 AM - 11:00 AM',
+                                        '1 Lac Bulksms & Whatsapp api requirement',
+                                        'Goutam Mazumder',
+                                        'Sales Executive',
+                                        'Completed',
+                                      ),
+                                      _buildTeamVisitCard(
+                                        context,
+                                        'ABC Enterprises',
+                                        'Salt Lake Sector V, Kolkata',
+                                        '10:15 AM - 11:00 AM',
+                                        '1 Lac Bulksms & Whatsapp api requirement',
+                                        'Priyanka Ghosh',
+                                        'Sales Executive',
+                                        'Postponed',
+                                      ),
+                                      _buildTeamVisitCard(
+                                        context,
+                                        'ABC Enterprises',
+                                        'Salt Lake Sector V, Kolkata',
+                                        '10:15 AM - 11:00 AM',
+                                        '1 Lac Bulksms & Whatsapp api requirement',
+                                        'Goutam Mazumder',
+                                        'Sales Executive',
+                                        'Cancel',
+                                      ),
+                                    ] else ...[
+                                      _buildMyVisitCard(
+                                        context,
+                                        'ABC Enterprises',
+                                        'Salt Lake Sector V, Kolkata',
+                                        '10:15 AM - 11:00 AM',
+                                        '1 Lac Bulksms & Whatsapp api requirement',
+                                      ),
+                                      _buildMyVisitCard(
+                                        context,
+                                        'XYZ Solutions',
+                                        'New Town, Kolkata',
+                                        '12:15 PM - 13:00 PM',
+                                        '1 Lac Bulksms & Whatsapp api requirement',
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
