@@ -20,6 +20,38 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreateScheduleScreen()),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.primary200,
+            borderRadius: BorderRadius.circular(25),
+
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Icon(Icons.add, color: Colors.white, size: 20),
+              SizedBox(width: 8),
+              Text(
+                'Create Schedule',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -141,340 +173,267 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
                   ],
                 ),
               ),
-              
-              // White Container for Content
+
+              // Content Area
               Expanded(
-                child: Column(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: [
-                    const SizedBox(height: 24),
-                    // Role-based Top Section for Manager
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                    // Toggle Card (My Visit / Team Visit)
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Toggle Card
                           Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.04),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
+                              color: AppColors.primary200.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: _buildToggleButton('My Visit (2)', !_isTeamVisit, () => setState(() => _isTeamVisit = false)),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: _buildToggleButton('Team Visit (5)', _isTeamVisit, () => setState(() => _isTeamVisit = true)),
                                 ),
                               ],
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Filter Search',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          // Filter Row
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                                   decoration: BoxDecoration(
-                                    color: AppColors.primary200.withOpacity(0.08),
-                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: const Color(0xFFE5E7EB)),
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Row(
-                                    children: [
+                                    children: const [
+                                      Icon(Icons.calendar_today_outlined, size: 16, color: Color(0xFF1F2937)),
+                                      SizedBox(width: 8),
                                       Expanded(
-                                        child: GestureDetector(
-                                          onTap: () => setState(() => _isTeamVisit = false),
-                                          child: Container(
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                              color: !_isTeamVisit ? AppColors.primary200 : Colors.white,
-                                              borderRadius: BorderRadius.circular(8),
-                                              border: _isTeamVisit ? Border.all(color: AppColors.primary200.withOpacity(0.5)) : null,
-                                            ),
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              'My Visit (0)',
-                                              style: TextStyle(
-                                                color: !_isTeamVisit ? Colors.white : AppColors.primary200,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: GestureDetector(
-                                          onTap: () => setState(() => _isTeamVisit = true),
-                                          child: Container(
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                              color: _isTeamVisit ? AppColors.primary200 : Colors.white,
-                                              borderRadius: BorderRadius.circular(8),
-                                              border: !_isTeamVisit ? Border.all(color: AppColors.primary200.withOpacity(0.5)) : null,
-                                            ),
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              'Team Visit (5)',
-                                              style: TextStyle(
-                                                color: _isTeamVisit ? Colors.white : AppColors.primary200,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                          ),
+                                        child: Text(
+                                          '01 Aug 2026 - 31 Aug 2026',
+                                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF1F2937)),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 12,),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal:0),
-                                  child: const Text(
-
-                                    'Filter Search',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.black,
-
-                                    ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: const Color(0xFFE5E7EB)),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    children: const [
+                                      Icon(Icons.edit_outlined, size: 16, color: Color(0xFF6B7280)),
+                                      SizedBox(width: 6),
+                                      Expanded(
+                                        child: Text(
+                                          'All Status',
+                                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF1F2937)),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      Icon(Icons.keyboard_arrow_down, size: 16, color: Color(0xFF6B7280)),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(height: 12),
-                                // Filter Row
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(color: const Color(0xFFE5E7EB)),
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: Row(
-                                          children: const [
-                                            Icon(Icons.calendar_today_outlined, size: 16, color: Color(0xFF1F2937)),
-                                            SizedBox(width: 8),
-                                            Expanded(
-                                              child: Text(
-                                                '01 Aug 2026 - 31 Aug 2026',
-                                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF1F2937)),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(color: const Color(0xFFE5E7EB)),
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: Row(
-                                          children: const [
-                                            Icon(Icons.edit_outlined, size: 16, color: Color(0xFF6B7280)),
-                                            SizedBox(width: 6),
-                                            Expanded(
-                                              child: Text(
-                                                'All Status',
-                                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF1F2937)),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            Icon(Icons.keyboard_arrow_down, size: 16, color: Color(0xFF6B7280)),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          // Search Bar
+                          SizedBox(
+                            height: 38,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: 'Search by Name, Client name, Location...',
+                                hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+                                prefixIcon: const Icon(Icons.search, color: Color(0xFF1F2937), size: 20),
+                                contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                                filled: true,
+                                fillColor: const Color(0xFFF9FAFB),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
                                 ),
-                                const SizedBox(height: 12),
-                                // Search Bar
-                                SizedBox(
-                                  height: 38,
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      hintText: 'Search by Name, Client name, Location...',
-                                      hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
-                                      prefixIcon: const Icon(Icons.search, color: Color(0xFF1F2937), size: 20),
-                                      contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                                      filled: true,
-                                      fillColor: const Color(0xFFF9FAFB),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-                                      ),
-                                    ),
-                                  ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                          // Filter & Search Card
-
                         ],
                       ),
                     ),
 
+                    const SizedBox(height: 20),
 
-                  // List of Visits and Sub-tabs Container
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                    // Main List Card
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
                       child: Column(
                         children: [
-                          const SizedBox(height: 20),
-                          // Manager Team Visit Sub-tabs
+                          // Sub-tabs
                           if (_isTeamVisit)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 0),
-                              child: Row(
-                                children: [
-                                  _buildSubTab('Total', '05', 0),
-                                  const SizedBox(width: 8),
-                                  _buildSubTab('Upcoming', '0', 1),
-                                  const SizedBox(width: 8),
-                                  _buildSubTab('Completed', '0', 2),
-                                ],
-                              ),
-                            ),
-                          if (_isTeamVisit) const SizedBox(height: 16),
-
-                          // List of Visits
-                          Expanded(
-                            child: ListView(
-                              padding: const EdgeInsets.symmetric(horizontal: 0),
+                            Row(
                               children: [
-                                if (_isTeamVisit) ...[
-                                  _buildTeamVisitCard(
-                                    context,
-                                    'ABC Enterprises',
-                                    'Salt Lake Sector V, Kolkata',
-                                    '10:15 AM - 11:00 AM',
-                                    '1 Lac Bulksms & Whatsapp api requirement',
-                                    'Goutam Mazumder',
-                                    'Sales Executive',
-                                    'In Progress',
-                                  ),
-                                  _buildTeamVisitCard(
-                                    context,
-                                    'ABC Enterprises',
-                                    'Salt Lake Sector V, Kolkata',
-                                    '10:15 AM - 11:00 AM',
-                                    '1 Lac Bulksms & Whatsapp api requirement',
-                                    'Santanu Das',
-                                    'Sales Executive',
-                                    'Upcoming',
-                                  ),
-                                  _buildTeamVisitCard(
-                                    context,
-                                    'ABC Enterprises',
-                                    'Salt Lake Sector V, Kolkata',
-                                    '10:15 AM - 11:00 AM',
-                                    '1 Lac Bulksms & Whatsapp api requirement',
-                                    'Goutam Mazumder',
-                                    'Sales Executive',
-                                    'Completed',
-                                  ),
-                                  _buildTeamVisitCard(
-                                    context,
-                                    'ABC Enterprises',
-                                    'Salt Lake Sector V, Kolkata',
-                                    '10:15 AM - 11:00 AM',
-                                    '1 Lac Bulksms & Whatsapp api requirement',
-                                    'Priyanka Ghosh',
-                                    'Sales Executive',
-                                    'Postponed',
-                                  ),
-                                  _buildTeamVisitCard(
-                                    context,
-                                    'ABC Enterprises',
-                                    'Salt Lake Sector V, Kolkata',
-                                    '10:15 AM - 11:00 AM',
-                                    '1 Lac Bulksms & Whatsapp api requirement',
-                                    'Goutam Mazumder',
-                                    'Sales Executive',
-                                    'Cancel',
-                                  ),
-                                ] else ...[
-                                  _buildMyVisitCard(
-                                    context,
-                                    'ABC Enterprises',
-                                    'Salt Lake Sector V, Kolkata',
-                                    '10:15 AM - 11:00 AM',
-                                    '1 Lac Bulksms & Whatsapp api requirement',
-                                  ),
-                                  _buildMyVisitCard(
-                                    context,
-                                    'XYZ Solutions',
-                                    'New Town, Kolkata',
-                                    '12:15 PM - 13:00 PM',
-                                    '1 Lac Bulksms & Whatsapp api requirement',
-                                  ),
-                                ],
+                                _buildSubTab('Total', '05', 0),
+                                const SizedBox(width: 8),
+                                _buildSubTab('Upcoming', '0', 1),
+                                const SizedBox(width: 8),
+                                _buildSubTab('Completed', '0', 2),
                               ],
                             ),
-                          ),
+                          if (_isTeamVisit) const SizedBox(height: 20),
+
+                          // Visits List
+                          if (_isTeamVisit) ...[
+                            _buildTeamVisitCard(
+                              context,
+                              'ABC Enterprises',
+                              'Salt Lake Sector V, Kolkata',
+                              '10:15 AM - 11:00 AM',
+                              '1 Lac Bulksms & Whatsapp api requirement',
+                              'Goutam Mazumder',
+                              'In Progress',
+                              AppImagesPng.persionIcon,
+                            ),
+                            _buildTeamVisitCard(
+                              context,
+                              'ABC Enterprises',
+                              'Salt Lake Sector V, Kolkata',
+                              '10:15 AM - 11:00 AM',
+                              '1 Lac Bulksms & Whatsapp api requirement',
+                              'Santanu Das',
+                              'Upcoming',
+                              AppImagesPng.persionIcon,
+                            ),
+                            _buildTeamVisitCard(
+                              context,
+                              'ABC Enterprises',
+                              'Salt Lake Sector V, Kolkata',
+                              '10:15 AM - 11:00 AM',
+                              '1 Lac Bulksms & Whatsapp api requirement',
+                              'Goutam Bakshi',
+                              'Completed',
+                              AppImagesPng.persionIcon,
+                            ),
+                            _buildTeamVisitCard(
+                              context,
+                              'ABC Enterprises',
+                              'Salt Lake Sector V, Kolkata',
+                              '10:15 AM - 11:00 AM',
+                              '1 Lac Bulksms & Whatsapp api requirement',
+                              'Priyanka Ghosh',
+                              'Postponed',
+                              AppImagesPng.persionIcon,
+                            ),
+                            _buildTeamVisitCard(
+                              context,
+                              'ABC Enterprises',
+                              'Salt Lake Sector V, Kolkata',
+                              '10:15 AM - 11:00 AM',
+                              '1 Lac Bulksms & Whatsapp api requirement',
+                              'Goutam Mazumder',
+                              'Cancel',
+                              AppImagesPng.persionIcon,
+                            ),
+                          ] else ...[
+                            _buildMyVisitCard(
+                              context,
+                              'ABC Enterprises',
+                              'Salt Lake Sector V, Kolkata',
+                              '10:15 AM - 11:00 AM',
+                              '1 Lac Bulksms & Whatsapp api requirement',
+                            ),
+                            _buildMyVisitCard(
+                              context,
+                              'XYZ Solutions',
+                              'New Town, Kolkata',
+                              '12:15 PM - 13:00 PM',
+                              '1 Lac Bulksms & Whatsapp api requirement',
+                            ),
+                          ],
                         ],
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const CreateScheduleScreen()),
-                          );
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary200,
-                            borderRadius: BorderRadius.circular(30),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.primary200.withOpacity(0.3),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(Icons.add, color: Colors.white, size: 20),
-                              SizedBox(width: 8),
-                              Text(
-                                'Create Schedule',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-                                ),
-              )
+                    const SizedBox(height: 80), // Space for FAB
+                  ],
+                ),
+              ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildToggleButton(String label, bool isSelected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 40,
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary200 : Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: !isSelected ? Border.all(color: AppColors.primary200.withOpacity(0.5)) : null,
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : AppColors.primary200,
+            fontWeight: FontWeight.w600,
+            fontSize: 13,
           ),
         ),
       ),
@@ -530,13 +489,6 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.02),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -633,8 +585,8 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
     String time,
     String purpose,
     String employeeName,
-    String designation,
     String status,
+    String avatarUrl,
   ) {
     Color statusTextColor;
     Color statusBgColor;
@@ -691,29 +643,40 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    'Employee Details',
-                    style: TextStyle(fontSize: 10, color: Color(0xFF9CA3AF), fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    'Schedule Time',
-                    style: TextStyle(fontSize: 10, color: Color(0xFF9CA3AF), fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    employeeName,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)),
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundImage: AssetImage(avatarUrl),
                   ),
-                  Text(
-                    time,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF111827)),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Employee Details',
+                          style: TextStyle(fontSize: 10, color: Color(0xFF9CA3AF), fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          employeeName,
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text(
+                        'Schedule Time',
+                        style: TextStyle(fontSize: 10, color: Color(0xFF9CA3AF), fontWeight: FontWeight.w500),
+                      ),
+                      Text(
+                        time,
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF111827)),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -721,9 +684,18 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    companyName,
-                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF1C2263)),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        companyName,
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1C2263)),
+                      ),
+                      Text(
+                        location,
+                        style: const TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.w500),
+                      ),
+                    ],
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -734,15 +706,10 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
                     ),
                     child: Text(
                       status,
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: statusTextColor),
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: statusTextColor),
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(height: 2),
-              Text(
-                location,
-                style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280), fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 12),
               GestureDetector(
@@ -763,7 +730,8 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
                   ),
                   child: Text(
                     purpose,
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF1C2263)),
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF1C2263)),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
