@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'package:hrms_app/feature/screen/setPassword/set_password_screen.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   const OtpVerifyScreen({super.key});
@@ -157,7 +158,12 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                       // Verify & Continue Button
                       GestureDetector(
                         onTap: () {
-                          // TODO: Implement OTP verification logic
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SetPasswordScreen(),
+                            ),
+                          );
                         },
                         child: Container(
                           width: double.infinity,
