@@ -187,7 +187,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const OtpVerifyScreen(),
+                                        builder: (context) => OtpVerifyScreen(emailOrMobile: contact),
                                       ),
                                     );
                                   } else {

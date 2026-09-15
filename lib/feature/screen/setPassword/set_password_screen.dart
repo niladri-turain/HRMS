@@ -3,7 +3,14 @@ import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 
 class SetPasswordScreen extends StatefulWidget {
-  const SetPasswordScreen({super.key});
+  final String emailOrMobile;
+  final String resetToken;
+
+  const SetPasswordScreen({
+    super.key,
+    required this.emailOrMobile,
+    required this.resetToken,
+  });
 
   @override
   State<SetPasswordScreen> createState() => _SetPasswordScreenState();

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:hrms_app/core/di/injection_container.dart' as di;
 import 'package:hrms_app/feature/provider/login_provider.dart';
 import 'package:hrms_app/feature/provider/forgot_password_provider.dart';
+import 'package:hrms_app/feature/provider/otp_verify_provider.dart';
 import 'feature/bottom_navigation/bottom_navigation_screen.dart';
 import 'feature/screen/splash/splash_screen.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => di.sl<LoginProvider>()),
         ChangeNotifierProvider(create: (_) => di.sl<ForgotPasswordProvider>()),
+        ChangeNotifierProvider(create: (_) => di.sl<OtpVerifyProvider>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

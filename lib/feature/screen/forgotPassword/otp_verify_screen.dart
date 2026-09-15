@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'package:hrms_app/feature/provider/otp_verify_provider.dart';
 import 'package:hrms_app/feature/screen/setPassword/set_password_screen.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
-  const OtpVerifyScreen({super.key});
+  final String emailOrMobile;
+  const OtpVerifyScreen({super.key, required this.emailOrMobile});
 
   @override
   State<OtpVerifyScreen> createState() => _OtpVerifyScreenState();
@@ -26,8 +29,45 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     super.dispose();
   }
 
+  void _verifyOtp(OtpVerifyProvider provider) async {
+    String otp = _otpControllers.map((e) => e.text).join();
+    if (otp.length < 4) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter all 4 digits'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
+    bool success = await provider.verifyOtp(widget.emailOrMobile, otp);
+
+    if (success && mounted) {
+      final data = provider.otpVerifyResponse?.data;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SetPasswordScreen(
+            emailOrMobile: widget.emailOrMobile,
+            resetToken: data?.resetToken ?? '',
+          ),
+        ),
+      );
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(provider.errorMessage ?? 'Invalid OTP'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final otpVerifyProvider = Provider.of<OtpVerifyProvider>(context);
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -160,14 +200,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
                       // Verify & Continue Button
                       GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SetPasswordScreen(),
-                            ),
-                          );
-                        },
+                        onTap: otpVerifyProvider.isLoading
+                            ? null
+                            : () => _verifyOtp(otpVerifyProvider),
                         child: Container(
                           width: double.infinity,
                           height: 57,
@@ -176,14 +211,16 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           alignment: Alignment.center,
-                          child: const Text(
-                            'Verify & Continue',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+                          child: otpVerifyProvider.isLoading
+                              ? const CircularProgressIndicator(color: Colors.white)
+                              : const Text(
+                                  'Verify & Continue',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                         ),
                       ),
                       const SizedBox(height: 24),
