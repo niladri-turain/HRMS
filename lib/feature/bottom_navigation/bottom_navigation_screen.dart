@@ -18,8 +18,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    const DashboardScreen(),
-    const ClientVisitScreen(),
+    const DashboardScreen(role: "manager"),
+    const ClientVisitScreen(role: "manager"),
     const AttendanceScreen(),
     const TasksScreen(),
     const AccountScreen(),
@@ -53,7 +53,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 10,
                   color: isSelected ? AppColors.primary200 : AppColors.grey100,
                   fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
                 ),

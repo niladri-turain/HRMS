@@ -1,13 +1,191 @@
 import 'package:flutter/material.dart';
+import 'package:hrms_app/core/constants/app_colors.dart';
+import 'package:hrms_app/feature/screen/dashboard/widget/live_tracking_card.dart';
+import 'package:hrms_app/feature/screen/dashboard/widget/login_logout_card.dart';
+import 'package:hrms_app/feature/screen/dashboard/widget/client_visit_card.dart';
+import 'package:hrms_app/feature/screen/dashboard/widget/client_meeting_card.dart';
+import 'package:hrms_app/feature/screen/dashboard/widget/task_tracking_card.dart';
+import 'package:hrms_app/feature/screen/dashboard/widget/employee_tracking_card.dart';
+import '../../../core/common_functions/timing.dart';
+import '../../../core/constants/app_images_png.dart';
+
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  final String role;
+  const DashboardScreen({super.key, this.role = "employee"});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Dashboard'),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AppImagesPng.dashboardBackground),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  child: Row(
+                    children: [
+                      // Profile Image with White Border and Online Indicator
+                      Stack(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const CircleAvatar(
+                              radius: 24,
+                              backgroundImage: AssetImage(AppImagesPng.persionIcon),
+                            ),
+                          ),
+                          Positioned(
+                            right: 2,
+                            bottom: 2,
+                            child: Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                color: Colors.green,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 1.5),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 12),
+                      // Greeting, Emoji, Name and Date
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  Timing.getGreeting(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    letterSpacing: -0.15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  Timing.getGreetingEmoji(),
+                                  style: const TextStyle(fontSize: 16,),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              'Niladri Roy, ${Timing.getCurrentDate()}',
+                              style:  const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: -0.25,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Notification with Red Dot
+                      Stack(
+                        children: [
+                          Image.asset(
+                            AppImagesPng.notificationIcon,
+                            width: 22,
+                            height: 22,
+                            color: Colors.white,
+                          ),
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 16),
+                      // Power Button in White Circle
+                      Container(
+                        height: 24,
+                        width: 24,
+            
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Image.asset(
+                            AppImagesPng.powerButtonIcon,
+                            width: 12,
+                            color: AppColors.black,
+                            height: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const LoginLogoutCard(),
+                const SizedBox(height: 16),
+                const LiveTrackingCard(isOnline: true),
+                const SizedBox(height: 16),
+                if (role == "manager") ...[
+                  const EmployeeTrackingCard(),
+                  const SizedBox(height: 16),
+                ],
+                const ClientVisitCard(),
+                const SizedBox(height: 16),
+                const ClientMeetingCard(
+                  meetings: [
+                    {
+                      'company': 'ABC Enterprises',
+                      'address': 'Salt Lake Sector V, Kolkata',
+                      'requirement': '1 Lac Bulksms & Whatsapp api requirement',
+                      'status': 'Upcoming',
+                    },
+                    {
+                      'company': 'XYZ Solutions',
+                      'address': 'New Town, Kolkata',
+                      'requirement': '1 Lac Bulksms & Whatsapp api requirement',
+                      'status': 'Completed',
+                    },
+                    {
+                      'company': 'Acme Pvt. Ltd.',
+                      'address': 'Howrah Maidan, Howrah',
+                      'requirement': 'Billtrack Demo and installation',
+                      'status': 'Postponed',
+                    },
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const TaskTrackingCard(),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
