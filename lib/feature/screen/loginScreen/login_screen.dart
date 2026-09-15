@@ -85,17 +85,24 @@ class _LoginScreenState extends State<LoginScreen> {
                             width: 1,
                           ),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                         child: TextField(
                           controller: _userIdController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Enter User ID',
-                            labelStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+                            labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
                             border: InputBorder.none,
                             floatingLabelBehavior: FloatingLabelBehavior.auto, // Floats up on focus/click
-                            suffixIcon: Icon(Icons.edit_outlined, color: Color(0xFF6B7280), size: 20),
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Image.asset(
+                                AppImagesPng.editIcon,
+                                height: 14,
+                                width: 14,
+                              ),
+                            ),
                           ),
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -125,17 +132,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                   _obscureText = !_obscureText;
                                 });
                               },
-                              child: Icon(
-                                _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                                color: const Color(0xFF6B7280),
-                                size: 20,
+                              child: Padding(
+                                padding: const EdgeInsets.all(14.0),
+                                child: Image.asset(
+                                  AppImagesPng.eyeIcon,
+                                  height: 14,
+                                  width: 14,
+                                  color: _obscureText
+                                      ? const Color(0xFF6B7280)
+                                      : AppColors.primary200,
+                                ),
                               ),
                             ),
                           ),
-                          style: const TextStyle(fontSize: 16, color: Colors.black),
+                          style: const TextStyle(fontSize: 16, color: Colors.black,fontWeight: FontWeight.w700),
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 18),
 
                       // Login Button
                       GestureDetector(
@@ -151,20 +164,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           decoration: BoxDecoration(
                             color: AppColors.primary200,
                             borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.primary200.withOpacity(0.3),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
+
                           ),
                           alignment: Alignment.center,
                           child: const Text(
                             'Login to HRMS',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -194,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const Text(
                                   'Remember Me',
                                   style: TextStyle(
-                                    fontSize: 13,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.black,
                                   ),
@@ -207,8 +214,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: const Text(
                               'Forgot Password?',
                               style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
                                 color: Color(0xFF1B2CF1),
                               ),
                             ),
@@ -224,7 +231,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: const Text(
                             'Need help? Contact HR Support',
                             style: TextStyle(
-                              fontSize: 13,
+                              fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: Color(0xFF1C2263),
                             ),
@@ -248,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(
                       fontSize: 12,
                       color: Color(0xFF1C2263),
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
