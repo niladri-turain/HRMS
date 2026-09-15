@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'package:hrms_app/core/common_functions/validation.dart';
 import 'package:hrms_app/feature/bottom_navigation/bottom_navigation_screen.dart';
 import 'package:hrms_app/feature/screen/forgotPassword/forgot_password_screen.dart';
 
@@ -154,6 +155,29 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Login Button
                       GestureDetector(
                         onTap: () {
+                          final usernameError = AppValidators.validateUsername(_userIdController.text);
+                          final passwordError = AppValidators.validatePassword(_passwordController.text);
+
+                          if (usernameError != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(usernameError),
+                                backgroundColor: Colors.redAccent,
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (passwordError != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(passwordError),
+                                backgroundColor: Colors.redAccent,
+                              ),
+                            );
+                            return;
+                          }
+
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => const BottomNavigation()),
