@@ -37,6 +37,9 @@ class AppImagesPng {
   static const accountsBackground = "assets/images/accountsBackground.png";
   static const trackmap = "assets/images/trackmap.png";
   static const splashLogo = "assets/images/splashLogo.png";
+  static const switchs = "assets/images/switch.png";
+  static const eyeIcon = "assets/images/eyeIcon.png";
+  static const editIcon = "assets/images/editIcon.png";
 
 
 }
