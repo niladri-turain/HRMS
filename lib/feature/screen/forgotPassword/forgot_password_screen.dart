@@ -119,15 +119,34 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               width: 1,
                             ),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          height: 59,
+                          alignment: Alignment.center,
                           child: TextField(
                             controller: _contactController,
-                            textAlign: TextAlign.left,
                             textAlignVertical: TextAlignVertical.center,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
+                              isDense: true,
                               hintText: 'Email Address or Mobile Number',
-                              hintStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+                              hintStyle: const TextStyle(
+                                color: Color(0xFF9CA3AF),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
                               border: InputBorder.none,
+                              suffixIcon: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                child: Image.asset(
+                                  AppImagesPng.eyeIcon,
+                                  height: 18,
+                                  width: 18,
+                                  color: const Color(0xFF6B7280),
+                                ),
+                              ),
+                              suffixIconConstraints: const BoxConstraints(
+                                minHeight: 18,
+                                minWidth: 18,
+                              ),
                             ),
                             style: const TextStyle(
                               fontSize: 14,
@@ -145,29 +164,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               : () async {
                                   final contact = _contactController.text.trim();
                                   
-                                  // Basic validation: Check if empty
-                                  if (contact.isEmpty) {
+                                  final validationError = AppValidators.validateEmail(contact);
+                                  if (validationError != null) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Please enter email or mobile number'),
+                                      SnackBar(
+                                        content: Text(validationError),
                                         backgroundColor: Colors.redAccent,
                                       ),
                                     );
                                     return;
-                                  }
-
-                                  // If it looks like email, validate email format
-                                  if (contact.contains('@')) {
-                                    final emailError = AppValidators.validateEmail(contact);
-                                    if (emailError != null) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(emailError),
-                                          backgroundColor: Colors.redAccent,
-                                        ),
-                                      );
-                                      return;
-                                    }
                                   }
 
                                   bool success = await forgotPasswordProvider.forgotPassword(contact);

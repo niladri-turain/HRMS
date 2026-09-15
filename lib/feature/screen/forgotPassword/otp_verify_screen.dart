@@ -81,7 +81,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     children: [
                       // Logo section
                       Align(
-                        alignment: Alignment.centerLeft,
+                        alignment: Alignment.center,
                         child: Image.asset(
                           AppImagesPng.splashLogo,
                           height: 110,
@@ -91,12 +91,14 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                       const SizedBox(height: 20),
 
                       // Heading
-                      const Text(
-                        'Verify OTP',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1C2263),
+                      Center(
+                        child: const Text(
+                          'Verify OTP',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF1C2263),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -109,6 +111,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                           color: Color(0xFF3E2D4C),
                           height: 1.5,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 30),
 

@@ -77,7 +77,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                     children: [
                       // Logo section
                       Align(
-                        alignment: Alignment.centerLeft,
+                        alignment: Alignment.center,
                         child: Image.asset(
                           AppImagesPng.splashLogo,
                           height: 110,
@@ -87,12 +87,14 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                       const SizedBox(height: 20),
 
                       // Heading
-                      const Text(
-                        'Password Reset',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1C2263),
+                      Center(
+                        child: const Text(
+                          'Password Reset',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF1C2263),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 5),
@@ -104,6 +106,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                           fontSize: 12,
                           color: Color(0xFF3E2D4C),
                         ),
+                        textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 20),
 
