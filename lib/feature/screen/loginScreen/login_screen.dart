@@ -277,7 +277,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // Version Text perfectly aligned with Splash screen (30px from bottom)
               const Positioned(
-                bottom: 30,
+                bottom: 0,
                 left: 0,
                 right: 0,
                 child: Center(

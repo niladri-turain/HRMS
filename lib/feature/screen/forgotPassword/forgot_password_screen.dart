@@ -108,26 +108,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             width: 1,
                           ),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                         child: TextField(
                           controller: _contactController,
                           textAlign: TextAlign.left,
+                          textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
                             hintText: 'Email Address or Mobile Number',
                             hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
                             border: InputBorder.none,
-                            // Dummy prefix to balance the suffix icon for perfect centering
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(14.0),
-                              child: Opacity(
-                                opacity: 0,
-                                child: Image.asset(
-                                  AppImagesPng.eyeIcon,
-                                  height: 18,
-                                  width: 18,
-                                ),
-                              ),
-                            ),
                             suffixIcon: Padding(
                               padding: const EdgeInsets.all(14.0),
                               child: Image.asset(
@@ -205,7 +194,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
               // Version Text at Bottom (30px offset)
               const Positioned(
-                bottom: 30,
+                bottom: 0,
                 left: 0,
                 right: 0,
                 child: Center(
