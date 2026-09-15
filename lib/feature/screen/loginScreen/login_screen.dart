@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 80),
                         // Logo section
                         Align(
-                          alignment: Alignment.centerLeft,
+                          alignment: Alignment.center,
                           child: Image.asset(
                             AppImagesPng.splashLogo,
                             height: 110,
@@ -62,12 +62,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 20),
                         // Heading
-                        const Text(
-                          'Welcome Back',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF1C2263),
+                        Center(
+                          child: const Text(
+                            'Welcome Back',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF1C2263),
+                            ),
                           ),
                         ),
                         // Subheading
@@ -78,6 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 12,
                             color: Color(0xFF3E2D4C),
                           ),
+                          textAlign: TextAlign.justify,
                         ),
                         const SizedBox(height: 20),
 
