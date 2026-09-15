@@ -328,7 +328,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // Version Text
               const Positioned(
-                bottom: 30,
+                bottom: 0,
                 left: 0,
                 right: 0,
                 child: Center(

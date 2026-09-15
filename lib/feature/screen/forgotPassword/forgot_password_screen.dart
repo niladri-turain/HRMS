@@ -255,7 +255,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
               // Version Text
               const Positioned(
-                bottom: 30,
+                bottom: 0,
                 left: 0,
                 right: 0,
                 child: Center(

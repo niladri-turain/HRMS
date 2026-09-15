@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'package:hrms_app/core/common_functions/validation.dart';
+import 'package:hrms_app/feature/provider/reset_password_provider.dart';
+import 'package:hrms_app/feature/provider/login_provider.dart';
+import 'package:hrms_app/feature/bottom_navigation/bottom_navigation_screen.dart';
 
 class SetPasswordScreen extends StatefulWidget {
   final String emailOrMobile;
@@ -29,8 +34,68 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
     super.dispose();
   }
 
+  void _handleResetPassword() async {
+    final newPassword = _newPasswordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    // Validation
+    final passwordError = AppValidators.validatePassword(newPassword);
+    if (passwordError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(passwordError), backgroundColor: Colors.redAccent),
+      );
+      return;
+    }
+
+    if (newPassword != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match'), backgroundColor: Colors.redAccent),
+      );
+      return;
+    }
+
+    final resetProvider = Provider.of<ResetPasswordProvider>(context, listen: false);
+    final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+
+    bool success = await resetProvider.resetPassword(
+      resetToken: widget.resetToken,
+      password: newPassword,
+      passwordConfirmation: confirmPassword,
+    );
+
+    if (success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(resetProvider.resetPasswordResponse?.message ?? 'Password reset successful'), backgroundColor: Colors.green),
+      );
+
+      // Automatically login
+      bool loginSuccess = await loginProvider.login(widget.emailOrMobile, newPassword);
+
+      if (loginSuccess && mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const BottomNavigation()),
+          (route) => false,
+        );
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(loginProvider.errorMessage ?? 'Automatic login failed. Please login manually.'), backgroundColor: Colors.orange),
+        );
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(resetProvider.errorMessage ?? 'Reset failed'), backgroundColor: Colors.redAccent),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final resetProvider = Provider.of<ResetPasswordProvider>(context);
+    final loginProvider = Provider.of<LoginProvider>(context);
+    final isLoading = resetProvider.isLoading || loginProvider.isLoading;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -205,9 +270,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
 
                       // Verify Button
                       GestureDetector(
-                        onTap: () {
-                          // Submit action
-                        },
+                        onTap: isLoading ? null : _handleResetPassword,
                         child: Container(
                           width: double.infinity,
                           height: 57,
@@ -216,14 +279,16 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           alignment: Alignment.center,
-                          child: const Text(
-                            'Verify',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+                          child: isLoading
+                              ? const CircularProgressIndicator(color: Colors.white)
+                              : const Text(
+                                  'Verify',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                         ),
                       ),
                       const SizedBox(height: 24),
