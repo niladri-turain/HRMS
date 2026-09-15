@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Positioned.fill(
 
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
                   child: Column(
                                  mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         child: Container(
                           width: double.infinity,
-                          height: 50,
+                          height: 57,
                           decoration: BoxDecoration(
                             color: AppColors.primary200,
                             borderRadius: BorderRadius.circular(16),

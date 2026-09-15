@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
-import 'package:hrms_app/feature/screen/forgotPassword/otp_verify_screen.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({super.key});
+class OtpVerifyScreen extends StatefulWidget {
+  const OtpVerifyScreen({super.key});
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  State<OtpVerifyScreen> createState() => _OtpVerifyScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final TextEditingController _contactController = TextEditingController();
+class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
+  final List<TextEditingController> _otpControllers =
+      List.generate(4, (index) => TextEditingController());
+  final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
+
+  @override
+  void dispose() {
+    for (var controller in _otpControllers) {
+      controller.dispose();
+    }
+    for (var node in _focusNodes) {
+      node.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +44,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         child: SafeArea(
           child: Stack(
             children: [
-              // Back Button - Purple arrow in white circle
+              // Back Button - Transparent circular button with white border
               Positioned(
                 top: 10,
                 left: 20,
@@ -58,7 +70,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               ),
 
-              // Main content matching Login Screen layout
+              // Main content
               Positioned.fill(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),
@@ -79,7 +91,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                       // Heading
                       const Text(
-                        'Forgot Password?',
+                        'Verify OTP',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
@@ -90,62 +102,62 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                       // Subheading
                       const Text(
-                        'No worries. Enter your registered email address or mobile number, and we\'ll send you a 6-digit OTP to reset your password.',
+                        'We\'ve sent a 4-digit verification code to your registered email address or mobile number.',
                         style: TextStyle(
                           fontSize: 12,
                           color: Color(0xFF3E2D4C),
                           height: 1.5,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 30),
 
-                      // Glass-morphic Input Field (20% Fill, 50% Stroke)
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.20),
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.50),
-                            width: 1,
-                          ),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                        child: TextField(
-                          controller: _contactController,
-                          textAlign: TextAlign.left,
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                            hintText: 'Email Address or Mobile Number',
-                            hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
-                            border: InputBorder.none,
-                            suffixIcon: Padding(
-                              padding: const EdgeInsets.all(14.0),
-                              child: Image.asset(
-                                AppImagesPng.eyeIcon,
-                                height: 18,
-                                width: 18,
-                                color: const Color(0xFF6B7280),
+                      // OTP Input Boxes
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(4, (index) {
+                          return Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.20),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.50),
+                                width: 1,
                               ),
                             ),
-                          ),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Send OTP Button
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const OtpVerifyScreen(),
+                            child: TextField(
+                              controller: _otpControllers[index],
+                              focusNode: _focusNodes[index],
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.number,
+                              maxLength: 1,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                              ),
+                              decoration: const InputDecoration(
+                                counterText: '',
+                                border: InputBorder.none,
+                              ),
+                              onChanged: (value) {
+                                if (value.isNotEmpty && index < 3) {
+                                  _focusNodes[index + 1].requestFocus();
+                                } else if (value.isEmpty && index > 0) {
+                                  _focusNodes[index - 1].requestFocus();
+                                }
+                              },
                             ),
                           );
+                        }),
+                      ),
+                      const SizedBox(height: 30),
+
+                      // Verify & Continue Button
+                      GestureDetector(
+                        onTap: () {
+                          // TODO: Implement OTP verification logic
                         },
                         child: Container(
                           width: double.infinity,
@@ -156,7 +168,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                           alignment: Alignment.center,
                           child: const Text(
-                            'Send OTP',
+                            'Verify & Continue',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -167,28 +179,40 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                       const SizedBox(height: 24),
 
-                      // Back to Login Link
+                      // Resend OTP Link
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            'Didn\'t receive the code?',
+                            style: TextStyle(
+                              color: Color(0xFF3E2D4C),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Resend OTP',
+                            style: TextStyle(
+                              color: Color(0xFF1B2CF1),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Change Email / Mobile Number Link
                       Center(
                         child: GestureDetector(
                           onTap: () => Navigator.pop(context),
-                          child: RichText(
-                            text: const TextSpan(
-                              text: 'Remember your password? ',
-                              style: TextStyle(
-                                color: Color(0xFF3E2D4C),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: 'Back to Login',
-                                  style: TextStyle(
-                                    color: Color(0xFF1B2CF1),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
+                          child: const Text(
+                            'Change Email / Mobile Number',
+                            style: TextStyle(
+                              color: Color(0xFF1B2CF1),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
@@ -198,7 +222,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               ),
 
-              // Version Text at Bottom (30px offset)
+              // Version Text at Bottom
               const Positioned(
                 bottom: 0,
                 left: 0,
