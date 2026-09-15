@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 import 'package:hrms_app/feature/bottom_navigation/bottom_navigation_screen.dart';
+import 'package:hrms_app/feature/screen/forgotPassword/forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -191,11 +192,34 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             child: Row(
                               children: [
-                                Image.asset(
-                                  AppImagesPng.switchs,
+                                Container(
                                   width: 34,
                                   height: 20,
-                                  color: _rememberMe ? AppColors.primary200 : const Color(0xFF9CA3AF),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.20), // Fill: FFFFFF 20%
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.50), // Stroke: FFFFFF 50%
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: AnimatedAlign(
+                                    duration: const Duration(milliseconds: 200),
+                                    alignment: _rememberMe
+                                        ? Alignment.centerRight
+                                        : Alignment.centerLeft,
+                                    child: Container(
+                                      width: 14,
+                                      height: 14,
+                                      margin: const EdgeInsets.symmetric(horizontal: 2),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: _rememberMe
+                                            ? AppColors.primary200
+                                            : const Color(0xFF6B7280), // Selection color from your image
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 const SizedBox(width: 8),
                                 const Text(
@@ -210,12 +234,19 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ForgotPasswordScreen(),
+                                ),
+                              );
+                            },
                             child: const Text(
                               'Forgot Password?',
                               style: TextStyle(
                                 fontSize: 12,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w500,
                                 color: Color(0xFF1B2CF1),
                               ),
                             ),
@@ -246,7 +277,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // Version Text perfectly aligned with Splash screen (30px from bottom)
               const Positioned(
-                bottom: 0,
+                bottom: 30,
                 left: 0,
                 right: 0,
                 child: Center(
