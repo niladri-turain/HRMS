@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
+import 'package:hrms_app/core/service/shared_pref_service.dart';
 import 'package:hrms_app/feature/screen/dashboard/widget/live_tracking_card.dart';
 import 'package:hrms_app/feature/screen/dashboard/widget/login_logout_card.dart';
 import 'package:hrms_app/feature/screen/dashboard/widget/client_visit_card.dart';
@@ -9,10 +10,31 @@ import 'package:hrms_app/feature/screen/dashboard/widget/employee_tracking_card.
 import '../../../core/common_functions/timing.dart';
 import '../../../core/constants/app_images_png.dart';
 
-
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   final String role;
   const DashboardScreen({super.key, this.role = "employee"});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  String _userName = 'User';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final name = await SharedPrefService().getName();
+    if (name != null && mounted) {
+      setState(() {
+        _userName = name;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +111,7 @@ class DashboardScreen extends StatelessWidget {
                               ],
                             ),
                             Text(
-                              'Niladri Roy, ${Timing.getCurrentDate()}',
+                              '$_userName, ${Timing.getCurrentDate()}',
                               style:  const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
@@ -151,7 +173,7 @@ class DashboardScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 const LiveTrackingCard(isOnline: true),
                 const SizedBox(height: 16),
-                if (role == "manager") ...[
+                if (widget.role == "manager") ...[
                   const EmployeeTrackingCard(),
                   const SizedBox(height: 16),
                 ],

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 import '../../../core/common_functions/timing.dart';
+import 'package:hrms_app/core/service/shared_pref_service.dart';
 import 'client_details/client_details_screen.dart';
 import 'manager_client_visit_screen.dart';
 
@@ -16,6 +17,22 @@ class ClientVisitScreen extends StatefulWidget {
 
 class _ClientVisitScreenState extends State<ClientVisitScreen> {
   int _selectedTab = 0; // 0 for Upcoming, 1 for Completed
+  String _userName = 'User';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final name = await SharedPrefService().getName();
+    if (name != null && mounted) {
+      setState(() {
+        _userName = name;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +108,9 @@ class _ClientVisitScreenState extends State<ClientVisitScreen> {
                               ),
                             ],
                           ),
-                          const Text(
-                            'Niladri Roy, 09 Sep, 2026',
-                            style: TextStyle(
+                          Text(
+                            '$_userName, ${Timing.getCurrentDate()}',
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
