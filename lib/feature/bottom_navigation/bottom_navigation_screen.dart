@@ -7,6 +7,8 @@ import '../screen/clientVisit/client_visit_screen.dart';
 import '../screen/dashboard/dashboard_screen.dart';
 import '../screen/tasks/tasks_screen.dart';
 
+import '../screen/dashboard/manager_dashboard_screen.dart';
+
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
 
@@ -18,7 +20,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    const DashboardScreen(role: "manager"),
+    const ManagerDashboardScreen(),
     const ClientVisitScreen(role: "manager"),
     const AttendanceScreen(),
     const TasksScreen(),
