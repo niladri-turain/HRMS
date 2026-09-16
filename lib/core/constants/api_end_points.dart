@@ -8,8 +8,7 @@ class ApiEndPoints {
 
 
   //Marketing Manager
-
-
   static const employeeList = "marketing/team/employees";
+  static String employeeJourney(String id) => "marketing/team/employees/$id/journey";
 
 }

@@ -1,71 +1,160 @@
 import 'package:flutter/material.dart';
-import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
-class EmployeeJourneyScreen extends StatelessWidget {
-  const EmployeeJourneyScreen({super.key});
+import 'package:hrms_app/feature/model/managerModel/employee_tracking_model.dart';
+import 'package:hrms_app/feature/provider/managerProvider/manager_employee_tracking_provider.dart';
+
+class EmployeeJourneyScreen extends StatefulWidget {
+  final String employeeId;
+  const EmployeeJourneyScreen({super.key, required this.employeeId});
+
+  @override
+  State<EmployeeJourneyScreen> createState() => _EmployeeJourneyScreenState();
+}
+
+class _EmployeeJourneyScreenState extends State<EmployeeJourneyScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // For demonstration/testing with the mock-responsive API, 
+      // we use the date expected by the backend mock data
+      Provider.of<ManagerEmployeeTrackingProvider>(context, listen: false)
+          .fetchEmployeeJourney(widget.employeeId, "2026-09-16"); 
+    });
+  }
+
+  String _formatTime(String? dateTimeStr) {
+    if (dateTimeStr == null || dateTimeStr.isEmpty) return '--:--';
+    try {
+      final dt = DateTime.parse(dateTimeStr);
+      return DateFormat('hh:mm a').format(dt);
+    } catch (e) {
+      return dateTimeStr;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(AppImagesPng.dashboardBackground),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                child: Row(
+    return Consumer<ManagerEmployeeTrackingProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return const Scaffold(
+            backgroundColor: Color(0xFFF3F4F6),
+            body: Center(child: CircularProgressIndicator(color: Color(0xFF7C3AED))),
+          );
+        }
+
+        if (provider.errorMessage != null) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Employee Journey'),
+              backgroundColor: const Color(0xFF311040),
+              foregroundColor: Colors.white,
+            ),
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
+                    const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text(
+                      provider.errorMessage!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                     ),
-                    const Text(
-                      'Employee Journey',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Provider.of<ManagerEmployeeTrackingProvider>(context, listen: false)
+                            .fetchEmployeeJourney(widget.employeeId, "2026-09-16");
+                      },
+                      child: const Text('Retry'),
+                    )
                   ],
                 ),
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    children: [
-                      // Employee Info Card
-                      _buildEmployeeInfoCard(),
-                      const SizedBox(height: 16),
-                      // Map Card
-                      _buildMapCard(),
-                      const SizedBox(height: 16),
-                      // Journey Details Card
-                      _buildJourneyDetailsCard(),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
-                ),
+            ),
+          );
+        }
+
+        final tracking = provider.trackingData?.data;
+        final employee = tracking?.employee;
+        final attendance = tracking?.attendance;
+        final summary = tracking?.journeySummary;
+        final session = tracking?.session;
+        final stoppages = tracking?.stoppages ?? [];
+
+        return Scaffold(
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(AppImagesPng.dashboardBackground),
+                fit: BoxFit.cover,
               ),
-            ],
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // Header
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        const Text(
+                          'Employee Journey',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          // Employee Info Card
+                          _buildEmployeeInfoCard(employee, attendance, summary, session),
+                          const SizedBox(height: 16),
+                          // Map Card
+                          _buildMapCard(),
+                          const SizedBox(height: 16),
+                          // Journey Details Card
+                          _buildJourneyDetailsCard(attendance, stoppages, tracking?.date),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildEmployeeInfoCard() {
+  Widget _buildEmployeeInfoCard(
+    EmployeeInfo? employee,
+    AttendanceInfo? attendance,
+    JourneySummary? summary,
+    SessionInfo? session,
+  ) {
     return Column(
       children: [
         Container(
@@ -89,18 +178,18 @@ class EmployeeJourneyScreen extends StatelessWidget {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          'Goutam Mazumder',
-                          style: TextStyle(
+                          employee?.name ?? 'N/A',
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF1F2937),
                           ),
                         ),
                         Text(
-                          'Marketing Executive',
-                          style: TextStyle(
+                          employee?.designation?.name ?? 'N/A',
+                          style: const TextStyle(
                             fontSize: 13,
                             color: Color(0xFF9CA3AF),
                           ),
@@ -115,12 +204,12 @@ class EmployeeJourneyScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
-                      children: const [
-                        Icon(Icons.calendar_today_outlined, size: 14, color: Color(0xFF6B7280)),
-                        SizedBox(width: 6),
+                      children: [
+                        const Icon(Icons.calendar_today_outlined, size: 14, color: Color(0xFF6B7280)),
+                        const SizedBox(width: 6),
                         Text(
-                          '12 Aug 2026',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)),
+                          attendance?.attendanceDate ?? '--',
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)),
                         ),
                       ],
                     ),
@@ -136,11 +225,11 @@ class EmployeeJourneyScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    _buildInfoItem('Login Time', '10:28 AM'),
+                    _buildInfoItem('Login Time', _formatTime(attendance?.loginAt)),
                     _buildVerticalDivider(),
-                    _buildInfoItem('Distance Travelled', '18.4 km'),
+                    _buildInfoItem('Distance Travelled', "${session?.totalDistanceKm?.toStringAsFixed(1) ?? '0.0'} km"),
                     _buildVerticalDivider(),
-                    _buildInfoItem('Total Stop', '3'),
+                    _buildInfoItem('Total Stop', "${summary?.totalStoppages ?? 0}"),
                   ],
                 ),
               ),
@@ -173,10 +262,10 @@ class EmployeeJourneyScreen extends StatelessWidget {
               ),
             ],
           ),
-          child: const Text(
-            '884 Kalikapur Road (Gitanjali Park), Kolkata 700099.',
+          child: Text(
+            attendance?.loginLocationName ?? 'Location not available',
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF065F46),
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -232,7 +321,7 @@ class EmployeeJourneyScreen extends StatelessWidget {
               AppImagesPng.trackmap,
               width: double.infinity,
               height: double.infinity,
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
             ),
           ),
           // Map Type Switcher
@@ -256,7 +345,7 @@ class EmployeeJourneyScreen extends StatelessWidget {
           ),
           // Zoom Controls
           Positioned(
-            bottom: 60,
+            bottom: 20,
             right: 12,
             child: Column(
               children: [
@@ -266,14 +355,10 @@ class EmployeeJourneyScreen extends StatelessWidget {
               ],
             ),
           ),
-          // Route and Markers Overlay (Simplified representation)
-          Positioned.fill(
-            child: IgnorePointer(
-              child: CustomPaint(
-                painter: MapJourneyPainter(),
-              ),
-            ),
-          ),
+          // Center Marker Simulation
+          const Center(
+            child: Icon(Icons.location_on, color: Colors.red, size: 40),
+          )
         ],
       ),
     );
@@ -310,7 +395,16 @@ class EmployeeJourneyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildJourneyDetailsCard() {
+  Widget _buildJourneyDetailsCard(AttendanceInfo? attendance, List<StoppageInfo> stoppages, String? date) {
+    String formattedDate = '';
+    if (date != null) {
+      try {
+        formattedDate = DateFormat('d MMM yyyy').format(DateTime.parse(date));
+      } catch (_) {
+        formattedDate = date;
+      }
+    }
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -321,58 +415,52 @@ class EmployeeJourneyScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Journey Details (12 Aug 2026)',
-            style: TextStyle(
+          Text(
+            'Journey Details ($formattedDate)',
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
               color: Color(0xFF7C3AED),
             ),
           ),
           const SizedBox(height: 24),
+          
+          // Check-in Item
           _buildTimelineItem(
             '1',
-            '10:28 AM',
+            _formatTime(attendance?.loginAt),
             'Attendance Check-in',
-            'Salt Lake Sector V, Kolkata',
+            attendance?.loginLocationName ?? 'N/A',
             const Color(0xFF10B981),
+            isLast: stoppages.isEmpty,
           ),
-          _buildTimelineItem(
-            '2',
-            '11:28 AM',
-            'Client Visit',
-            'ABC Enterprises',
-            const Color(0xFF7C3AED),
-            subLocation: 'Sector V, Kolkata - 1h 10m',
-            isVisit: true,
-          ),
-          _buildTimelineItem(
-            '3',
-            '12:50 PM',
-            'Client Visit',
-            'XYZ Solutions',
-            const Color(0xFF7C3AED),
-            subLocation: 'New Town, Kolkata - 1h',
-            isVisit: true,
-          ),
-          _buildTimelineItem(
-            '4',
-            '14:18 PM',
-            'Client Visit',
-            'Acme Pvt. Ltd.',
-            const Color(0xFF7C3AED),
-            subLocation: 'Eco Park, Kolkata - 1h 20m',
-            isVisit: true,
-          ),
-          _buildTimelineItem(
-            '',
-            '15:28 PM',
-            'Current Location',
-            'Park Street, Kolkata',
-            const Color(0xFFEF4444),
-            isLast: true,
-            isLocation: true,
-          ),
+
+          // Stoppages / Client Visits
+          ...List.generate(stoppages.length, (index) {
+            final stop = stoppages[index];
+            final isLast = index == stoppages.length - 1;
+            return _buildTimelineItem(
+              (index + 2).toString(),
+              _formatTime(stop.arrivedAt),
+              'Stoppage / Client Visit',
+              stop.locationName ?? 'Unknown Location',
+              const Color(0xFF7C3AED),
+              subLocation: '${stop.durationMinutes ?? 0}m duration',
+              isVisit: true,
+              isLast: isLast,
+            );
+          }),
+
+          if (stoppages.isEmpty && attendance?.isLoggedIn == true)
+            _buildTimelineItem(
+              '',
+              'Now',
+              'Current Status',
+              'Actively Tracking',
+              const Color(0xFFEF4444),
+              isLast: true,
+              isLocation: true,
+            ),
         ],
       ),
     );
@@ -511,46 +599,6 @@ class HorizontalDashedLinePainter extends CustomPainter {
     while (startX < max) {
       canvas.drawLine(Offset(startX, 0), Offset(startX + dashWidth, 0), paint);
       startX += dashWidth + dashSpace;
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
-
-class MapJourneyPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = const Color(0xFF3B82F6)
-      ..strokeWidth = 3
-      ..style = PaintingStyle.stroke;
-
-    final path = Path();
-    // Simulate a route path on the map
-    path.moveTo(size.width * 0.7, size.height * 0.2);
-    path.lineTo(size.width * 0.6, size.height * 0.3);
-    path.lineTo(size.width * 0.5, size.height * 0.45);
-    path.lineTo(size.width * 0.4, size.height * 0.55);
-    path.lineTo(size.width * 0.35, size.height * 0.75);
-    path.lineTo(size.width * 0.25, size.height * 0.85);
-
-    canvas.drawPath(path, paint);
-
-    // Draw simulation markers
-    _drawMarker(canvas, Offset(size.width * 0.7, size.height * 0.2), "1", const Color(0xFF10B981));
-    _drawMarker(canvas, Offset(size.width * 0.5, size.height * 0.45), "2", const Color(0xFF7C3AED));
-    _drawMarker(canvas, Offset(size.width * 0.4, size.height * 0.55), "3", const Color(0xFF7C3AED));
-    _drawMarker(canvas, Offset(size.width * 0.25, size.height * 0.85), "", const Color(0xFFEF4444), isPin: true);
-  }
-
-  void _drawMarker(Canvas canvas, Offset position, String text, Color color, {bool isPin = false}) {
-    if (isPin) {
-      final pinPaint = Paint()..color = color;
-      canvas.drawCircle(position, 8, pinPaint);
-    } else {
-      final circlePaint = Paint()..color = color;
-      canvas.drawCircle(position, 10, circlePaint);
     }
   }
 

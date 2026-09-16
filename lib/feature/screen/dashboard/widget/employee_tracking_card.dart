@@ -61,7 +61,7 @@ class EmployeeTrackingCard extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const EmployeeJourneyScreen()),
+                    MaterialPageRoute(builder: (context) => const EmployeeJourneyScreen(employeeId: '1',)),
                   );
                 },
                 child: Container(

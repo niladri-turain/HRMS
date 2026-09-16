@@ -382,7 +382,9 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const EmployeeJourneyScreen(),
+                        builder: (context) => EmployeeJourneyScreen(
+                          employeeId: item.id ?? '',
+                        ),
                       ),
                     );
                   },
