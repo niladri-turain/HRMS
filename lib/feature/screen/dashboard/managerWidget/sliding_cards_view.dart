@@ -4,6 +4,7 @@ import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 import 'package:hrms_app/feature/provider/managerProvider/employee_list_provider.dart';
 import 'package:hrms_app/feature/model/employee_list_model.dart';
+import 'package:hrms_app/feature/screen/employee_tracking/employee_journey_screen.dart';
 
 class SlidingCardsView extends StatefulWidget {
   const SlidingCardsView({super.key});
@@ -377,7 +378,14 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                 ),
                 // Outlined Button matching image
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EmployeeJourneyScreen(),
+                      ),
+                    );
+                  },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
