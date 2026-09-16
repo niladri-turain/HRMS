@@ -129,7 +129,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFF311040),
+          color: const Color(0xFF3B4760),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -241,7 +241,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFF311040),
+          color: const Color(0xFF3E2D4C),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
