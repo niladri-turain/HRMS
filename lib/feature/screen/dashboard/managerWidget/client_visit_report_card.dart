@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
+import 'package:hrms_app/core/constants/app_images_png.dart';
 
 class ClientVisitReportCard extends StatelessWidget {
   const ClientVisitReportCard({super.key});
@@ -54,18 +55,10 @@ class ClientVisitReportCard extends StatelessWidget {
           const SizedBox(height: 20),
           SizedBox(
             height: 150,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                _buildBar(16, 12, 8, 4),
-                _buildBar(12, 8, 6, 2),
-                _buildBar(18, 14, 10, 6),
-                _buildBar(14, 10, 5, 3),
-                _buildBar(10, 6, 4, 1),
-                _buildBar(15, 11, 7, 3),
-                _buildBar(13, 9, 6, 2),
-              ],
+            width: double.infinity,
+            child: Image.asset(
+              AppImagesPng.reportCard,
+              fit: BoxFit.contain,
             ),
           ),
           const SizedBox(height: 12),
@@ -85,25 +78,6 @@ class ClientVisitReportCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBar(double h1, double h2, double h3, double h4) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(width: 8, height: h1 * 6, color: Colors.grey.shade300),
-            Container(width: 8, height: h2 * 6, color: Colors.green),
-            Container(width: 8, height: h3 * 6, color: Colors.orange),
-            Container(width: 8, height: h4 * 6, color: Colors.red),
-          ],
-        ),
-        const SizedBox(height: 4),
-        const Text('12 Aug', style: TextStyle(fontSize: 8, color: Colors.grey)),
-      ],
     );
   }
 

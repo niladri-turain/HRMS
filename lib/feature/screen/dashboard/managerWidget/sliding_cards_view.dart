@@ -20,60 +20,66 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
         // Toggle Buttons
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Container(
-            height: 45,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() => isTeamTracking = true);
-                      _pageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: isTeamTracking ? AppColors.primary200 : Colors.transparent,
-                        borderRadius: BorderRadius.circular(10),
+          child: Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() => isTeamTracking = true);
+                    _pageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                  },
+                  child: Container(
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: isTeamTracking ? AppColors.primary200 : Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: AppColors.primary200,
+                        width: 1,
                       ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Team Tracking (4)',
-                        style: TextStyle(
-                          color: isTeamTracking ? Colors.white : AppColors.primary200,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Team Tracking (4)',
+                      style: TextStyle(
+                        color: isTeamTracking ? Colors.white : AppColors.primary200,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
                       ),
                     ),
                   ),
                 ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() => isTeamTracking = false);
-                      _pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: !isTeamTracking ? AppColors.primary200 : Colors.transparent,
-                        borderRadius: BorderRadius.circular(10),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() => isTeamTracking = false);
+                    _pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                  },
+                  child: Container(
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: !isTeamTracking ? AppColors.primary200 : Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: AppColors.primary200,
+                        width: 1,
                       ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Client Visit (5)',
-                        style: TextStyle(
-                          color: !isTeamTracking ? Colors.white : AppColors.primary200,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Client Visit (5)',
+                      style: TextStyle(
+                        color: !isTeamTracking ? Colors.white : AppColors.primary200,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
                       ),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 16),

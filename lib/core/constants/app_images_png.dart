@@ -40,6 +40,7 @@ class AppImagesPng {
   static const switchs = "assets/images/switch.png";
   static const eyeIcon = "assets/images/eyeIcon.png";
   static const editIcon = "assets/images/editIcon.png";
+  static const reportCard = "assets/images/reportCard.png";
 
 
 }
