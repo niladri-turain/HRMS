@@ -11,7 +11,83 @@ class SlidingCardsView extends StatefulWidget {
 
 class _SlidingCardsViewState extends State<SlidingCardsView> {
   bool isTeamTracking = true;
-  final PageController _pageController = PageController();
+  final PageController _teamPageController = PageController(viewportFraction: 0.93);
+  final PageController _clientPageController = PageController(viewportFraction: 0.93);
+
+  // Mock Data for Team Tracking
+  final List<Map<String, dynamic>> teamData = [
+    {
+      'name': 'Priyanka Ghosh',
+      'role': 'Employee Details',
+      'location': 'Salt Lake, Sector V, Kolkata West Bengal, 700078',
+      'time': '18:55 PM',
+      'status': 'Live',
+    },
+    {
+      'name': 'Rahul Sharma',
+      'role': 'Employee Details',
+      'location': 'New Town, Action Area I, Kolkata, 700156',
+      'time': '17:30 PM',
+      'status': 'Live',
+    },
+    {
+      'name': 'Amit Das',
+      'role': 'Employee Details',
+      'location': 'Park Street, Kolkata, 700016',
+      'time': '16:45 PM',
+      'status': 'Away',
+    },
+    {
+      'name': 'Sourav Ganguly',
+      'role': 'Employee Details',
+      'location': 'Behala, Kolkata, 700034',
+      'time': '15:20 PM',
+      'status': 'Live',
+    },
+  ];
+
+  // Mock Data for Client Visit
+  final List<Map<String, dynamic>> clientData = [
+    {
+      'name': 'Goutam Mazumder',
+      'company': 'ABC Enterprises',
+      'location': 'Salt Lake Sector V, Kolkata',
+      'time': '10:15 AM - 11:00 AM',
+      'status': 'In Progress',
+      'requirement': '1 Lac Bulksms & Whatsapp api requirement',
+    },
+    {
+      'name': 'Niladri Roy',
+      'company': 'XYZ Solutions',
+      'location': 'Sector III, Salt Lake, Kolkata',
+      'time': '12:00 PM - 01:00 PM',
+      'status': 'Scheduled',
+      'requirement': 'Cloud migration discussion & architecture planning',
+    },
+    {
+      'name': 'Tanmay Pal',
+      'company': 'PQR Technologies',
+      'location': 'Sector V, Kolkata',
+      'time': '02:30 PM - 03:30 PM',
+      'status': 'Completed',
+      'requirement': 'HRMS product demo & feature walkthrough',
+    },
+    {
+      'name': 'Vikram Jit',
+      'company': 'WebSpiders',
+      'location': 'Sector I, Salt Lake, Kolkata',
+      'time': '04:00 PM - 05:00 PM',
+      'status': 'Scheduled',
+      'requirement': 'Annual maintenance contract renewal discussion',
+    },
+  ];
+
+  @override
+  void dispose() {
+    _teamPageController.dispose();
+    _clientPageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +102,6 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() => isTeamTracking = true);
-                    _pageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                   },
                   child: Container(
                     height: 45,
@@ -40,7 +115,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      'Team Tracking (4)',
+                      'Team Tracking (${teamData.length})',
                       style: TextStyle(
                         color: isTeamTracking ? Colors.white : AppColors.primary200,
                         fontWeight: FontWeight.bold,
@@ -55,7 +130,6 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() => isTeamTracking = false);
-                    _pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                   },
                   child: Container(
                     height: 45,
@@ -69,7 +143,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      'Client Visit (5)',
+                      'Client Visit (${clientData.length})',
                       style: TextStyle(
                         color: !isTeamTracking ? Colors.white : AppColors.primary200,
                         fontWeight: FontWeight.bold,
@@ -82,235 +156,417 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
-        // Sliding Cards
-        SizedBox(
-          height: 200,
-          child: PageView(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() => isTeamTracking = index == 0);
-            },
-            children: [
-              _buildTeamTrackingList(),
-              _buildClientVisitList(),
-            ],
-          ),
-        ),
+        const SizedBox(height: 20),
+        
+        // Card Deck Content View
+        isTeamTracking ? _buildTeamTrackingDeck() : _buildClientVisitDeck(),
       ],
     );
   }
 
-  Widget _buildTeamTrackingList() {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: 3,
-      itemBuilder: (context, index) {
-        return _buildTeamTrackingCard(index);
-      },
-    );
-  }
+  // Beautiful Stacked Deck for Team Tracking
+  Widget _buildTeamTrackingDeck() {
+    return SizedBox(
+      height: 210,
+      child: PageView.builder(
+        controller: _teamPageController,
+        itemCount: teamData.length,
+        itemBuilder: (context, index) {
+          final item = teamData[index];
+          final remaining = teamData.length - 1 - index;
 
-  Widget _buildTeamTrackingCard(int index) {
-    return TweenAnimationBuilder<double>(
-      duration: Duration(milliseconds: 400 + (index * 100)),
-      tween: Tween(begin: 0.0, end: 1.0),
-      builder: (context, value, child) {
-        return Transform.translate(
-          offset: Offset(0, 50 * (1 - value)),
-          child: Opacity(
-            opacity: value,
-            child: child,
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFF3B4760),
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
               children: [
-                const CircleAvatar(radius: 18, backgroundImage: AssetImage(AppImagesPng.persionIcon)),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text('Employee Details', style: TextStyle(color: Colors.grey, fontSize: 10)),
-                    Text('Priyanka Ghosh', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(width: 6, height: 6, decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle)),
-                      const SizedBox(width: 4),
-                      const Text('Live', style: TextStyle(color: Colors.green, fontSize: 10)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            const Text('Last Location', style: TextStyle(color: Colors.grey, fontSize: 10)),
-            const Text(
-              'Salt Lake, Sector V, Kolkata West Bengal, 700078',
-              style: TextStyle(color: Colors.white, fontSize: 12),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text('Last Seen', style: TextStyle(color: Colors.grey, fontSize: 10)),
-                      Text('18:55 PM', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.location_on, size: 14),
-                    label: const Text('View on Map', style: TextStyle(fontSize: 10)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white.withOpacity(0.2),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                // 3rd Deepest Layer
+                if (remaining >= 2)
+                  Positioned(
+                    top: 24,
+                    left: 24,
+                    right: 24,
+                    child: Container(
+                      height: 165,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF3B4760).withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
                   ),
-                ],
-              ),
+                // 2nd Middle Layer
+                if (remaining >= 1)
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    right: 12,
+                    child: Container(
+                      height: 165,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF3B4760).withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                // Top Main Card Card
+                _buildTeamTrackingCard(item),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildClientVisitList() {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: 3,
-      itemBuilder: (context, index) {
-        return _buildClientVisitCard(index);
-      },
-    );
-  }
+  // Individual Team Tracking Card Layout matching the screenshot perfectly
+  Widget _buildTeamTrackingCard(Map<String, dynamic> item) {
+    final bool isLive = item['status'] == 'Live';
 
-  Widget _buildClientVisitCard(int index) {
-    return TweenAnimationBuilder<double>(
-      duration: Duration(milliseconds: 400 + (index * 100)),
-      tween: Tween(begin: 0.0, end: 1.0),
-      builder: (context, value, child) {
-        return Transform.translate(
-          offset: Offset(0, 50 * (1 - value)),
-          child: Opacity(
-            opacity: value,
-            child: child,
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF3B4760),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Employee Header Row
+          Row(
+            children: [
+              const CircleAvatar(
+                radius: 18,
+                backgroundImage: AssetImage(AppImagesPng.persionIcon),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item['role'],
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 11,
+                    ),
+                  ),
+                  Text(
+                    item['name'],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              // Live Status Pill Container
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: (isLive ? Colors.green : Colors.orange).withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: (isLive ? Colors.green : Colors.orange).withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 7,
+                      height: 7,
+                      decoration: BoxDecoration(
+                        color: isLive ? const Color(0xFF00C853) : Colors.orange,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      item['status'],
+                      style: TextStyle(
+                        color: isLive ? const Color(0xFF00C853) : Colors.orange,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFF3E2D4C),
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+          const SizedBox(height: 12),
+          // Last Location Section
+          Text(
+            'Last Location',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.5),
+              fontSize: 11,
             ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const CircleAvatar(radius: 18, backgroundImage: AssetImage(AppImagesPng.persionIcon)),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text('Employee Details', style: TextStyle(color: Colors.grey, fontSize: 10)),
-                    Text('Goutam Mazumder', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                const Spacer(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: const [
-                    Text('Schedule Time', style: TextStyle(color: Colors.grey, fontSize: 10)),
-                    Text('10:15 AM - 11:00 AM', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ],
+          ),
+          const SizedBox(height: 2),
+          Text(
+            item['location'],
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
             ),
-            const SizedBox(height: 12),
-            Row(
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 14),
+          // Inner Translucent Details Box
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.12),
+                width: 1,
+              ),
+            ),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text('ABC Enterprises', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                    Text('Salt Lake Sector V, Kolkata', style: TextStyle(color: Colors.grey, fontSize: 10)),
+                  children: [
+                    Text(
+                      'Last Seen',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.5),
+                        fontSize: 11,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      item['time'],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
                   ],
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8),
+                // Outlined Button matching image
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.6),
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(
+                          Icons.location_on_outlined,
+                          color: Colors.white,
+                          size: 14,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          'View on Map',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  child: const Text('In Progress', style: TextStyle(color: Colors.orange, fontSize: 10)),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Beautiful Stacked Deck for Client Visit
+  Widget _buildClientVisitDeck() {
+    return SizedBox(
+      height: 190,
+      child: PageView.builder(
+        controller: _clientPageController,
+        itemCount: clientData.length,
+        itemBuilder: (context, index) {
+          final item = clientData[index];
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: _buildClientVisitCard(item),
+          );
+        },
+      ),
+    );
+  }
+
+  // Individual Client Visit Card Layout matching the branding colors
+  Widget _buildClientVisitCard(Map<String, dynamic> item) {
+    final bool isCompleted = item['status'] == 'Completed';
+    final bool isInProgress = item['status'] == 'In Progress';
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF3E2D4C),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header Row
+          Row(
+            children: [
+              const CircleAvatar(
+                radius: 18,
+                backgroundImage: AssetImage(AppImagesPng.persionIcon),
               ),
-              child: const Text(
-                '1 Lac Bulksms & Whatsapp api requirement',
-                style: TextStyle(color: Colors.white, fontSize: 11),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Employee Details',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 11,
+                    ),
+                  ),
+                  Text(
+                    item['name'],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Schedule Time',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 10,
+                    ),
+                  ),
+                  Text(
+                    item['time'],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          // Company details & Status Row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item['company'],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    item['location'],
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: (isCompleted
+                          ? Colors.green
+                          : isInProgress
+                              ? Colors.orange
+                              : Colors.blue)
+                      .withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: (isCompleted
+                            ? Colors.green
+                            : isInProgress
+                                ? Colors.orange
+                                : Colors.blue)
+                        .withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  item['status'],
+                  style: TextStyle(
+                    color: isCompleted
+                        ? const Color(0xFF00C853)
+                        : isInProgress
+                            ? Colors.orange
+                            : Colors.blue,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Requirements inner container box
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.12),
+                width: 1,
               ),
             ),
-          ],
-        ),
+            child: Text(
+              item['requirement'],
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }
