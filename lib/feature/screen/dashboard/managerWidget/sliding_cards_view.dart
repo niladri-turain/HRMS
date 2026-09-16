@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'package:hrms_app/feature/provider/managerProvider/employee_list_provider.dart';
+import 'package:hrms_app/feature/model/employee_list_model.dart';
 
 class SlidingCardsView extends StatefulWidget {
   const SlidingCardsView({super.key});
@@ -13,38 +16,6 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
   bool isTeamTracking = true;
   final PageController _teamPageController = PageController(viewportFraction: 0.93);
   final PageController _clientPageController = PageController(viewportFraction: 0.93);
-
-  // Mock Data for Team Tracking
-  final List<Map<String, dynamic>> teamData = [
-    {
-      'name': 'Priyanka Ghosh',
-      'role': 'Employee Details',
-      'location': 'Salt Lake, Sector V, Kolkata West Bengal, 700078',
-      'time': '18:55 PM',
-      'status': 'Live',
-    },
-    {
-      'name': 'Rahul Sharma',
-      'role': 'Employee Details',
-      'location': 'New Town, Action Area I, Kolkata, 700156',
-      'time': '17:30 PM',
-      'status': 'Live',
-    },
-    {
-      'name': 'Amit Das',
-      'role': 'Employee Details',
-      'location': 'Park Street, Kolkata, 700016',
-      'time': '16:45 PM',
-      'status': 'Away',
-    },
-    {
-      'name': 'Sourav Ganguly',
-      'role': 'Employee Details',
-      'location': 'Behala, Kolkata, 700034',
-      'time': '15:20 PM',
-      'status': 'Live',
-    },
-  ];
 
   // Mock Data for Client Visit
   final List<Map<String, dynamic>> clientData = [
@@ -83,6 +54,14 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<EmployeeListProvider>(context, listen: false).fetchEmployeeList();
+    });
+  }
+
+  @override
   void dispose() {
     _teamPageController.dispose();
     _clientPageController.dispose();
@@ -91,6 +70,8 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
 
   @override
   Widget build(BuildContext context) {
+    final employeeProvider = Provider.of<EmployeeListProvider>(context);
+
     return Column(
       children: [
         // Toggle Buttons
@@ -115,7 +96,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      'Team Tracking (${teamData.length})',
+                      'Team Tracking (${employeeProvider.employees.length})',
                       style: TextStyle(
                         color: isTeamTracking ? Colors.white : AppColors.primary200,
                         fontWeight: FontWeight.bold,
@@ -159,21 +140,58 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
         const SizedBox(height: 20),
         
         // Card Deck Content View
-        isTeamTracking ? _buildTeamTrackingDeck() : _buildClientVisitDeck(),
+        isTeamTracking ? _buildTeamTrackingDeck(employeeProvider) : _buildClientVisitDeck(),
       ],
     );
   }
 
   // Beautiful Stacked Deck for Team Tracking
-  Widget _buildTeamTrackingDeck() {
+  Widget _buildTeamTrackingDeck(EmployeeListProvider provider) {
+    if (provider.isLoading) {
+      return const SizedBox(
+        height: 210,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (provider.errorMessage != null) {
+      return SizedBox(
+        height: 210,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Text(
+              provider.errorMessage!,
+              style: const TextStyle(color: Colors.redAccent, fontSize: 14, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (provider.employees.isEmpty) {
+      return const SizedBox(
+        height: 210,
+        child: Center(
+          child: Text(
+            'No employee list found',
+            style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+        ),
+      );
+    }
+
     return SizedBox(
       height: 210,
       child: PageView.builder(
         controller: _teamPageController,
-        itemCount: teamData.length,
+        itemCount: provider.employees.length,
         itemBuilder: (context, index) {
-          final item = teamData[index];
-          final remaining = teamData.length - 1 - index;
+          final item = provider.employees[index];
+          final remaining = provider.employees.length - 1 - index;
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6),
@@ -220,8 +238,8 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
   }
 
   // Individual Team Tracking Card Layout matching the screenshot perfectly
-  Widget _buildTeamTrackingCard(Map<String, dynamic> item) {
-    final bool isLive = item['status'] == 'Live';
+  Widget _buildTeamTrackingCard(EmployeeData item) {
+    final bool isLive = item.status == 'Live';
 
     return Container(
       width: double.infinity,
@@ -237,23 +255,25 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
           // Employee Header Row
           Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 18,
-                backgroundImage: AssetImage(AppImagesPng.persionIcon),
+                backgroundImage: item.avatarUrl != null && item.avatarUrl!.isNotEmpty
+                    ? NetworkImage(item.avatarUrl!)
+                    : const AssetImage(AppImagesPng.persionIcon) as ImageProvider,
               ),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item['role'],
+                    'Employee Details',
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.5),
                       fontSize: 11,
                     ),
                   ),
                   Text(
-                    item['name'],
+                    item.name ?? '',
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -287,7 +307,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      item['status'],
+                      item.status ?? 'Live',
                       style: TextStyle(
                         color: isLive ? const Color(0xFF00C853) : Colors.orange,
                         fontSize: 11,
@@ -310,7 +330,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
           ),
           const SizedBox(height: 2),
           Text(
-            item['location'],
+            item.lastLocation ?? '',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 13,
@@ -346,7 +366,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      item['time'],
+                      item.lastSeen ?? '',
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
