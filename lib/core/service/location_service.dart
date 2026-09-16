@@ -6,7 +6,7 @@ class LocationService {
   static const String _addressKey = 'cached_address';
 
   /// Returns the current address as a String and saves it to SharedPreferences
-  static Future<String> getCurrentAddress() async {
+  Future<String> getCurrentAddress() async {
     try {
       // Check if location services are enabled
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -61,7 +61,7 @@ class LocationService {
   }
 
   /// Retrieves the cached address from SharedPreferences
-  static Future<String?> getCachedAddress() async {
+  Future<String?> getCachedAddress() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_addressKey);
   }
