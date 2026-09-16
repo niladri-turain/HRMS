@@ -75,4 +75,32 @@ class LoginProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> logout() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await apiService.post(ApiEndPoints.logout);
+
+      if (response.statusCode == 200) {
+        await prefService.clear();
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _errorMessage = response.data['message'] ?? 'Logout failed';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      // Even if API fails, we should clear local storage to let user "log out"
+      await prefService.clear();
+      _errorMessage = e.toString().replaceAll('Exception: ', '');
+      _isLoading = false;
+      notifyListeners();
+      return true; // Return true because session is cleared locally
+    }
+  }
 }
