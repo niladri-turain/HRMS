@@ -28,7 +28,7 @@
         <!-- Mapbox Access Token -->
         <meta-data
             android:name="com.mapbox.token"
-            android:resource=""
+            android:value="" />
 
 <!--            android:value="pk.eyJ1IjoibmlsYWRyaTE5OTYiLCJhIjoiY211NTV1bWxlMG45ejJ3cXZyYmFtN2lnOSJ9.XH5-RUlsbr3ztLUwZznXIw" />-->
 
