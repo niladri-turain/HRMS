@@ -1,8 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart' hide Size;
 import 'package:flutter/services.dart';
-import 'dart:ui' as ui show Size;
+import 'dart:ui' as ui;
 
 import 'package:hrms_app/core/constants/app_images_png.dart';
 import 'package:hrms_app/core/constants/app_strings.dart';
@@ -215,13 +213,20 @@ class _EmployeeJourneyScreenState
       await polylineManager.deleteAll();
 
       // ============================================================
-      // CONVERT API LAT/LNG -> MAPBOX POSITION & MARK BREADCRUMBS
+      // CONVERT API LAT/LNG -> MAPBOX POSITION (FULL PATH)
       // ============================================================
+      //
+      // `route_coordinates` is the raw GPS breadcrumb trail and often
+      // contains many consecutive pings at the exact same lat/long
+      // (e.g. while the employee is stationary). We keep every point
+      // for the polyline (accurate path), but collapse consecutive
+      // duplicates into a single "unique waypoint" so numbered pins
+      // only show up once per distinct place visited.
 
       final List<Position> allRoutePoints = [];
+      final List<Position> uniqueWaypoints = [];
 
-      for (int i = 0; i < routeCoordinates.length; i++) {
-        final coordinate = routeCoordinates[i];
+      for (final coordinate in routeCoordinates) {
         final latitude = coordinate.latitude;
         final longitude = coordinate.longitude;
 
@@ -235,17 +240,21 @@ class _EmployeeJourneyScreenState
         );
         allRoutePoints.add(pos);
 
-        // Add small marker icon for each tracking coordinate point
-        await _addRoutePointMarker(
-          position: pos,
-          index: (i + 1).toString(),
-        );
+        final lastWaypoint =
+        uniqueWaypoints.isEmpty ? null : uniqueWaypoints.last;
 
-        debugPrint('Marking route point ${i + 1} at $latitude, $longitude');
+        final isSameAsLast = lastWaypoint != null &&
+            lastWaypoint.lat == pos.lat &&
+            lastWaypoint.lng == pos.lng;
+
+        if (!isSameAsLast) {
+          uniqueWaypoints.add(pos);
+        }
       }
 
       debugPrint(
-        'Valid route points: ${allRoutePoints.length}',
+        'Valid route points: ${allRoutePoints.length}, '
+            'unique waypoints: ${uniqueWaypoints.length}',
       );
 
       // ============================================================
@@ -280,7 +289,7 @@ class _EmployeeJourneyScreenState
       }
 
       // ============================================================
-      // START LOCATION (GREEN PIN)
+      // START / END POSITIONS
       // ============================================================
 
       Position? startPosition;
@@ -296,6 +305,79 @@ class _EmployeeJourneyScreenState
         );
       }
 
+      final Position? endPosition =
+      allRoutePoints.length >= 2 ? allRoutePoints.last : null;
+
+      // ============================================================
+      // ROUTE WAYPOINTS (BLUE NUMBERED CIRCLES 1, 2, 3...)
+      // ============================================================
+      //
+      // Skip any waypoint sitting at (or very near) the Start/End
+      // location — those already get the dedicated green/red pins,
+      // so numbering them again would just stack a blue circle on
+      // top of it (this is what caused Start/End to show a numbered
+      // blue circle instead of the S/E pin).
+
+      bool overlapsStartOrEnd(Position pos) {
+        if (startPosition != null &&
+            _isNearPosition(pos, startPosition)) {
+          return true;
+        }
+        if (endPosition != null &&
+            _isNearPosition(pos, endPosition)) {
+          return true;
+        }
+        return false;
+      }
+
+      if (stoppages.isNotEmpty) {
+        // Preferred: backend-analyzed stoppages (has duration/arrival info).
+        int number = 1;
+
+        for (final stop in stoppages) {
+          if (stop.latitude == null || stop.longitude == null) continue;
+
+          final stopPosition = Position(
+            stop.longitude!.toDouble(),
+            stop.latitude!.toDouble(),
+          );
+
+          if (overlapsStartOrEnd(stopPosition)) continue;
+
+          await _addNumberedPinMarker(
+            position: stopPosition,
+            text: '${number++}',
+            color: const Color(0xFF1976F3),
+          );
+
+          cameraPoints.add(Point(coordinates: stopPosition));
+        }
+      } else if (uniqueWaypoints.length > 2) {
+        // Fallback: no `stoppages` from the API — number every distinct
+        // place visited in `route_coordinates` instead.
+        final middleWaypoints = uniqueWaypoints
+            .sublist(1, uniqueWaypoints.length - 1)
+            .where((pos) => !overlapsStartOrEnd(pos))
+            .toList();
+
+        for (int i = 0; i < middleWaypoints.length; i++) {
+          final stopPosition = middleWaypoints[i];
+
+          await _addNumberedPinMarker(
+            position: stopPosition,
+            text: '${i + 1}',
+            color: const Color(0xFF1976F3),
+          );
+
+          cameraPoints.add(Point(coordinates: stopPosition));
+        }
+      }
+
+      // ============================================================
+      // START LOCATION (GREEN PIN) — drawn after the numbered
+      // waypoints so it always renders on top of them.
+      // ============================================================
+
       if (startPosition != null) {
         await _addLocationPopupMarker(
           position: startPosition,
@@ -303,42 +385,17 @@ class _EmployeeJourneyScreenState
           time: _formatTime(data.attendance?.loginAt),
           location: data.attendance?.loginLocationName ?? 'N/A',
           color: const Color(0xFF16A34A),
-          index: '', // No number inside green pin
         );
 
         cameraPoints.add(Point(coordinates: startPosition));
       }
 
       // ============================================================
-      // ROUTE WAYPOINTS / STOPPAGES (BLUE NUMBERED CIRCLES 1, 2, 3...)
+      // END / CURRENT LOCATION (RED PIN) — drawn last so it always
+      // renders on top of everything else.
       // ============================================================
 
-      // We can map each valid route coordinate or stoppage. The user wants the markers from the route/stoppage data numbered sequentially 1, 2, 3...
-      for (int i = 0; i < stoppages.length; i++) {
-        final stop = stoppages[i];
-        if (stop.latitude == null || stop.longitude == null) continue;
-
-        final stopPosition = Position(
-          stop.longitude!.toDouble(),
-          stop.latitude!.toDouble(),
-        );
-
-        await _addNumberedPinMarker(
-          position: stopPosition,
-          text: '${i + 1}',
-          color: const Color(0xFF1976F3),
-        );
-
-        cameraPoints.add(Point(coordinates: stopPosition));
-      }
-
-      // ============================================================
-      // END / CURRENT LOCATION (RED PIN)
-      // ============================================================
-
-      if (allRoutePoints.length >= 2) {
-        final endPosition = allRoutePoints.last;
-
+      if (endPosition != null) {
         String endTime = '--:--';
         if (data.attendance?.logoutAt != null) {
           endTime = _formatTime(data.attendance?.logoutAt);
@@ -351,9 +408,8 @@ class _EmployeeJourneyScreenState
           title: 'End',
           time: endTime,
           location: routeCoordinates.last.locationName ?? 'N/A',
-          color: const Color(0xFFFF4D5E),
+          color: const Color(0xFFDC2626),
           isEnd: true,
-          index: '', // No number inside red pin
         );
 
         cameraPoints.add(Point(coordinates: endPosition));
@@ -395,6 +451,17 @@ class _EmployeeJourneyScreenState
   // MARKER GENERATORS
   // ============================================================
 
+  // Treats two points within ~55m of each other as the "same" stop —
+  // GPS pings rarely land on the exact same lat/long twice.
+  bool _isNearPosition(
+      Position a,
+      Position b, {
+        double toleranceDegrees = 0.0005,
+      }) {
+    return (a.lat - b.lat).abs() < toleranceDegrees &&
+        (a.lng - b.lng).abs() < toleranceDegrees;
+  }
+
   Future<void> _addNumberedPinMarker({
     required Position position,
     required String text,
@@ -403,41 +470,99 @@ class _EmployeeJourneyScreenState
     final manager = _pointAnnotationManager;
     if (manager == null) return;
 
+    final markerImage = await _createNumberedCircleImage(
+      text: text,
+      backgroundColor: color,
+    );
+
     await manager.create(
       PointAnnotationOptions(
         geometry: Point(coordinates: position),
-        textField: text,
-        textColor: Colors.white.value,
-        textSize: 11.0,
-        textOffset: [0.0, 0.0],
-        iconImage: 'marker-15',
-        iconColor: color.value,
-        iconSize: 1.5,
-        textHaloColor: color.value,
-        textHaloWidth: 1.0,
+        image: markerImage,
+        iconAnchor: IconAnchor.CENTER,
+        iconSize: 1.0,
       ),
     );
   }
 
-  Future<void> _addRoutePointMarker({
-    required Position position,
-    required String index,
-  }) async {
-    final manager = _pointAnnotationManager;
-    if (manager == null) return;
+  // ------------------------------------------------------------
+  // Draws a solid, high-contrast circle (white ring + colored
+  // fill + bold white number) as a PNG so numbered waypoints are
+  // clearly visible on the map, instead of relying on the tiny
+  // default sprite icons.
+  // ------------------------------------------------------------
 
-    await manager.create(
-      PointAnnotationOptions(
-        geometry: Point(coordinates: position),
-        textField: index,
-        textColor: Colors.white.value,
-        textSize: 8.0,
-        textOffset: [0.0, 0.0],
-        iconImage: 'circle-11',
-        iconColor: const Color(0xFF6366F1).value,
-        iconSize: 0.8,
+  final Map<String, Uint8List> _numberedMarkerCache = {};
+
+  Future<Uint8List> _createNumberedCircleImage({
+    required String text,
+    required Color backgroundColor,
+    double size = 90,
+  }) async {
+    final cacheKey = '$text-${backgroundColor.value}';
+
+    final cached = _numberedMarkerCache[cacheKey];
+    if (cached != null) return cached;
+
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+
+    final radius = size / 2;
+    final center = Offset(radius, radius);
+
+    // White outer ring for contrast against any map background.
+    canvas.drawCircle(
+      center,
+      radius,
+      Paint()..color = Colors.white,
+    );
+
+    // Colored fill.
+    canvas.drawCircle(
+      center,
+      radius - 6,
+      Paint()..color = backgroundColor,
+    );
+
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: size * 0.42,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: ui.TextDirection.ltr,
+    );
+
+    textPainter.layout();
+
+    textPainter.paint(
+      canvas,
+      Offset(
+        center.dx - textPainter.width / 2,
+        center.dy - textPainter.height / 2,
       ),
     );
+
+    final picture = recorder.endRecording();
+
+    final image = await picture.toImage(
+      size.toInt(),
+      size.toInt(),
+    );
+
+    final byteData = await image.toByteData(
+      format: ui.ImageByteFormat.png,
+    );
+
+    final bytes = byteData!.buffer.asUint8List();
+
+    _numberedMarkerCache[cacheKey] = bytes;
+
+    return bytes;
   }
 
   Future<void> _addLocationPopupMarker({
@@ -446,24 +571,24 @@ class _EmployeeJourneyScreenState
     required String time,
     required String location,
     required Color color,
-    String? index,
     bool isEnd = false,
   }) async {
     final manager = _pointAnnotationManager;
     if (manager == null) return;
 
-    // 1. Add the Standard Pin with Number
+    // 1. Add the solid circle pin (green for Start, red for End) with
+    // a bold white letter in the middle.
+    final markerImage = await _createNumberedCircleImage(
+      text: isEnd ? 'E' : 'S',
+      backgroundColor: color,
+    );
+
     await manager.create(
       PointAnnotationOptions(
         geometry: Point(coordinates: position),
-        textField: index ?? '',
-        textColor: Colors.white.value,
-        textSize: 10.0,
-
-        textOffset: [0.0, -0.6],
-        iconImage: 'pin-s',
-        iconColor: color.value, // Green for start, Red for end (passed in)
-        iconSize: 1.2,
+        image: markerImage,
+        iconAnchor: IconAnchor.CENTER,
+        iconSize: 1.0,
       ),
     );
 
