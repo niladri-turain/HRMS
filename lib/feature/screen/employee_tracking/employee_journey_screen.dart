@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' hide Size;
 import 'dart:ui' as ui show Size;
 
 import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'package:hrms_app/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
@@ -52,7 +53,7 @@ class _EmployeeJourneyScreenState
     super.initState();
 
     MapboxOptions.setAccessToken(
-      'YOUR_MAPBOX_PUBLIC_ACCESS_TOKEN',
+      AppStrings.MAPBOX_ACCESS_TOKEN,
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

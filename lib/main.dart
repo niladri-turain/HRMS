@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hrms_app/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import 'package:hrms_app/core/di/injection_container.dart' as di;
 import 'package:hrms_app/feature/provider/login_provider.dart';
@@ -14,7 +15,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  MapboxOptions.setAccessToken("pk.eyJ1IjoibmlsYWRyaTE5OTYiLCJhIjoiY211NTV1bWxlMG45ejJ3cXZyYmFtN2lnOSJ9.XH5-RUlsbr3ztLUwZznXIw");
+  MapboxOptions.setAccessToken(AppStrings.MAPBOX_ACCESS_TOKEN);
   await di.init();
   runApp(const MyApp());
 }
