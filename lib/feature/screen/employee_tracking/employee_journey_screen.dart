@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart' hide Size;
+import 'package:flutter/services.dart';
 import 'dart:ui' as ui show Size;
 
 import 'package:hrms_app/core/constants/app_images_png.dart';
@@ -171,11 +172,6 @@ class _EmployeeJourneyScreenState
   Future<void> _updateMapData(
       JourneyData data,
       ) async {
-
-    // ----------------------------------------------------------
-    // Safety checks
-    // ----------------------------------------------------------
-
     if (!_isMapReady) {
       debugPrint('Map not ready');
       return;
@@ -187,112 +183,90 @@ class _EmployeeJourneyScreenState
     }
 
     final pointManager = _pointAnnotationManager;
-
     final polylineManager = _polylineAnnotationManager;
-
     final map = _mapboxMap;
 
     if (pointManager == null ||
         polylineManager == null ||
         map == null) {
-
-      debugPrint(
-        'Mapbox managers are not available',
-      );
-
+      debugPrint('Mapbox managers are not available');
       return;
     }
 
-    // ----------------------------------------------------------
-    // Data key
-    // ----------------------------------------------------------
-
-    final routeCoordinates =
-        data.routeCoordinates ?? [];
-
-    final stoppages =
-        data.stoppages ?? [];
+    final routeCoordinates = data.routeCoordinates ?? [];
+    final stoppages = data.stoppages ?? [];
 
     final key =
-        '${data.employee?.id}_'
-        '${routeCoordinates.length}_'
-        '${stoppages.length}';
+        '${data.employee?.id}_${routeCoordinates.length}_${stoppages.length}';
 
-    // Already loaded
     if (_lastLoadedDataKey == key) {
-      debugPrint(
-        'Same journey data already loaded',
-      );
-
+      debugPrint('Same journey data already loaded');
       return;
     }
 
     _isUpdatingMap = true;
 
     try {
-
-      // ========================================================
-      // CLEAR OLD ANNOTATIONS
-      // ========================================================
+      // ============================================================
+      // CLEAR OLD DATA
+      // ============================================================
 
       await pointManager.deleteAll();
-
       await polylineManager.deleteAll();
 
-      // ========================================================
-      // ROUTE POINTS
-      // ========================================================
+      // ============================================================
+      // CONVERT API LAT/LNG -> MAPBOX POSITION & MARK BREADCRUMBS
+      // ============================================================
 
       final List<Position> allRoutePoints = [];
 
-      for (final coordinate in routeCoordinates) {
-
+      for (int i = 0; i < routeCoordinates.length; i++) {
+        final coordinate = routeCoordinates[i];
         final latitude = coordinate.latitude;
-
         final longitude = coordinate.longitude;
 
-        if (latitude == null ||
-            longitude == null) {
+        if (latitude == null || longitude == null) {
           continue;
         }
 
-        allRoutePoints.add(
-          Position(
-            longitude.toDouble(),
-            latitude.toDouble(),
-          ),
+        final pos = Position(
+          longitude.toDouble(),
+          latitude.toDouble(),
         );
+        allRoutePoints.add(pos);
+
+        // Add small marker icon for each tracking coordinate point
+        await _addRoutePointMarker(
+          position: pos,
+          index: (i + 1).toString(),
+        );
+
+        debugPrint('Marking route point ${i + 1} at $latitude, $longitude');
       }
 
       debugPrint(
         'Valid route points: ${allRoutePoints.length}',
       );
 
-      // ========================================================
+      // ============================================================
       // CAMERA POINTS
-      // ========================================================
+      // ============================================================
 
       final List<Point> cameraPoints = [];
 
-      // ========================================================
-      // DRAW ROUTE
-      // ========================================================
+      // ============================================================
+      // DRAW BLUE POLYLINE
+      // ============================================================
 
       if (allRoutePoints.length >= 2) {
-
         await polylineManager.create(
           PolylineAnnotationOptions(
             geometry: LineString(
               coordinates: allRoutePoints,
             ),
-
-            // Blue route
-            lineColor: Colors.blue.value,
-
+            lineColor: const Color(0xFF1976F3).value,
             lineWidth: 5.0,
-
-            // Optional
-            lineOpacity: 0.9,
+            lineOpacity: 0.95,
           ),
         );
 
@@ -303,254 +277,210 @@ class _EmployeeJourneyScreenState
             ),
           ),
         );
-
-        debugPrint(
-          'Route polyline created',
-        );
       }
 
-      // ========================================================
-      // START LOCATION
-      // ========================================================
+      // ============================================================
+      // START LOCATION (GREEN PIN)
+      // ============================================================
 
       Position? startPosition;
 
       if (allRoutePoints.isNotEmpty) {
-
-        startPosition =
-            allRoutePoints.first;
-
+        startPosition = allRoutePoints.first;
       } else if (
       data.attendance?.loginLatitude != null &&
-          data.attendance?.loginLongitude != null
-      ) {
-
+          data.attendance?.loginLongitude != null) {
         startPosition = Position(
-          data.attendance!.loginLongitude!
-              .toDouble(),
-
-          data.attendance!.loginLatitude!
-              .toDouble(),
+          data.attendance!.loginLongitude!.toDouble(),
+          data.attendance!.loginLatitude!.toDouble(),
         );
       }
 
       if (startPosition != null) {
-
-        await _addStartEndMarker(
+        await _addLocationPopupMarker(
           position: startPosition,
-          label: 'Start',
-          color: Colors.green,
+          title: 'Start',
+          time: _formatTime(data.attendance?.loginAt),
+          location: data.attendance?.loginLocationName ?? 'N/A',
+          color: const Color(0xFF16A34A),
+          index: '', // No number inside green pin
         );
 
-        cameraPoints.add(
-          Point(
-            coordinates: startPosition,
-          ),
-        );
+        cameraPoints.add(Point(coordinates: startPosition));
       }
 
-      // ========================================================
-      // END LOCATION
-      // ========================================================
+      // ============================================================
+      // ROUTE WAYPOINTS / STOPPAGES (BLUE NUMBERED CIRCLES 1, 2, 3...)
+      // ============================================================
 
-      if (allRoutePoints.length >= 2) {
-
-        final endPosition =
-            allRoutePoints.last;
-
-        await _addStartEndMarker(
-          position: endPosition,
-          label: 'End',
-          color: Colors.red,
-        );
-
-        cameraPoints.add(
-          Point(
-            coordinates: endPosition,
-          ),
-        );
-      }
-
-      // ========================================================
-      // STOPPAGE MARKERS
-      // ========================================================
-
-      for (
-      int index = 0;
-      index < stoppages.length;
-      index++
-      ) {
-
-        final stop = stoppages[index];
-
-        if (
-        stop.latitude == null ||
-            stop.longitude == null
-        ) {
-          continue;
-        }
+      // We can map each valid route coordinate or stoppage. The user wants the markers from the route/stoppage data numbered sequentially 1, 2, 3...
+      for (int i = 0; i < stoppages.length; i++) {
+        final stop = stoppages[i];
+        if (stop.latitude == null || stop.longitude == null) continue;
 
         final stopPosition = Position(
           stop.longitude!.toDouble(),
           stop.latitude!.toDouble(),
         );
 
-        await _addNumberedMarker(
+        await _addNumberedPinMarker(
           position: stopPosition,
-          text: '${index + 1}',
+          text: '${i + 1}',
+          color: const Color(0xFF1976F3),
         );
 
-        cameraPoints.add(
-          Point(
-            coordinates: stopPosition,
-          ),
-        );
+        cameraPoints.add(Point(coordinates: stopPosition));
       }
 
-      // ========================================================
+      // ============================================================
+      // END / CURRENT LOCATION (RED PIN)
+      // ============================================================
+
+      if (allRoutePoints.length >= 2) {
+        final endPosition = allRoutePoints.last;
+
+        String endTime = '--:--';
+        if (data.attendance?.logoutAt != null) {
+          endTime = _formatTime(data.attendance?.logoutAt);
+        } else if (stoppages.isNotEmpty) {
+          endTime = _formatTime(stoppages.last.departedAt);
+        }
+
+        await _addLocationPopupMarker(
+          position: endPosition,
+          title: 'End',
+          time: endTime,
+          location: routeCoordinates.last.locationName ?? 'N/A',
+          color: const Color(0xFFFF4D5E),
+          isEnd: true,
+          index: '', // No number inside red pin
+        );
+
+        cameraPoints.add(Point(coordinates: endPosition));
+      }
+
+      // ============================================================
       // FIT CAMERA
-      // ========================================================
+      // ============================================================
 
       if (cameraPoints.isNotEmpty) {
-
-        final camera =
-        await map.cameraForCoordinates(
+        final camera = await map.cameraForCoordinates(
           cameraPoints,
-
           MbxEdgeInsets(
-            top: 80,
+            top: 100,
             left: 50,
-            bottom: 50,
+            bottom: 100,
             right: 50,
           ),
-
           null,
-
           null,
         );
 
         await map.setCamera(camera);
 
-        debugPrint(
-          'Camera fitted to route',
-        );
+        debugPrint('Camera fitted to route');
       }
-
-      // ========================================================
-      // MARK DATA AS LOADED
-      //
-      // IMPORTANT:
-      // Only set this AFTER successful map update.
-      // ========================================================
 
       _lastLoadedDataKey = key;
 
-      debugPrint(
-        'Journey map updated successfully',
-      );
-
     } catch (e, stackTrace) {
-
-      debugPrint(
-        'Error updating Mapbox data: $e',
-      );
-
-      debugPrint(
-        stackTrace.toString(),
-      );
-
-      // --------------------------------------------------------
-      // IMPORTANT:
-      // Don't set _lastLoadedDataKey here.
-      // So next attempt can retry.
-      // --------------------------------------------------------
-
+      debugPrint('Error updating Mapbox data: $e');
+      debugPrint(stackTrace.toString());
     } finally {
-
       _isUpdatingMap = false;
     }
   }
 
   // ============================================================
-  // START / END MARKER
+  // MARKER GENERATORS
   // ============================================================
 
-  Future<void> _addStartEndMarker({
+  Future<void> _addNumberedPinMarker({
     required Position position,
-    required String label,
+    required String text,
     required Color color,
   }) async {
-
-    final manager =
-        _pointAnnotationManager;
-
+    final manager = _pointAnnotationManager;
     if (manager == null) return;
 
     await manager.create(
       PointAnnotationOptions(
-
-        geometry: Point(
-          coordinates: position,
-        ),
-
-        textField: label,
-
-        textColor: color.value,
-
-        textSize: 14.0,
-
-        textOffset: [
-          0.0,
-          1.2,
-        ],
-
-        // Mapbox built-in marker
+        geometry: Point(coordinates: position),
+        textField: text,
+        textColor: Colors.white.value,
+        textSize: 11.0,
+        textOffset: [0.0, 0.0],
         iconImage: 'marker-15',
-
         iconColor: color.value,
-
         iconSize: 1.5,
+        textHaloColor: color.value,
+        textHaloWidth: 1.0,
       ),
     );
   }
 
-  // ============================================================
-  // NUMBERED STOPPAGE MARKER
-  // ============================================================
-
-  Future<void> _addNumberedMarker({
+  Future<void> _addRoutePointMarker({
     required Position position,
-    required String text,
+    required String index,
   }) async {
-
-    final manager =
-        _pointAnnotationManager;
-
+    final manager = _pointAnnotationManager;
     if (manager == null) return;
 
     await manager.create(
       PointAnnotationOptions(
-
-        geometry: Point(
-          coordinates: position,
-        ),
-
-        textField: text,
-
+        geometry: Point(coordinates: position),
+        textField: index,
         textColor: Colors.white.value,
+        textSize: 8.0,
+        textOffset: [0.0, 0.0],
+        iconImage: 'circle-11',
+        iconColor: const Color(0xFF6366F1).value,
+        iconSize: 0.8,
+      ),
+    );
+  }
 
-        textSize: 12.0,
+  Future<void> _addLocationPopupMarker({
+    required Position position,
+    required String title,
+    required String time,
+    required String location,
+    required Color color,
+    String? index,
+    bool isEnd = false,
+  }) async {
+    final manager = _pointAnnotationManager;
+    if (manager == null) return;
 
-        textOffset: [
-          0.0,
-          0.0,
-        ],
+    // 1. Add the Standard Pin with Number
+    await manager.create(
+      PointAnnotationOptions(
+        geometry: Point(coordinates: position),
+        textField: index ?? '',
+        textColor: Colors.white.value,
+        textSize: 10.0,
 
-        iconImage: 'circle-15',
+        textOffset: [0.0, -0.6],
+        iconImage: 'pin-s',
+        iconColor: color.value, // Green for start, Red for end (passed in)
+        iconSize: 1.2,
+      ),
+    );
 
-        iconColor: Colors.blue.value,
+    // 2. Add the info box as a text field
+    await manager.create(
+      PointAnnotationOptions(
+        geometry: Point(coordinates: position),
+        textField: "$title\n$time\n$location",
+        textColor: const Color(0xFF1F2937).value,
+        textSize: 9.0,
+        textMaxWidth: 12.0,
+        textJustify: TextJustify.LEFT,
+        textAnchor: isEnd ? TextAnchor.TOP_LEFT : TextAnchor.TOP_RIGHT,
+        textOffset: isEnd ? [1.5, 0.0] : [-1.5, 0.0],
 
-        iconSize: 1.5,
+        textHaloColor: Colors.white.value,
+        textHaloWidth: 2.0,
       ),
     );
   }
@@ -1103,50 +1033,155 @@ class _EmployeeJourneyScreenState
   // ============================================================
 
   Widget _buildMapCard() {
-
     return Container(
-      height: 320,
-
+      height: 380,
       width: double.infinity,
-
-      decoration:
-      BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-
-        borderRadius:
-        BorderRadius.circular(16),
-
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color:
-            Colors.black.withOpacity(
-              0.05,
-            ),
-
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
           ),
         ],
       ),
-
       child: ClipRRect(
-        borderRadius:
-        BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16),
+        child: Stack(
+          children: [
+            MapWidget(
+              key: const ValueKey('employeeJourneyMap'),
+              styleUri: MapboxStyles.MAPBOX_STREETS,
+              onMapCreated: _onMapCreated,
+              onStyleLoadedListener: _onStyleLoaded,
+            ),
 
-        child: MapWidget(
-          key: const ValueKey(
-            'employeeJourneyMap',
-          ),
+            // Zoom Controls
+            Positioned(
+              right: 12,
+              top: 12,
+              child: Column(
+                children: [
+                  _buildZoomButton(
+                    icon: Icons.add,
+                    onPressed: () async {
+                      final camera = await _mapboxMap?.getCameraState();
+                      if (camera != null) {
+                        _mapboxMap?.setCamera(
+                          CameraOptions(
+                            zoom: camera.zoom + 1,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  _buildZoomButton(
+                    icon: Icons.remove,
+                    onPressed: () async {
+                      final camera = await _mapboxMap?.getCameraState();
+                      if (camera != null) {
+                        _mapboxMap?.setCamera(
+                          CameraOptions(
+                            zoom: camera.zoom - 1,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
 
-          styleUri:
-          MapboxStyles.MAPBOX_STREETS,
-
-          onMapCreated:
-          _onMapCreated,
-
-          onStyleLoadedListener:
-          _onStyleLoaded,
+            Positioned(
+              right: 12,
+              bottom: 12,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.95),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildLegendItem(Icons.location_on, Colors.green, 'Start'),
+                    const SizedBox(height: 4),
+                    _buildLegendItem(Icons.location_on, Colors.red, 'End'),
+                    const SizedBox(height: 4),
+                    _buildLegendItem(Icons.circle, const Color(0xFF3B82F6), 'Route Point'),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 16,
+                          height: 2,
+                          color: const Color(0xFF3B82F6),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'Route',
+                          style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _buildZoomButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+          ),
+        ],
+      ),
+      child: IconButton(
+        icon: Icon(icon, color: const Color(0xFF1F2937)),
+        onPressed: onPressed,
+        constraints: const BoxConstraints(
+          minWidth: 40,
+          minHeight: 40,
+        ),
+        padding: EdgeInsets.zero,
+      ),
+    );
+  }
+
+  Widget _buildLegendItem(IconData icon, Color color, String label) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 16, color: color),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+        ),
+      ],
     );
   }
 

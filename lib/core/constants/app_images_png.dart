@@ -42,5 +42,4 @@ class AppImagesPng {
   static const editIcon = "assets/images/editIcon.png";
   static const reportCard = "assets/images/reportCard.png";
 
-
 }
