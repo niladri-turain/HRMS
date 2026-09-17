@@ -105,11 +105,15 @@ class _EmployeeJourneyScreenState
       _pointAnnotationManager = null;
       _polylineAnnotationManager = null;
 
-      final pointManager =
-      await map.annotations.createPointAnnotationManager();
-
+      // Create the polyline layer first, then the point layer — Mapbox
+      // stacks each new annotation layer above the previous ones, so
+      // creating points last keeps the numbered/S/E markers drawn on
+      // top of the route line instead of being hidden underneath it.
       final polylineManager =
       await map.annotations.createPolylineAnnotationManager();
+
+      final pointManager =
+      await map.annotations.createPointAnnotationManager();
 
       if (!mounted) return;
 
