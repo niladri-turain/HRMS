@@ -1393,6 +1393,9 @@ class _EmployeeJourneyScreenState
 
             isLast:
             stoppages.isEmpty,
+
+            isLocation:
+            stoppages.isEmpty,
           ),
 
           ...List.generate(
@@ -1422,6 +1425,10 @@ class _EmployeeJourneyScreenState
                 isVisit: true,
 
                 isLast:
+                index ==
+                    stoppages.length - 1,
+
+                isLocation:
                 index ==
                     stoppages.length - 1,
               );
@@ -1477,10 +1484,10 @@ class _EmployeeJourneyScreenState
 
                 child: isLocation
 
-                    ? Icon(
-                  Icons.location_on,
-                  color: color,
-                  size: 30,
+                    ? Image.asset(
+                  AppImagesPng.lastLocation,
+                  width: 30,
+                  height: 30,
                 )
 
                     : Text(

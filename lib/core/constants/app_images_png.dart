@@ -41,5 +41,7 @@ class AppImagesPng {
   static const eyeIcon = "assets/images/eyeIcon.png";
   static const editIcon = "assets/images/editIcon.png";
   static const reportCard = "assets/images/reportCard.png";
+  static const lastLocation = "assets/images/lastLocation.png";
+
 
 }
