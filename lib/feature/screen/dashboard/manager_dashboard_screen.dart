@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hrms_app/feature/provider/login_provider.dart';
+import 'package:hrms_app/feature/screen/loginScreen/login_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 import 'package:hrms_app/core/common_functions/timing.dart';
@@ -143,20 +146,32 @@ class _ManagerDashboardScreenState extends State<ManagerDashboardScreen> {
                         ],
                       ),
                       const SizedBox(width: 16),
-                      Container(
-                        height: 24,
-                        width: 24,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Image.asset(
-                            AppImagesPng.powerButtonIcon,
-                            width: 12,
-                            color: AppColors.black,
-                            height: 12,
+                      GestureDetector(
+                        onTap: () async {
+                          final success = await context.read<LoginProvider>().logout();
+                          if (success && mounted) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => const LoginScreen()),
+                              (route) => false,
+                            );
+                          }
+                        },
+                        child: Container(
+                          height: 24,
+                          width: 24,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Image.asset(
+                              AppImagesPng.powerButtonIcon,
+                              width: 12,
+                              color: AppColors.black,
+                              height: 12,
+                            ),
                           ),
                         ),
                       ),

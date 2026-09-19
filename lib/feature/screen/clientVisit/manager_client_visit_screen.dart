@@ -3,6 +3,8 @@ import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 import 'package:hrms_app/core/service/shared_pref_service.dart';
 import 'package:hrms_app/feature/provider/managerProvider/manager_client_visit_provider.dart';
+import 'package:hrms_app/feature/provider/login_provider.dart';
+import 'package:hrms_app/feature/screen/loginScreen/login_screen.dart';
 import 'package:provider/provider.dart';
 import '../../../core/common_functions/timing.dart';
 import 'client_details/client_details_screen.dart';
@@ -208,20 +210,32 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
                           ],
                         ),
                         const SizedBox(width: 16),
-                        Container(
-                          height: 24,
-                          width: 24,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Image.asset(
-                              AppImagesPng.powerButtonIcon,
-                              width: 12,
-                              color: AppColors.black,
-                              height: 12,
+                        GestureDetector(
+                          onTap: () async {
+                            final success = await context.read<LoginProvider>().logout();
+                            if (success && mounted) {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                                (route) => false,
+                              );
+                            }
+                          },
+                          child: Container(
+                            height: 24,
+                            width: 24,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Image.asset(
+                                AppImagesPng.powerButtonIcon,
+                                width: 12,
+                                color: AppColors.black,
+                                height: 12,
+                              ),
                             ),
                           ),
                         ),
@@ -400,7 +414,28 @@ class _ManagerClientVisitScreenState extends State<ManagerClientVisitScreen> {
                               isLoading
                                   ? const Center(child: CircularProgressIndicator())
                                   : visits.isEmpty
-                                      ? const Center(child: Text('No visits found'))
+                                      ? Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            const SizedBox(height: 40),
+                                            Image.asset(
+                                              AppImagesPng.notLocation,
+                                              width: 120,
+                                              height: 120,
+                                              color: Colors.grey.withOpacity(0.5),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            const Text(
+                                              'No visits found',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: Color(0xFF6B7280),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 40),
+                                          ],
+                                        )
                                       : ListView.builder(
                                           shrinkWrap: true,
                                           physics: const NeverScrollableScrollPhysics(),

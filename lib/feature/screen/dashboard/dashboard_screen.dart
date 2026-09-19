@@ -7,6 +7,9 @@ import 'package:hrms_app/feature/screen/dashboard/widget/client_visit_card.dart'
 import 'package:hrms_app/feature/screen/dashboard/widget/client_meeting_card.dart';
 import 'package:hrms_app/feature/screen/dashboard/widget/task_tracking_card.dart';
 import 'package:hrms_app/feature/screen/dashboard/widget/employee_tracking_card.dart';
+import 'package:hrms_app/feature/provider/login_provider.dart';
+import 'package:hrms_app/feature/screen/loginScreen/login_screen.dart';
+import 'package:provider/provider.dart';
 import '../../../core/common_functions/timing.dart';
 import '../../../core/constants/app_images_png.dart';
 
@@ -147,21 +150,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       const SizedBox(width: 16),
                       // Power Button in White Circle
-                      Container(
-                        height: 24,
-                        width: 24,
-            
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Image.asset(
-                            AppImagesPng.powerButtonIcon,
-                            width: 12,
-                            color: AppColors.black,
-                            height: 12,
+                      GestureDetector(
+                        onTap: () async {
+                          final success = await context.read<LoginProvider>().logout();
+                          if (success && mounted) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => const LoginScreen()),
+                              (route) => false,
+                            );
+                          }
+                        },
+                        child: Container(
+                          height: 24,
+                          width: 24,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Image.asset(
+                              AppImagesPng.powerButtonIcon,
+                              width: 12,
+                              color: AppColors.black,
+                              height: 12,
+                            ),
                           ),
                         ),
                       ),
