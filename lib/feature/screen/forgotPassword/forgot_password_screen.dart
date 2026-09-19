@@ -21,6 +21,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final forgotPasswordProvider = Provider.of<ForgotPasswordProvider>(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -67,6 +68,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),
                   child: SingleChildScrollView(
+                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,

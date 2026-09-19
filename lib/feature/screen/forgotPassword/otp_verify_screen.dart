@@ -69,6 +69,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     final otpVerifyProvider = Provider.of<OtpVerifyProvider>(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -115,7 +116,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               Positioned.fill(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: Column(
+                  child: SingleChildScrollView(
+                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                    child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -264,6 +267,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                         ),
                       ),
                     ],
+                    ),
                   ),
                 ),
               ),
