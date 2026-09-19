@@ -5,6 +5,7 @@ class ApiEndPoints {
   static const resetPassword = "auth/reset-password";
   static const otpVerify = "auth/verify-otp";
   static const logout ="auth/logout";
+  static const employeeClientVisitList ="marketing/client-visits/my";
 
 
   //Marketing Manager

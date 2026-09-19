@@ -8,6 +8,7 @@ import 'package:hrms_app/feature/provider/otp_verify_provider.dart';
 import 'package:hrms_app/feature/provider/reset_password_provider.dart';
 import 'package:hrms_app/feature/provider/managerProvider/employee_list_provider.dart';
 import 'package:hrms_app/feature/provider/managerProvider/manager_employee_tracking_provider.dart';
+import 'package:hrms_app/feature/provider/employee_client_visit_list_provider.dart';
 import 'feature/bottom_navigation/bottom_navigation_screen.dart';
 import 'feature/screen/splash/splash_screen.dart';
 
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => di.sl<ResetPasswordProvider>()),
         ChangeNotifierProvider(create: (_) => di.sl<EmployeeListProvider>()),
         ChangeNotifierProvider(create: (_) => di.sl<ManagerEmployeeTrackingProvider>()),
+        ChangeNotifierProvider(create: (_) => di.sl<EmployeeClientVisitListProvider>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
