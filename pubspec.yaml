@@ -51,6 +51,7 @@ dependencies:
   permission_handler: ^11.3.1
   device_info_plus: ^11.1.0
   intl: ^0.20.2
+  mapbox_maps_flutter: ^2.6.0
 
 dev_dependencies:
   flutter_test:

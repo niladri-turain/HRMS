@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'package:hrms_app/feature/provider/login_provider.dart';
+import 'package:hrms_app/feature/screen/loginScreen/login_screen.dart';
 import 'widget/account_profile_header.dart';
 import 'widget/account_menu_section.dart';
 
@@ -112,6 +115,44 @@ class AccountScreen extends StatelessWidget {
                       label: 'Logout',
                       subLabel: 'Sign out securely from your account',
                       iconBgColor: const Color(0xFFFFF1F2),
+                      onTap: () async {
+                        // Show loading indicator
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                        
+                        final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+                        bool loggedOut = await loginProvider.logout();
+                        
+                        if (context.mounted) {
+                          Navigator.pop(context); // Close loading dialog
+                          
+                          if (loggedOut) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Logged out successfully'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => const LoginScreen()),
+                              (route) => false,
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(loginProvider.errorMessage ?? 'Logout failed'),
+                                backgroundColor: Colors.redAccent,
+                              ),
+                            );
+                          }
+                        }
+                      },
                     ),
                     AccountMenuItem(
                       iconPath: AppImagesPng.deleteAccount,

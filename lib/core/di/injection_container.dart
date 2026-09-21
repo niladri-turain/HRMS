@@ -6,6 +6,10 @@ import 'package:hrms_app/feature/provider/login_provider.dart';
 import 'package:hrms_app/feature/provider/forgot_password_provider.dart';
 import 'package:hrms_app/feature/provider/otp_verify_provider.dart';
 import 'package:hrms_app/feature/provider/reset_password_provider.dart';
+import 'package:hrms_app/feature/provider/managerProvider/employee_list_provider.dart';
+import 'package:hrms_app/feature/provider/managerProvider/manager_employee_tracking_provider.dart';
+import 'package:hrms_app/feature/provider/employee_client_visit_list_provider.dart';
+import 'package:hrms_app/feature/provider/managerProvider/manager_client_visit_provider.dart';
 
 final sl = GetIt.instance;
 
@@ -20,4 +24,8 @@ Future<void> init() async {
   sl.registerFactory(() => ForgotPasswordProvider(apiService: sl()));
   sl.registerFactory(() => OtpVerifyProvider(apiService: sl()));
   sl.registerFactory(() => ResetPasswordProvider(apiService: sl()));
+  sl.registerFactory(() => EmployeeListProvider(apiService: sl()));
+  sl.registerFactory(() => ManagerEmployeeTrackingProvider(apiService: sl()));
+  sl.registerFactory(() => EmployeeClientVisitListProvider(apiService: sl()));
+  sl.registerFactory(() => ManagerClientVisitProvider(apiService: sl()));
 }

@@ -6,6 +6,7 @@ import 'package:hrms_app/core/common_functions/validation.dart';
 import 'package:hrms_app/feature/bottom_navigation/bottom_navigation_screen.dart';
 import 'package:hrms_app/feature/screen/forgotPassword/forgot_password_screen.dart';
 import 'package:hrms_app/feature/provider/login_provider.dart';
+import 'package:hrms_app/core/constants/app_sizes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +16,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppSize.init(context);
+    });
+  }
+
   bool _rememberMe = true;
   bool _obscureText = true;
   final TextEditingController _userIdController = TextEditingController();
@@ -25,6 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final loginProvider = Provider.of<LoginProvider>(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -46,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),
                   child: SingleChildScrollView(
+                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,

@@ -97,6 +97,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
     final isLoading = resetProvider.isLoading || loginProvider.isLoading;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -143,7 +144,13 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
               Positioned.fill(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: Column(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                          child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -293,6 +300,10 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                       ),
                       const SizedBox(height: 24),
                     ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),

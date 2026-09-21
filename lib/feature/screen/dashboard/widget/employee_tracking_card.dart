@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'package:hrms_app/core/service/shared_pref_service.dart';
 import '../../employee_tracking/employee_journey_screen.dart';
 
 class EmployeeTrackingCard extends StatelessWidget {
@@ -58,11 +59,14 @@ class EmployeeTrackingCard extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const EmployeeJourneyScreen()),
-                  );
+                onTap: () async {
+                  final empId = await SharedPrefService().getEmployeeId();
+                  if (context.mounted) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EmployeeJourneyScreen(employeeId: empId ?? '1')),
+                    );
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hrms_app/core/service/shared_pref_service.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_images_png.dart';
 import '../screen/accounts/account_screen.dart';
@@ -6,6 +7,7 @@ import '../screen/attendance/attendance_screen.dart';
 import '../screen/clientVisit/client_visit_screen.dart';
 import '../screen/dashboard/dashboard_screen.dart';
 import '../screen/tasks/tasks_screen.dart';
+import '../screen/dashboard/manager_dashboard_screen.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
@@ -16,14 +18,34 @@ class BottomNavigation extends StatefulWidget {
 
 class _BottomNavigationState extends State<BottomNavigation> {
   int _selectedIndex = 0;
+  String _designationCode = '';
+  bool _isLoading = true;
 
-  final List<Widget> _screens = [
-    const DashboardScreen(role: "manager"),
-    const ClientVisitScreen(role: "manager"),
-    const AttendanceScreen(),
-    const TasksScreen(),
-    const AccountScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadUserRole();
+  }
+
+  Future<void> _loadUserRole() async {
+    final prefService = SharedPrefService();
+    final code = await prefService.getDesignationCode();
+    setState(() {
+      _designationCode = code ?? '';
+      _isLoading = false;
+    });
+  }
+
+  List<Widget> get _screens {
+    final bool isManager = _designationCode == 'MKT-HEAD';
+    return [
+      isManager ? const ManagerDashboardScreen() : const DashboardScreen(role: 'employee'),
+      ClientVisitScreen(role: isManager ? "manager" : "employee"),
+      const AttendanceScreen(),
+      const TasksScreen(),
+      const AccountScreen(),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -69,6 +91,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,

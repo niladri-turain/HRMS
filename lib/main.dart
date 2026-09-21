@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:hrms_app/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import 'package:hrms_app/core/di/injection_container.dart' as di;
 import 'package:hrms_app/feature/provider/login_provider.dart';
 import 'package:hrms_app/feature/provider/forgot_password_provider.dart';
 import 'package:hrms_app/feature/provider/otp_verify_provider.dart';
 import 'package:hrms_app/feature/provider/reset_password_provider.dart';
+import 'package:hrms_app/feature/provider/managerProvider/employee_list_provider.dart';
+import 'package:hrms_app/feature/provider/managerProvider/manager_employee_tracking_provider.dart';
+import 'package:hrms_app/feature/provider/employee_client_visit_list_provider.dart';
+import 'package:hrms_app/feature/provider/managerProvider/manager_client_visit_provider.dart';
 import 'feature/bottom_navigation/bottom_navigation_screen.dart';
 import 'feature/screen/splash/splash_screen.dart';
 
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MapboxOptions.setAccessToken(AppStrings.MAPBOX_ACCESS_TOKEN);
   await di.init();
   runApp(const MyApp());
 }
@@ -25,6 +33,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => di.sl<ForgotPasswordProvider>()),
         ChangeNotifierProvider(create: (_) => di.sl<OtpVerifyProvider>()),
         ChangeNotifierProvider(create: (_) => di.sl<ResetPasswordProvider>()),
+        ChangeNotifierProvider(create: (_) => di.sl<EmployeeListProvider>()),
+        ChangeNotifierProvider(create: (_) => di.sl<ManagerEmployeeTrackingProvider>()),
+        ChangeNotifierProvider(create: (_) => di.sl<EmployeeClientVisitListProvider>()),
+        ChangeNotifierProvider(create: (_) => di.sl<ManagerClientVisitProvider>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

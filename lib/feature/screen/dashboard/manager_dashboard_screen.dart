@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:hrms_app/core/constants/app_colors.dart';
-import 'package:hrms_app/core/service/shared_pref_service.dart';
-import 'package:hrms_app/feature/screen/dashboard/widget/live_tracking_card.dart';
-import 'package:hrms_app/feature/screen/dashboard/widget/login_logout_card.dart';
-import 'package:hrms_app/feature/screen/dashboard/widget/client_visit_card.dart';
-import 'package:hrms_app/feature/screen/dashboard/widget/client_meeting_card.dart';
-import 'package:hrms_app/feature/screen/dashboard/widget/task_tracking_card.dart';
-import 'package:hrms_app/feature/screen/dashboard/widget/employee_tracking_card.dart';
 import 'package:hrms_app/feature/provider/login_provider.dart';
 import 'package:hrms_app/feature/screen/loginScreen/login_screen.dart';
 import 'package:provider/provider.dart';
-import '../../../core/common_functions/timing.dart';
-import '../../../core/constants/app_images_png.dart';
+import 'package:hrms_app/core/constants/app_colors.dart';
+import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'package:hrms_app/core/common_functions/timing.dart';
+import 'package:hrms_app/core/service/shared_pref_service.dart';
+import 'package:hrms_app/feature/screen/dashboard/managerWidget/team_overview_card.dart';
+import 'package:hrms_app/feature/screen/dashboard/managerWidget/client_visit_report_card.dart';
+import 'package:hrms_app/feature/screen/dashboard/managerWidget/sliding_cards_view.dart';
+import 'package:hrms_app/feature/screen/dashboard/managerWidget/recent_activities_card.dart';
 
-class DashboardScreen extends StatefulWidget {
-  final String role;
-  const DashboardScreen({super.key, this.role = "employee"});
+class ManagerDashboardScreen extends StatefulWidget {
+  const ManagerDashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  State<ManagerDashboardScreen> createState() => _ManagerDashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
-  String _userName = 'User';
+class _ManagerDashboardScreenState extends State<ManagerDashboardScreen> {
+  String _userName = 'Manager';
 
   @override
   void initState() {
@@ -42,25 +39,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(AppImagesPng.dashboardBackground),
-            fit: BoxFit.cover,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF311040), // Dark Purple
+              Colors.white,      // Fade to white
+            ],
+            stops: [0.0, 0.5],
           ),
         ),
         child: SafeArea(
           child: SingleChildScrollView(
             child: Column(
               children: [
+                // Header
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                   child: Row(
                     children: [
-                      // Profile Image with White Border and Online Indicator
                       Stack(
                         children: [
                           Container(
@@ -90,7 +91,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ],
                       ),
                       const SizedBox(width: 12),
-                      // Greeting, Emoji, Name and Date
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,30 +102,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
-                                    letterSpacing: -0.15,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
                                   Timing.getGreetingEmoji(),
-                                  style: const TextStyle(fontSize: 16,),
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                               ],
                             ),
                             Text(
                               '$_userName, ${Timing.getCurrentDate()}',
-                              style:  const TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
-                                letterSpacing: -0.25,
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      // Notification with Red Dot
                       Stack(
                         children: [
                           Image.asset(
@@ -149,7 +146,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ],
                       ),
                       const SizedBox(width: 16),
-                      // Power Button in White Circle
                       GestureDetector(
                         onTap: () async {
                           final success = await context.read<LoginProvider>().logout();
@@ -182,41 +178,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
-                const LoginLogoutCard(),
+
+                const TeamOverviewCard(),
                 const SizedBox(height: 16),
-                const LiveTrackingCard(isOnline: true),
+                const ClientVisitReportCard(),
                 const SizedBox(height: 16),
-                if (widget.role == "manager") ...[
-                  const EmployeeTrackingCard(),
-                  const SizedBox(height: 16),
-                ],
-                const ClientVisitCard(),
+                const SlidingCardsView(),
                 const SizedBox(height: 16),
-                const ClientMeetingCard(
-                  meetings: [
-                    {
-                      'company': 'ABC Enterprises',
-                      'address': 'Salt Lake Sector V, Kolkata',
-                      'requirement': '1 Lac Bulksms & Whatsapp api requirement',
-                      'status': 'Upcoming',
-                    },
-                    {
-                      'company': 'XYZ Solutions',
-                      'address': 'New Town, Kolkata',
-                      'requirement': '1 Lac Bulksms & Whatsapp api requirement',
-                      'status': 'Completed',
-                    },
-                    {
-                      'company': 'Acme Pvt. Ltd.',
-                      'address': 'Howrah Maidan, Howrah',
-                      'requirement': 'Billtrack Demo and installation',
-                      'status': 'Postponed',
-                    },
-                  ],
-                ),
-                const SizedBox(height: 16),
-                const TaskTrackingCard(),
+                const RecentActivitiesCard(),
                 const SizedBox(height: 20),
               ],
             ),
