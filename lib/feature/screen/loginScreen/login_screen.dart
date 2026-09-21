@@ -26,8 +26,57 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _rememberMe = true;
   bool _obscureText = true;
+  bool _isOtpLogin = false;
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _mobileNumberController = TextEditingController();
+
+  Widget _buildLoginModeOption({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 18,
+            height: 18,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: isSelected ? AppColors.primary200 : const Color(0xFF9CA3AF),
+                width: 1.5,
+              ),
+            ),
+            child: isSelected
+                ? Center(
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.primary200,
+                      ),
+                    ),
+                  )
+                : null,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: isSelected ? const Color(0xFF1C2263) : const Color(0xFF6B7280),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,81 +142,141 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           textAlign: TextAlign.justify,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 16),
 
-                        // User ID Field
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.20),
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.50),
-                              width: 1,
+                        // Login Mode Selector
+                        Row(
+                          children: [
+                            _buildLoginModeOption(
+                              label: 'User ID',
+                              isSelected: !_isOtpLogin,
+                              onTap: () {
+                                setState(() {
+                                  _isOtpLogin = false;
+                                });
+                              },
                             ),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                          child: TextField(
-                            controller: _userIdController,
-                            decoration: InputDecoration(
-                              labelText: 'Enter User ID',
-                              labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
-                              border: InputBorder.none,
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              suffixIcon: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Image.asset(
-                                  AppImagesPng.editIcon,
-                                  height: 14,
-                                  width: 14,
-                                ),
-                              ),
+                            const SizedBox(width: 24),
+                            _buildLoginModeOption(
+                              label: 'OTP',
+                              isSelected: _isOtpLogin,
+                              onTap: () {
+                                setState(() {
+                                  _isOtpLogin = true;
+                                });
+                              },
                             ),
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
-                          ),
+                          ],
                         ),
                         const SizedBox(height: 16),
 
-                        // Password Field
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.20),
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.50),
-                              width: 1,
+                        if (!_isOtpLogin) ...[
+                          // User ID Field
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.20),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.50),
+                                width: 1,
+                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                            child: TextField(
+                              controller: _userIdController,
+                              decoration: InputDecoration(
+                                labelText: 'Enter User ID',
+                                labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+                                border: InputBorder.none,
+                                floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                // suffixIcon: Padding(
+                                //   padding: const EdgeInsets.all(15.0),
+                                //   child: Image.asset(
+                                //     AppImagesPng.editIcon,
+                                //     height: 14,
+                                //     width: 14,
+                                //   ),
+                                // ),
+                              ),
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
                             ),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                          child: TextField(
-                            controller: _passwordController,
-                            obscureText: _obscureText,
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
-                              border: InputBorder.none,
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              suffixIcon: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _obscureText = !_obscureText;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(14.0),
-                                  child: Image.asset(
-                                    AppImagesPng.eyeIcon,
-                                    height: 14,
-                                    width: 14,
-                                    color: _obscureText
-                                        ? const Color(0xFF6B7280)
-                                        : AppColors.primary200,
+                          const SizedBox(height: 16),
+
+                          // Password Field
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.20),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.50),
+                                width: 1,
+                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                            child: TextField(
+                              controller: _passwordController,
+                              obscureText: _obscureText,
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+                                border: InputBorder.none,
+                                floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _obscureText = !_obscureText;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(14.0),
+                                    child: Image.asset(
+                                      AppImagesPng.eyeIcon,
+                                      height: 14,
+                                      width: 14,
+                                      color: _obscureText
+                                          ? const Color(0xFF6B7280)
+                                          : AppColors.primary200,
+                                    ),
                                   ),
                                 ),
                               ),
+                              style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                             ),
-                            style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                           ),
-                        ),
+                        ] else ...[
+                          // Mobile Number Field
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.20),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.50),
+                                width: 1,
+                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                            child: TextField(
+                              controller: _mobileNumberController,
+                              keyboardType: TextInputType.phone,
+                              decoration: InputDecoration(
+                                labelText: 'Enter Mobile Number',
+                                labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+                                border: InputBorder.none,
+                                floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                // suffixIcon: Padding(
+                                //   padding: const EdgeInsets.all(15.0),
+                                //   child: Image.asset(
+                                //     AppImagesPng.editIcon,
+                                //     height: 14,
+                                //     width: 14,
+                                //   ),
+                                // ),
+                              ),
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 18),
 
                         // Login Button
@@ -175,6 +284,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: loginProvider.isLoading
                               ? null
                               : () async {
+                                  if (_isOtpLogin) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('OTP login is coming soon'),
+                                        backgroundColor: Colors.grey
+                                      ),
+                                    );
+                                    return;
+                                  }
+
                                   final usernameError = AppValidators.validateUsername(_userIdController.text);
                                   final passwordError = AppValidators.validatePassword(_passwordController.text);
 
@@ -233,9 +352,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             alignment: Alignment.center,
                             child: loginProvider.isLoading
                                 ? const CircularProgressIndicator(color: Colors.white)
-                                : const Text(
-                                    'Login to HRMS',
-                                    style: TextStyle(
+                                : Text(
+                                    _isOtpLogin ? 'Send OTP' : 'Login to HRMS',
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700,
@@ -245,75 +364,76 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 16),
 
-                        // Remember Me & Forgot Password
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _rememberMe = !_rememberMe;
-                                });
-                              },
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 34,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.20),
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        color: Colors.white.withOpacity(0.50),
-                                        width: 1,
+                        if (!_isOtpLogin)
+                          // Remember Me & Forgot Password
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _rememberMe = !_rememberMe;
+                                  });
+                                },
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 34,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.20),
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                          color: Colors.white.withOpacity(0.50),
+                                          width: 1,
+                                        ),
                                       ),
-                                    ),
-                                    child: AnimatedAlign(
-                                      duration: const Duration(milliseconds: 200),
-                                      alignment: _rememberMe ? Alignment.centerRight : Alignment.centerLeft,
-                                      child: Container(
-                                        width: 14,
-                                        height: 14,
-                                        margin: const EdgeInsets.symmetric(horizontal: 2),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: _rememberMe ? AppColors.primary200 : const Color(0xFF6B7280),
+                                      child: AnimatedAlign(
+                                        duration: const Duration(milliseconds: 200),
+                                        alignment: _rememberMe ? Alignment.centerRight : Alignment.centerLeft,
+                                        child: Container(
+                                          width: 14,
+                                          height: 14,
+                                          margin: const EdgeInsets.symmetric(horizontal: 2),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: _rememberMe ? AppColors.primary200 : const Color(0xFF6B7280),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Text(
-                                    'Remember Me',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
+                                    const SizedBox(width: 8),
+                                    const Text(
+                                      'Remember Me',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const ForgotPasswordScreen(),
-                                  ),
-                                );
-                              },
-                              child: const Text(
-                                'Forgot Password?',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xFF1B2CF1),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const ForgotPasswordScreen(),
+                                    ),
+                                  );
+                                },
+                                child: const Text(
+                                  'Forgot Password?',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFF1B2CF1),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         const SizedBox(height: 32),
 
                         // Need help
