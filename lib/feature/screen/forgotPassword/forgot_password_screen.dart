@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
@@ -13,8 +14,30 @@ class ForgotPasswordScreen extends StatefulWidget {
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with SingleTickerProviderStateMixin {
   final TextEditingController _contactController = TextEditingController();
+  String? _contactError;
+  late final AnimationController _shakeController;
+
+  @override
+  void initState() {
+    super.initState();
+    _shakeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+  }
+
+  @override
+  void dispose() {
+    _shakeController.dispose();
+    _contactController.dispose();
+    super.dispose();
+  }
+
+  double _shakeOffset(double t) {
+    return math.sin(t * math.pi * 6) * 8 * (1 - t);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,51 +135,85 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         const SizedBox(height: 20),
 
                         // Input Field
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.20),
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.50),
-                              width: 1,
-                            ),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          height: 59,
-                          alignment: Alignment.center,
-                          child: TextField(
-                            controller: _contactController,
-                            textAlignVertical: TextAlignVertical.center,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              hintText: 'Email Address or Mobile Number',
-                              hintStyle: const TextStyle(
-                                color: Color(0xFF9CA3AF),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
+                        AnimatedBuilder(
+                          animation: _shakeController,
+                          builder: (context, child) {
+                            final offset = _contactError != null
+                                ? _shakeOffset(_shakeController.value)
+                                : 0.0;
+                            return Transform.translate(
+                              offset: Offset(offset, 0),
+                              child: child,
+                            );
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.20),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: _contactError != null
+                                    ? Colors.redAccent
+                                    : Colors.white.withOpacity(0.50),
+                                width: _contactError != null ? 1.4 : 1,
                               ),
-                              border: InputBorder.none,
-                              suffixIcon: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                child: Image.asset(
-                                  AppImagesPng.eyeIcon,
-                                  height: 18,
-                                  width: 18,
-                                  color: const Color(0xFF6B7280),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            height: 59,
+                            alignment: Alignment.center,
+                            child: TextField(
+                              controller: _contactController,
+                              textAlignVertical: TextAlignVertical.center,
+                              onChanged: (_) {
+                                if (_contactError != null) {
+                                  setState(() {
+                                    _contactError = null;
+                                  });
+                                }
+                              },
+                              decoration: InputDecoration(
+                                isDense: true,
+                                hintText: 'Email Address or Mobile Number',
+                                hintStyle: const TextStyle(
+                                  color: Color(0xFF9CA3AF),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                border: InputBorder.none,
+                                // suffixIcon: Padding(
+                                //   padding: const EdgeInsets.symmetric(vertical: 14),
+                                //   child: Image.asset(
+                                //     AppImagesPng.eyeIcon,
+                                //     height: 18,
+                                //     width: 18,
+                                //     color: const Color(0xFF6B7280),
+                                //   ),
+                                // ),
+                                suffixIconConstraints: const BoxConstraints(
+                                  minHeight: 18,
+                                  minWidth: 18,
                                 ),
                               ),
-                              suffixIconConstraints: const BoxConstraints(
-                                minHeight: 18,
-                                minWidth: 18,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
                               ),
-                            ),
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
+                        if (_contactError != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 6, left: 4),
+                            child: Text(
+                              _contactError!,
+                              style: const TextStyle(
+                                color: Colors.redAccent,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
                         const SizedBox(height: 24),
 
                         // Send OTP Button
@@ -165,15 +222,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               ? null
                               : () async {
                                   final contact = _contactController.text.trim();
-                                  
+
                                   final validationError = AppValidators.validateEmail(contact);
                                   if (validationError != null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(validationError),
-                                        backgroundColor: Colors.redAccent,
-                                      ),
-                                    );
+                                    setState(() {
+                                      _contactError = validationError;
+                                    });
+                                    _shakeController.forward(from: 0);
                                     return;
                                   }
 

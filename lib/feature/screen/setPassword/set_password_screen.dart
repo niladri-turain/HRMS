@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
@@ -21,17 +22,34 @@ class SetPasswordScreen extends StatefulWidget {
   State<SetPasswordScreen> createState() => _SetPasswordScreenState();
 }
 
-class _SetPasswordScreenState extends State<SetPasswordScreen> {
+class _SetPasswordScreenState extends State<SetPasswordScreen> with SingleTickerProviderStateMixin {
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
+  String? _newPasswordError;
+  String? _confirmPasswordError;
+  late final AnimationController _shakeController;
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _shakeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+  }
+
+  @override
   void dispose() {
+    _shakeController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  double _shakeOffset(double t) {
+    return math.sin(t * math.pi * 6) * 8 * (1 - t);
   }
 
   void _handleResetPassword() async {
@@ -40,17 +58,16 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
 
     // Validation
     final passwordError = AppValidators.validatePassword(newPassword);
-    if (passwordError != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(passwordError), backgroundColor: Colors.redAccent),
-      );
-      return;
-    }
+    final confirmError = confirmPassword.isEmpty
+        ? 'Please confirm your password'
+        : (newPassword != confirmPassword ? 'Passwords do not match' : null);
 
-    if (newPassword != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match'), backgroundColor: Colors.redAccent),
-      );
+    if (passwordError != null || confirmError != null) {
+      setState(() {
+        _newPasswordError = passwordError;
+        _confirmPasswordError = confirmError;
+      });
+      _shakeController.forward(from: 0);
       return;
     }
 
@@ -190,89 +207,157 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                       const SizedBox(height: 20),
 
                       // Set New Password Field
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.20), // Fill: FFFFFF 20%
-                          borderRadius: BorderRadius.circular(15), // Corner radius: 15
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.50), // Stroke: FFFFFF 50%
-                            width: 1,
+                      AnimatedBuilder(
+                        animation: _shakeController,
+                        builder: (context, child) {
+                          final offset = _newPasswordError != null
+                              ? _shakeOffset(_shakeController.value)
+                              : 0.0;
+                          return Transform.translate(
+                            offset: Offset(offset, 0),
+                            child: child,
+                          );
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.20), // Fill: FFFFFF 20%
+                            borderRadius: BorderRadius.circular(15), // Corner radius: 15
+                            border: Border.all(
+                              color: _newPasswordError != null
+                                  ? Colors.redAccent
+                                  : Colors.white.withOpacity(0.50), // Stroke: FFFFFF 50%
+                              width: _newPasswordError != null ? 1.4 : 1,
+                            ),
                           ),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        child: TextField(
-                          controller: _newPasswordController,
-                          obscureText: _obscureNewPassword,
-                          decoration: InputDecoration(
-                            labelText: 'Set New Password',
-                            labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
-                            border: InputBorder.none,
-                            floatingLabelBehavior: FloatingLabelBehavior.auto,
-                            suffixIcon: GestureDetector(
-                              onTap: () {
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                          child: TextField(
+                            controller: _newPasswordController,
+                            obscureText: _obscureNewPassword,
+                            onChanged: (_) {
+                              if (_newPasswordError != null) {
                                 setState(() {
-                                  _obscureNewPassword = !_obscureNewPassword;
+                                  _newPasswordError = null;
                                 });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(14.0),
-                                child: Image.asset(
-                                  AppImagesPng.eyeIcon,
-                                  height: 14,
-                                  width: 14,
-                                  color: _obscureNewPassword
-                                      ? const Color(0xFF6B7280)
-                                      : AppColors.primary200,
+                              }
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Set New Password',
+                              labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+                              border: InputBorder.none,
+                              floatingLabelBehavior: FloatingLabelBehavior.auto,
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _obscureNewPassword = !_obscureNewPassword;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(14.0),
+                                  child: Image.asset(
+                                    AppImagesPng.eyeIcon,
+                                    height: 14,
+                                    width: 14,
+                                    color: _obscureNewPassword
+                                        ? const Color(0xFF6B7280)
+                                        : AppColors.primary200,
+                                  ),
                                 ),
                               ),
                             ),
+                            style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                           ),
-                          style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                         ),
                       ),
+                      if (_newPasswordError != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6, left: 4),
+                          child: Text(
+                            _newPasswordError!,
+                            style: const TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
                       const SizedBox(height: 16),
 
                       // Confirm Password Field
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.20), // Fill: FFFFFF 20%
-                          borderRadius: BorderRadius.circular(15), // Corner radius: 15
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.50), // Stroke: FFFFFF 50%
-                            width: 1,
+                      AnimatedBuilder(
+                        animation: _shakeController,
+                        builder: (context, child) {
+                          final offset = _confirmPasswordError != null
+                              ? _shakeOffset(_shakeController.value)
+                              : 0.0;
+                          return Transform.translate(
+                            offset: Offset(offset, 0),
+                            child: child,
+                          );
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.20), // Fill: FFFFFF 20%
+                            borderRadius: BorderRadius.circular(15), // Corner radius: 15
+                            border: Border.all(
+                              color: _confirmPasswordError != null
+                                  ? Colors.redAccent
+                                  : Colors.white.withOpacity(0.50), // Stroke: FFFFFF 50%
+                              width: _confirmPasswordError != null ? 1.4 : 1,
+                            ),
                           ),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        child: TextField(
-                          controller: _confirmPasswordController,
-                          obscureText: _obscureConfirmPassword,
-                          decoration: InputDecoration(
-                            labelText: 'Confirm Password',
-                            labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
-                            border: InputBorder.none,
-                            floatingLabelBehavior: FloatingLabelBehavior.auto,
-                            suffixIcon: GestureDetector(
-                              onTap: () {
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                          child: TextField(
+                            controller: _confirmPasswordController,
+                            obscureText: _obscureConfirmPassword,
+                            onChanged: (_) {
+                              if (_confirmPasswordError != null) {
                                 setState(() {
-                                  _obscureConfirmPassword = !_obscureConfirmPassword;
+                                  _confirmPasswordError = null;
                                 });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(14.0),
-                                child: Image.asset(
-                                  AppImagesPng.eyeIcon,
-                                  height: 14,
-                                  width: 14,
-                                  color: _obscureConfirmPassword
-                                      ? const Color(0xFF6B7280)
-                                      : AppColors.primary200,
+                              }
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Confirm Password',
+                              labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+                              border: InputBorder.none,
+                              floatingLabelBehavior: FloatingLabelBehavior.auto,
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _obscureConfirmPassword = !_obscureConfirmPassword;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(14.0),
+                                  child: Image.asset(
+                                    AppImagesPng.eyeIcon,
+                                    height: 14,
+                                    width: 14,
+                                    color: _obscureConfirmPassword
+                                        ? const Color(0xFF6B7280)
+                                        : AppColors.primary200,
+                                  ),
                                 ),
                               ),
                             ),
+                            style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                           ),
-                          style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                         ),
                       ),
+                      if (_confirmPasswordError != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6, left: 4),
+                          child: Text(
+                            _confirmPasswordError!,
+                            style: const TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
                       const SizedBox(height: 18),
 
                       // Verify Button

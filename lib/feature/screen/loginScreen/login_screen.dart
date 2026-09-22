@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
@@ -15,21 +16,41 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AppSize.init(context);
     });
+    _shakeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+  }
+
+  @override
+  void dispose() {
+    _shakeController.dispose();
+    _userIdController.dispose();
+    _passwordController.dispose();
+    _mobileNumberController.dispose();
+    super.dispose();
   }
 
   bool _rememberMe = true;
   bool _obscureText = true;
   bool _isOtpLogin = false;
+  String? _userIdError;
+  String? _passwordError;
+  late final AnimationController _shakeController;
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _mobileNumberController = TextEditingController();
+
+  double _shakeOffset(double t) {
+    return math.sin(t * math.pi * 6) * 8 * (1 - t);
+  }
 
   Widget _buildLoginModeOption({
     required String label,
@@ -163,6 +184,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               onTap: () {
                                 setState(() {
                                   _isOtpLogin = true;
+                                  _userIdError = null;
+                                  _passwordError = null;
                                 });
                               },
                             ),
@@ -172,78 +195,146 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         if (!_isOtpLogin) ...[
                           // User ID Field
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.20),
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.50),
-                                width: 1,
+                          AnimatedBuilder(
+                            animation: _shakeController,
+                            builder: (context, child) {
+                              final offset = _userIdError != null
+                                  ? _shakeOffset(_shakeController.value)
+                                  : 0.0;
+                              return Transform.translate(
+                                offset: Offset(offset, 0),
+                                child: child,
+                              );
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 250),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.20),
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: _userIdError != null
+                                      ? Colors.redAccent
+                                      : Colors.white.withOpacity(0.50),
+                                  width: _userIdError != null ? 1.4 : 1,
+                                ),
                               ),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                            child: TextField(
-                              controller: _userIdController,
-                              decoration: InputDecoration(
-                                labelText: 'Enter User ID',
-                                labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
-                                border: InputBorder.none,
-                                floatingLabelBehavior: FloatingLabelBehavior.auto,
-                                // suffixIcon: Padding(
-                                //   padding: const EdgeInsets.all(15.0),
-                                //   child: Image.asset(
-                                //     AppImagesPng.editIcon,
-                                //     height: 14,
-                                //     width: 14,
-                                //   ),
-                                // ),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: TextField(
+                                controller: _userIdController,
+                                onChanged: (_) {
+                                  if (_userIdError != null) {
+                                    setState(() {
+                                      _userIdError = null;
+                                    });
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Enter User ID',
+                                  labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+                                  border: InputBorder.none,
+                                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                  // suffixIcon: Padding(
+                                  //   padding: const EdgeInsets.all(15.0),
+                                  //   child: Image.asset(
+                                  //     AppImagesPng.editIcon,
+                                  //     height: 14,
+                                  //     width: 14,
+                                  //   ),
+                                  // ),
+                                ),
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
                               ),
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
                             ),
                           ),
+                          if (_userIdError != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 6, left: 4),
+                              child: Text(
+                                _userIdError!,
+                                style: const TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
                           const SizedBox(height: 16),
 
                           // Password Field
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.20),
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.50),
-                                width: 1,
+                          AnimatedBuilder(
+                            animation: _shakeController,
+                            builder: (context, child) {
+                              final offset = _passwordError != null
+                                  ? _shakeOffset(_shakeController.value)
+                                  : 0.0;
+                              return Transform.translate(
+                                offset: Offset(offset, 0),
+                                child: child,
+                              );
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 250),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.20),
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: _passwordError != null
+                                      ? Colors.redAccent
+                                      : Colors.white.withOpacity(0.50),
+                                  width: _passwordError != null ? 1.4 : 1,
+                                ),
                               ),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                            child: TextField(
-                              controller: _passwordController,
-                              obscureText: _obscureText,
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
-                                border: InputBorder.none,
-                                floatingLabelBehavior: FloatingLabelBehavior.auto,
-                                suffixIcon: GestureDetector(
-                                  onTap: () {
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                              child: TextField(
+                                controller: _passwordController,
+                                obscureText: _obscureText,
+                                onChanged: (_) {
+                                  if (_passwordError != null) {
                                     setState(() {
-                                      _obscureText = !_obscureText;
+                                      _passwordError = null;
                                     });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(14.0),
-                                    child: Image.asset(
-                                      AppImagesPng.eyeIcon,
-                                      height: 14,
-                                      width: 14,
-                                      color: _obscureText
-                                          ? const Color(0xFF6B7280)
-                                          : AppColors.primary200,
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Password',
+                                  labelStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+                                  border: InputBorder.none,
+                                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                  suffixIcon: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _obscureText = !_obscureText;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(14.0),
+                                      child: Image.asset(
+                                        AppImagesPng.eyeIcon,
+                                        height: 14,
+                                        width: 14,
+                                        color: _obscureText
+                                            ? const Color(0xFF6B7280)
+                                            : AppColors.primary200,
+                                      ),
                                     ),
                                   ),
                                 ),
+                                style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                               ),
-                              style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                             ),
                           ),
+                          if (_passwordError != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 6, left: 4),
+                              child: Text(
+                                _passwordError!,
+                                style: const TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
                         ] else ...[
                           // Mobile Number Field
                           Container(
@@ -297,23 +388,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   final usernameError = AppValidators.validateUsername(_userIdController.text);
                                   final passwordError = AppValidators.validatePassword(_passwordController.text);
 
-                                  if (usernameError != null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(usernameError),
-                                        backgroundColor: Colors.redAccent,
-                                      ),
-                                    );
-                                    return;
-                                  }
-
-                                  if (passwordError != null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(passwordError),
-                                        backgroundColor: Colors.redAccent,
-                                      ),
-                                    );
+                                  if (usernameError != null || passwordError != null) {
+                                    setState(() {
+                                      _userIdError = usernameError;
+                                      _passwordError = passwordError;
+                                    });
+                                    _shakeController.forward(from: 0);
                                     return;
                                   }
 

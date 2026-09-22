@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
@@ -13,10 +14,21 @@ class OtpVerifyScreen extends StatefulWidget {
   State<OtpVerifyScreen> createState() => _OtpVerifyScreenState();
 }
 
-class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
+class _OtpVerifyScreenState extends State<OtpVerifyScreen> with SingleTickerProviderStateMixin {
   final List<TextEditingController> _otpControllers =
       List.generate(4, (index) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
+  String? _otpError;
+  late final AnimationController _shakeController;
+
+  @override
+  void initState() {
+    super.initState();
+    _shakeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+  }
 
   @override
   void dispose() {
@@ -26,18 +38,21 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     for (var node in _focusNodes) {
       node.dispose();
     }
+    _shakeController.dispose();
     super.dispose();
+  }
+
+  double _shakeOffset(double t) {
+    return math.sin(t * math.pi * 6) * 8 * (1 - t);
   }
 
   void _verifyOtp(OtpVerifyProvider provider) async {
     String otp = _otpControllers.map((e) => e.text).join();
     if (otp.length < 4) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter all 4 digits'),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
+      setState(() {
+        _otpError = 'Please enter all 4 digits';
+      });
+      _shakeController.forward(from: 0);
       return;
     }
 
@@ -55,12 +70,10 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         ),
       );
     } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(provider.errorMessage ?? 'Invalid OTP'),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
+      setState(() {
+        _otpError = provider.errorMessage ?? 'Invalid OTP';
+      });
+      _shakeController.forward(from: 0);
     }
   }
 
@@ -163,46 +176,78 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                       const SizedBox(height: 30),
 
                       // OTP Input Boxes
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: List.generate(4, (index) {
-                          return Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.20),
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.50),
-                                width: 1,
-                              ),
-                            ),
-                            child: TextField(
-                              controller: _otpControllers[index],
-                              focusNode: _focusNodes[index],
-                              textAlign: TextAlign.center,
-                              keyboardType: TextInputType.number,
-                              maxLength: 1,
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                              ),
-                              decoration: const InputDecoration(
-                                counterText: '',
-                                border: InputBorder.none,
-                              ),
-                              onChanged: (value) {
-                                if (value.isNotEmpty && index < 3) {
-                                  _focusNodes[index + 1].requestFocus();
-                                } else if (value.isEmpty && index > 0) {
-                                  _focusNodes[index - 1].requestFocus();
-                                }
-                              },
-                            ),
+                      AnimatedBuilder(
+                        animation: _shakeController,
+                        builder: (context, child) {
+                          final offset = _otpError != null
+                              ? _shakeOffset(_shakeController.value)
+                              : 0.0;
+                          return Transform.translate(
+                            offset: Offset(offset, 0),
+                            child: child,
                           );
-                        }),
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: List.generate(4, (index) {
+                            return AnimatedContainer(
+                              duration: const Duration(milliseconds: 250),
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.20),
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: _otpError != null
+                                      ? Colors.redAccent
+                                      : Colors.white.withOpacity(0.50),
+                                  width: _otpError != null ? 1.4 : 1,
+                                ),
+                              ),
+                              child: TextField(
+                                controller: _otpControllers[index],
+                                focusNode: _focusNodes[index],
+                                textAlign: TextAlign.center,
+                                keyboardType: TextInputType.number,
+                                maxLength: 1,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black,
+                                ),
+                                decoration: const InputDecoration(
+                                  counterText: '',
+                                  border: InputBorder.none,
+                                ),
+                                onChanged: (value) {
+                                  if (_otpError != null) {
+                                    setState(() {
+                                      _otpError = null;
+                                    });
+                                  }
+                                  if (value.isNotEmpty && index < 3) {
+                                    _focusNodes[index + 1].requestFocus();
+                                  } else if (value.isEmpty && index > 0) {
+                                    _focusNodes[index - 1].requestFocus();
+                                  }
+                                },
+                              ),
+                            );
+                          }),
+                        ),
                       ),
+                      if (_otpError != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 4),
+                          child: Text(
+                            _otpError!,
+                            style: const TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
                       const SizedBox(height: 30),
 
                       // Verify & Continue Button
