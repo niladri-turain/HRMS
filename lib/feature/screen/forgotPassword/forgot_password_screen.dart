@@ -6,6 +6,7 @@ import 'package:hrms_app/core/constants/app_images_png.dart';
 import 'package:hrms_app/core/common_functions/validation.dart';
 import 'package:hrms_app/feature/screen/forgotPassword/otp_verify_screen.dart';
 import 'package:hrms_app/feature/provider/forgot_password_provider.dart';
+import 'package:hrms_app/core/widgets/app_toast.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -235,11 +236,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
                                   bool success = await forgotPasswordProvider.forgotPassword(contact);
 
                                   if (success) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(forgotPasswordProvider.forgotPasswordResponse?.message ?? 'OTP Sent Successful'),
-                                        backgroundColor: Colors.green,
-                                      ),
+                                    AppToast.show(
+                                      context,
+                                      forgotPasswordProvider.forgotPasswordResponse?.message ?? 'OTP Sent Successful',
                                     );
                                     Navigator.push(
                                       context,
@@ -248,12 +247,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
                                       ),
                                     );
                                   } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(forgotPasswordProvider.errorMessage ?? 'Request Failed'),
-                                        backgroundColor: Colors.redAccent,
-                                      ),
-                                    );
+                                    AppToast.show(context, forgotPasswordProvider.errorMessage ?? 'Request Failed');
                                   }
                                 },
                           child: Container(

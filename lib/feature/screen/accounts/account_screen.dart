@@ -4,6 +4,7 @@ import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 import 'package:hrms_app/feature/provider/login_provider.dart';
 import 'package:hrms_app/feature/screen/loginScreen/login_screen.dart';
+import 'package:hrms_app/core/widgets/app_toast.dart';
 import 'widget/account_profile_header.dart';
 import 'widget/account_menu_section.dart';
 
@@ -132,24 +133,14 @@ class AccountScreen extends StatelessWidget {
                           Navigator.pop(context); // Close loading dialog
                           
                           if (loggedOut) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Logged out successfully'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
+                            AppToast.show(context, 'Logged out successfully');
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(builder: (context) => const LoginScreen()),
                               (route) => false,
                             );
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(loginProvider.errorMessage ?? 'Logout failed'),
-                                backgroundColor: Colors.redAccent,
-                              ),
-                            );
+                            AppToast.show(context, loginProvider.errorMessage ?? 'Logout failed');
                           }
                         }
                       },

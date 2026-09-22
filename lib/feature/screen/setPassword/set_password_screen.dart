@@ -7,6 +7,7 @@ import 'package:hrms_app/core/common_functions/validation.dart';
 import 'package:hrms_app/feature/provider/reset_password_provider.dart';
 import 'package:hrms_app/feature/provider/login_provider.dart';
 import 'package:hrms_app/feature/bottom_navigation/bottom_navigation_screen.dart';
+import 'package:hrms_app/core/widgets/app_toast.dart';
 
 class SetPasswordScreen extends StatefulWidget {
   final String emailOrMobile;
@@ -81,9 +82,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> with SingleTicker
     );
 
     if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(resetProvider.resetPasswordResponse?.message ?? 'Password reset successful'), backgroundColor: Colors.green),
-      );
+      AppToast.show(context, resetProvider.resetPasswordResponse?.message ?? 'Password reset successful');
 
       // Automatically login
       bool loginSuccess = await loginProvider.login(widget.emailOrMobile, newPassword);
@@ -95,15 +94,11 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> with SingleTicker
           (route) => false,
         );
       } else if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loginProvider.errorMessage ?? 'Automatic login failed. Please login manually.'), backgroundColor: Colors.orange),
-        );
+        AppToast.show(context, loginProvider.errorMessage ?? 'Automatic login failed. Please login manually.');
         Navigator.of(context).popUntil((route) => route.isFirst);
       }
     } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(resetProvider.errorMessage ?? 'Reset failed'), backgroundColor: Colors.redAccent),
-      );
+      AppToast.show(context, resetProvider.errorMessage ?? 'Reset failed');
     }
   }
 

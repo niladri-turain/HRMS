@@ -8,6 +8,7 @@ import 'package:hrms_app/feature/bottom_navigation/bottom_navigation_screen.dart
 import 'package:hrms_app/feature/screen/forgotPassword/forgot_password_screen.dart';
 import 'package:hrms_app/feature/provider/login_provider.dart';
 import 'package:hrms_app/core/constants/app_sizes.dart';
+import 'package:hrms_app/core/widgets/app_toast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -284,7 +285,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   width: _passwordError != null ? 1.4 : 1,
                                 ),
                               ),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                               child: TextField(
                                 controller: _passwordController,
                                 obscureText: _obscureText,
@@ -376,12 +377,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               ? null
                               : () async {
                                   if (_isOtpLogin) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('OTP login is coming soon'),
-                                        backgroundColor: Colors.grey
-                                      ),
-                                    );
+                                    AppToast.show(context, 'OTP login is coming soon');
                                     return;
                                   }
 
@@ -403,23 +399,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   );
 
                                   if (success) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Login Successful'),
-                                        backgroundColor: Colors.green,
-                                      ),
-                                    );
+                                    AppToast.show(context, 'Login Successful');
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(builder: (context) => const BottomNavigation()),
                                     );
                                   } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(loginProvider.errorMessage ?? 'Login Failed'),
-                                        backgroundColor: Colors.redAccent,
-                                      ),
-                                    );
+                                    AppToast.show(context, loginProvider.errorMessage ?? 'Login Failed');
                                   }
                                 },
                           child: Container(
