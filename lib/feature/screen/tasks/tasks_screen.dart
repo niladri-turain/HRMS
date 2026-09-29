@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 
+import '../../../core/constants/app_images_png.dart';
+
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
 
@@ -157,14 +159,14 @@ class _TasksScreenState extends State<TasksScreen> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     const Spacer(),
                     Image.asset(
-                      'assets/images/switch.png',
-                      width: 20,
-                      height: 20,
+                      AppImagesPng.filterIcon,
+                      width: 24,
+                      height: 24,
                       color: Colors.white,
                     ),
                   ],
@@ -181,7 +183,9 @@ class _TasksScreenState extends State<TasksScreen> {
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
+
                     ),
+
                   ),
                   child: Column(
                     children: [
@@ -213,21 +217,25 @@ class _TasksScreenState extends State<TasksScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Container(
-                          height: 42,
+                          height: 32,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
+
+                            borderRadius: BorderRadius.circular(6),
                             border: Border.all(color: const Color(0xFFE5E7EB)),
                           ),
                           child: TextField(
+
                             controller: _searchController,
                             onChanged: (value) => setState(() {}),
+                            textAlign: TextAlign.start,
+                            textAlignVertical: TextAlignVertical.center,
                             decoration: const InputDecoration(
                               hintText: 'Search tasks by title, project or client...',
                               hintStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
                               prefixIcon: Icon(Icons.search, color: Color(0xFF9CA3AF), size: 18),
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(vertical: 10),
+                              contentPadding: EdgeInsets.only(top: -18),
                             ),
                           ),
                         ),
@@ -301,7 +309,7 @@ class _TasksScreenState extends State<TasksScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFF901AEA) : Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(6),
           border: Border.all(
             color: isSelected ? const Color(0xFF901AEA) : const Color(0xFFE5E7EB),
             width: 1,
@@ -409,7 +417,7 @@ class TaskItemWidget extends StatelessWidget {
             children: [
               // Left Border Indicator Bar Only
               Container(
-                width: 4.5,
+                width:1.5,
                 color: config.leftBarColor,
               ),
 
@@ -426,8 +434,8 @@ class TaskItemWidget extends StatelessWidget {
                         Text(
                           task.id,
                           style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
                             color: Color(0xFF6B7280),
                           ),
                         ),
@@ -438,8 +446,8 @@ class TaskItemWidget extends StatelessWidget {
                         Text(
                           task.clientProject,
                           style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
                             color: Color(0xFF2563EB),
                           ),
                         ),
@@ -455,7 +463,7 @@ class TaskItemWidget extends StatelessWidget {
                           child: Text(
                             task.priority,
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 8,
                               fontWeight: FontWeight.w700,
                               color: config.textColor,
                             ),
@@ -464,13 +472,13 @@ class TaskItemWidget extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 4),
 
                     // Task Title
                     Text(
                       task.title,
                       style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: Color(0xFF111827),
                       ),
@@ -540,7 +548,7 @@ class TaskItemWidget extends StatelessWidget {
                               Text(
                                 task.status,
                                 style: TextStyle(
-                                  fontSize: 11,
+                                  fontSize: 10,
                                   fontWeight: FontWeight.w600,
                                   color: _getStatusTextColor(task.status),
                                 ),
@@ -640,7 +648,7 @@ class TaskItemWidget extends StatelessWidget {
                       Text(
                         task.description,
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 10,
                           color: Color(0xFF4B5563),
                           height: 1.4,
                         ),
@@ -655,12 +663,12 @@ class TaskItemWidget extends StatelessWidget {
                             child: ElevatedButton.icon(
                               onPressed: () {},
                               icon: const Icon(Icons.play_arrow, size: 16, color: Colors.white),
-                              label: const Text('Start Work', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white)),
+                              label: const Text('Start Work', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.white)),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF901AEA),
                                 elevation: 0,
                                 padding: const EdgeInsets.symmetric(vertical: 10),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                               ),
                             ),
                           ),
@@ -668,12 +676,12 @@ class TaskItemWidget extends StatelessWidget {
                           Expanded(
                             child: OutlinedButton.icon(
                               onPressed: () {},
-                              icon: const Icon(Icons.visibility_outlined, size: 16, color: Color(0xFF901AEA)),
-                              label: const Text('View Details', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF901AEA))),
+                              icon: const Icon(Icons.visibility_outlined, size: 16, color: Color(0xFF1B2CF1)),
+                              label: const Text('View Details', style: TextStyle(fontWeight:  FontWeight.w600, fontSize: 14, color: Color(0xFF1B2CF1))),
                               style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: Color(0xFF901AEA), width: 1.2),
+                                side: const BorderSide(color: Color(0xFF1B2CF1), width: 0.8),
                                 padding: const EdgeInsets.symmetric(vertical: 10),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                               ),
                             ),
                           ),
