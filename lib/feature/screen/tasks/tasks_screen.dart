@@ -3,6 +3,7 @@ import 'package:hrms_app/core/constants/app_colors.dart';
 
 import '../../../core/constants/app_images_png.dart';
 import 'create_task_screen.dart';
+import 'task_details_screen.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
@@ -701,7 +702,14 @@ class TaskItemWidget extends StatelessWidget {
                               const SizedBox(width: 12),
                               Expanded(
                                 child: OutlinedButton.icon(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => TaskDetailsScreen(task: task),
+                                      ),
+                                    );
+                                  },
                                   icon: const Icon(Icons.visibility_outlined, size: 16, color: Color(0xFF1B2CF1)),
                                   label: const Text('View Details', style: TextStyle(fontWeight:  FontWeight.w600, fontSize: 14, color: Color(0xFF1B2CF1))),
                                   style: OutlinedButton.styleFrom(
