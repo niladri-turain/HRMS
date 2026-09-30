@@ -37,7 +37,7 @@ class TaskTextField extends StatelessWidget {
             style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF111827),
+              color: Color(0xFF6B7280),
             ),
             children: [
               if (isRequired)
@@ -53,7 +53,7 @@ class TaskTextField extends StatelessWidget {
           onTap: onTap,
           child: Container(
             constraints: BoxConstraints(
-              minHeight: maxLines != null && maxLines! > 1 ? 100 : 40,
+              minHeight: maxLines != null && maxLines! > 1 ? 60 : 40,
             ),
             decoration: BoxDecoration(
               color: Colors.white,

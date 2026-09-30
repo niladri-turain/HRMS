@@ -112,7 +112,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
               TaskTextField(
                 label: 'Task Description',
                 hintText: 'Enter task details, objective, expected etc..',
-                maxLines: 6,
+                maxLines: 4,
                 maxLength: 300,
                 controller: _descriptionController,
               ),
@@ -241,7 +241,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             children: const [
                               Text(
                                 'Start Working Now?',
-                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF111827)),
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF6B7280)),
                               ),
                               Text(
                                 'Yes, start this task immediately.\nThe task will be available in your\nactive tasks.',
@@ -333,7 +333,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         style: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          color: Color(0xFF111827),
+          color: Color(0xFF6B7280),
         ),
         children: [
           if (isRequired)
