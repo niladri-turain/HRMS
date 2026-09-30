@@ -276,11 +276,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     child: OutlinedButton.icon(
                       onPressed: () {},
                       icon: Image.asset(AppImagesPng.commants, width: 16, height: 16, color: const Color(0xFF6B7280)),
-                      label: const Text('Add Comments', style: TextStyle(color: Color(0xFF6B7280), fontSize: 12)),
+                      label: const Text('Add Comments', style: TextStyle(color: Color(0xFF6B7280), fontSize: 12,fontWeight: FontWeight.w500)),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFF6B7280)),
+                        side: const BorderSide(color: Color(0xFF6B7280), width: .75),
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                       ),
                     ),
                   ),
@@ -289,11 +289,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     child: OutlinedButton.icon(
                       onPressed: () {},
                       icon: Image.asset(AppImagesPng.attachedd, width: 16, height: 16, color: const Color(0xFF6B7280)),
-                      label: const Text('Upload Documents', style: TextStyle(color: Color(0xFF6B7280), fontSize: 12)),
+                      label: const Text('Upload Documents', style: TextStyle(color: Color(0xFF6B7280), fontSize: 12,fontWeight: FontWeight.w500)),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFF6B7280)),
+                        side: const BorderSide(color: Color(0xFF6B7280), width: .75),
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                       ),
                     ),
                   ),
