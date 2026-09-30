@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 import 'widgets/task_text_field.dart';
 import 'widgets/category_item.dart';
 import 'widgets/priority_item.dart';
+import 'widgets/comments_dialog.dart';
+import 'widgets/attachment_dialog.dart';
 
 class CreateTaskScreen extends StatefulWidget {
   const CreateTaskScreen({super.key});
@@ -22,6 +25,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _commentsController = TextEditingController();
   final TextEditingController _hoursController = TextEditingController(text: '0 hours');
   final TextEditingController _minutesController = TextEditingController(text: '30 minutes');
   final TextEditingController _dueDateController = TextEditingController(text: '14 Aug 2026');
@@ -37,6 +41,32 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     {'label': 'Presentation', 'icon': AppImagesPng.presentation},
     {'label': 'Others', 'icon': AppImagesPng.others},
   ];
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF901AEA),
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      setState(() {
+        _dueDateController.text = DateFormat('dd MMM yyyy').format(picked);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -260,7 +290,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       hintText: '14 Aug 2026',
                       prefixIcon: AppImagesPng.scheduleDate,
                       isReadOnly: true,
-                      onTap: () {},
+                      onTap: () => _selectDate(context),
                       controller: _dueDateController,
                     ),
                   ),
@@ -274,11 +304,21 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 children: [
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => CommentsDialog(
+                            controller: _commentsController,
+                            onSubmit: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      },
                       icon: Image.asset(AppImagesPng.commants, width: 16, height: 16, color: const Color(0xFF6B7280)),
                       label: const Text('Add Comments', style: TextStyle(color: Color(0xFF6B7280), fontSize: 12,fontWeight: FontWeight.w500)),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFF6B7280), width: .75),
+                        side: const BorderSide(color: Color(0xFFE5E7EB), width: 1.0),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                       ),
@@ -287,11 +327,23 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AttachmentDialog(
+                            onUpload: () {
+                              // Handle upload logic
+                            },
+                            onSubmit: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      },
                       icon: Image.asset(AppImagesPng.attachedd, width: 16, height: 16, color: const Color(0xFF6B7280)),
                       label: const Text('Upload Documents', style: TextStyle(color: Color(0xFF6B7280), fontSize: 12,fontWeight: FontWeight.w500)),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFF6B7280), width: .75),
+                        side: const BorderSide(color: Color(0xFFE5E7EB), width: 1.0),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                       ),
