@@ -220,22 +220,25 @@ class _TasksScreenState extends State<TasksScreen> {
                           height: 32,
                           decoration: BoxDecoration(
                             color: Colors.white,
-
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(color: const Color(0xFFE5E7EB)),
                           ),
                           child: TextField(
-
                             controller: _searchController,
                             onChanged: (value) => setState(() {}),
                             textAlign: TextAlign.start,
                             textAlignVertical: TextAlignVertical.center,
                             decoration: const InputDecoration(
                               hintText: 'Search tasks by title, project or client...',
-                              hintStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
-                              prefixIcon: Icon(Icons.search, color: Color(0xFF9CA3AF), size: 18),
+                              hintStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.only(left: 8.0, right: 2.0),
+                                child: Icon(Icons.search, color: Color(0xFF9CA3AF), size: 18),
+                              ),
+                              prefixIconConstraints: const BoxConstraints(),
+                              isDense: true,
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.only(top: -18),
+                              contentPadding: EdgeInsets.only(top: 2),
                             ),
                           ),
                         ),
@@ -411,21 +414,23 @@ class TaskItemWidget extends StatelessWidget {
           ],
         ),
         clipBehavior: Clip.antiAlias,
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Left Border Indicator Bar Only
-              Container(
-                width:1.5,
+        child: Stack(
+          children: [
+            // Left Border Indicator Bar Only
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 1.5,
+              child: Container(
                 color: config.leftBarColor,
               ),
+            ),
 
-              // Content Area
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                  child: Column(
+            // Content Area
+            Padding(
+              padding: const EdgeInsets.only(left: 15.5, right: 14, top: 12, bottom: 12),
+              child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                     // Top Info Row (ID | Project --- Priority Badge)
@@ -626,75 +631,81 @@ class TaskItemWidget extends StatelessWidget {
                     ),
 
                     // Collapsible Extra Contents Section
-                    if (isExpanded) ...[
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Divider(color: Color(0xFFF3F4F6), height: 1),
-                      ),
-                      
-                      // Extra meta info row
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    AnimatedCrossFade(
+                      duration: const Duration(milliseconds: 300),
+                      crossFadeState: isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                      firstChild: const SizedBox(width: double.infinity),
+                      secondChild: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildMetaInfoItem(Icons.calendar_today_outlined, 'Assigned On', task.assignedOn),
-                          _buildMetaInfoItem(Icons.alarm, 'Estimated Time', task.estimatedTime, valueColor: const Color(0xFF2563EB)),
-                          _buildMetaInfoItem(Icons.timelapse, 'Duration Covered', task.durationCover, valueColor: const Color(0xFF16A34A)),
-                        ],
-                      ),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Divider(color: Color(0xFFF3F4F6), height: 1),
+                          ),
 
-                      const SizedBox(height: 10),
+                          // Extra meta info row
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _buildMetaInfoItem(Icons.calendar_today_outlined, 'Assigned On', task.assignedOn),
+                              _buildMetaInfoItem(Icons.alarm, 'Estimated Time', task.estimatedTime, valueColor: const Color(0xFF2563EB)),
+                              _buildMetaInfoItem(Icons.timelapse, 'Duration Covered', task.durationCover, valueColor: const Color(0xFF16A34A)),
+                            ],
+                          ),
 
-                      // Description block
-                      Text(
-                        task.description,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: Color(0xFF4B5563),
-                          height: 1.4,
-                        ),
-                      ),
+                          const SizedBox(height: 10),
 
-                      const SizedBox(height: 14),
-
-                      // Actions Button Row
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: const Icon(Icons.play_arrow, size: 16, color: Colors.white),
-                              label: const Text('Start Work', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.white)),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF901AEA),
-                                elevation: 0,
-                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              ),
+                          // Description block
+                          Text(
+                            task.description,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: Color(0xFF4B5563),
+                              height: 1.4,
                             ),
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: () {},
-                              icon: const Icon(Icons.visibility_outlined, size: 16, color: Color(0xFF1B2CF1)),
-                              label: const Text('View Details', style: TextStyle(fontWeight:  FontWeight.w600, fontSize: 14, color: Color(0xFF1B2CF1))),
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: Color(0xFF1B2CF1), width: 0.8),
-                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+
+                          const SizedBox(height: 14),
+
+                          // Actions Button Row
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.play_arrow, size: 16, color: Colors.white),
+                                  label: const Text('Start Work', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.white)),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF901AEA),
+                                    elevation: 0,
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                  ),
+                                ),
                               ),
-                            ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: OutlinedButton.icon(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.visibility_outlined, size: 16, color: Color(0xFF1B2CF1)),
+                                  label: const Text('View Details', style: TextStyle(fontWeight:  FontWeight.w600, fontSize: 14, color: Color(0xFF1B2CF1))),
+                                  style: OutlinedButton.styleFrom(
+                                    side: const BorderSide(color: Color(0xFF1B2CF1), width: 0.8),
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ],
                 ),
               ),
-              )
-            ]
+            ],
           ),
-        ),
       ),
     );
   }
@@ -704,7 +715,7 @@ class TaskItemWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 12, color: const Color(0xFF9CA3AF)),
+          Icon(icon, size: 10, color: const Color(0xFF9CA3AF)),
           const SizedBox(width: 4),
           Expanded(
             child: Column(
@@ -718,8 +729,8 @@ class TaskItemWidget extends StatelessWidget {
                 Text(
                   value,
                   style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 8,
+                    fontWeight: FontWeight.w500,
                     color: valueColor ?? const Color(0xFF1F2937),
                   ),
                   overflow: TextOverflow.ellipsis,
