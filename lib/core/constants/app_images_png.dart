@@ -43,6 +43,20 @@ class AppImagesPng {
   static const reportCard = "assets/images/reportCard.png";
   static const lastLocation = "assets/images/lastLocation.png";
   static const filterIcon = "assets/images/filter_icon.png";
+  static const attachedd = "assets/images/attachedd.png";
+  static const clientCity = "assets/images/clientCity.png";
+  static const commants = "assets/images/commants.png";
+  static const design = "assets/images/design.png";
+  static const development = "assets/images/development.png";
+  static const documentation = "assets/images/documentation.png";
+  static const editss = "assets/images/editss.png";
+  static const meeting = "assets/images/meeting.png";
+  static const module = "assets/images/module.png";
+  static const others = "assets/images/others.png";
+  static const presentation = "assets/images/presentation.png";
+  static const research = "assets/images/research.png";
+  static const todo = "assets/images/todo.png";
+
 
 
 }

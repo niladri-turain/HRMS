@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
 
 import '../../../core/constants/app_images_png.dart';
+import 'create_task_screen.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
@@ -232,7 +233,7 @@ class _TasksScreenState extends State<TasksScreen> {
                               hintText: 'Search tasks by title, project or client...',
                               hintStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
                               prefixIcon: Padding(
-                                padding: const EdgeInsets.only(left: 8.0, right: 2.0),
+                                padding: const EdgeInsets.only(left: 8.0, right: 2.0,top: 5),
                                 child: Icon(Icons.search, color: Color(0xFF9CA3AF), size: 18),
                               ),
                               prefixIconConstraints: const BoxConstraints(),
@@ -279,7 +280,12 @@ class _TasksScreenState extends State<TasksScreen> {
       floatingActionButton: Container(
         height: 37,
         child: FloatingActionButton.extended(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CreateTaskScreen()),
+            );
+          },
           backgroundColor: const Color(0xFF901AEA),
           elevation: 2,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
