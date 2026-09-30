@@ -190,15 +190,16 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
               // Task Category Grid
               _buildDropdownLabel('Task Category', isRequired: true),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               GridView.builder(
                 shrinkWrap: true,
+                padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 1.3,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  childAspectRatio: 1.4,
                 ),
                 itemCount: _categories.length,
                 itemBuilder: (context, index) {
@@ -212,6 +213,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 },
               ),
 
+                      const SizedBox(height: 16),
 
 
               // Priority (labeled "Task Category" in screenshot)
