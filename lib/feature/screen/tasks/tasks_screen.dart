@@ -30,9 +30,9 @@ class _TasksScreenState extends State<TasksScreen> {
       progress: 0.60,
       commentsCount: 3,
       attachmentsCount: 2,
-      assignedOn: '15 Sep 2024 | 10:28 AM',
+      assignedOn: '15 Sep 2026 | 10:46 AM',
       estimatedTime: '48h 30m',
-      durationCover: '26h 30m',
+      durationCover: '38h 30m',
       description: 'Create high-fidelity UI for employee dashboard as per latest discussion. Follow the approved design system and ensure mobile responsive layouts.',
     ),
     TaskModel(
@@ -644,13 +644,22 @@ class TaskItemWidget extends StatelessWidget {
                           ),
 
                           // Extra meta info row
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              _buildMetaInfoItem(Icons.calendar_today_outlined, 'Assigned On', task.assignedOn),
-                              _buildMetaInfoItem(Icons.alarm, 'Estimated Time', task.estimatedTime, valueColor: const Color(0xFF2563EB)),
-                              _buildMetaInfoItem(Icons.timelapse, 'Duration Covered', task.durationCover, valueColor: const Color(0xFF16A34A)),
-                            ],
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: const Color(0xFFE8E9EA), width: 1),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildMetaInfoItem(Icons.calendar_month_outlined, 'Assigned On', task.assignedOn),
+                                const SizedBox(width: 8),
+                                _buildMetaInfoItem(Icons.access_time, 'Estimated Time', task.estimatedTime, valueColor: const Color(0xFF335F88)),
+                                const SizedBox(width: 8),
+                                _buildMetaInfoItem(Icons.access_time, 'Duration Covered', task.durationCover, valueColor: const Color(0xFF16A34A)),
+                              ],
+                            ),
                           ),
 
                           const SizedBox(height: 10),
@@ -713,27 +722,48 @@ class TaskItemWidget extends StatelessWidget {
   Widget _buildMetaInfoItem(IconData icon, String title, String value, {Color? valueColor}) {
     return Expanded(
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(icon, size: 10, color: const Color(0xFF9CA3AF)),
-          const SizedBox(width: 4),
+          Icon(icon, size: 15, color: const Color(0xFF6B7280)),
+          const SizedBox(width: 3),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontSize: 9, color: Color(0xFF9CA3AF), fontWeight: FontWeight.w500),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  value,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 8,
-                    fontWeight: FontWeight.w500,
-                    color: valueColor ?? const Color(0xFF1F2937),
+                    color: Color(0xFF6B7280),
+                    fontWeight: FontWeight.w400,
                   ),
                   overflow: TextOverflow.ellipsis,
+                ),
+                RichText(
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontSize: 7,
+                      fontWeight: FontWeight.w600,
+                      color: valueColor ?? const Color(0xFF335F88),
+                      fontFamily: 'Inter',
+                    ),
+                    children: [
+                      if (value.contains('|')) ...[
+                        TextSpan(text: value.split('|')[0]),
+                        TextSpan(
+                          text: ' | ',
+                          style: TextStyle(
+                            color: const Color(0xFF335F88).withOpacity(0.5),
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        TextSpan(text: value.split('|')[1].trim()),
+                      ] else
+                        TextSpan(text: value),
+                    ],
+                  ),
                 ),
               ],
             ),
