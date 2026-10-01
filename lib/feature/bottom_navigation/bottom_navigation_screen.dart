@@ -7,6 +7,7 @@ import '../screen/attendance/attendance_screen.dart';
 import '../screen/clientVisit/client_visit_screen.dart';
 import '../screen/dashboard/dashboard_screen.dart';
 import '../screen/tasks/tasks_screen.dart';
+import '../screen/tasks/task_screen_dashboard_manager.dart';
 import '../screen/dashboard/manager_dashboard_screen.dart';
 
 class BottomNavigation extends StatefulWidget {
@@ -42,7 +43,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       isManager ? const ManagerDashboardScreen() : const DashboardScreen(role: 'employee'),
       ClientVisitScreen(role: isManager ? "manager" : "employee"),
       const AttendanceScreen(),
-      const TasksScreen(),
+      isManager ? const TaskScreenDashboardManager() : const TasksScreen(),
       const AccountScreen(),
     ];
   }
