@@ -50,12 +50,33 @@ class TaskHeaderCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              Text(
-                '${task.id}  |  ${task.clientProject}',
-                style: const TextStyle(
-                  color: Color(0xFF9CA3AF),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: task.id,
+                      style: const TextStyle(
+                        color: Color(0xFF6B7280),
+                        fontSize: 11.8,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const TextSpan(
+                      text: '  |  ',
+                      style: TextStyle(
+                        color: Color(0xFFD1D5DB),
+                        fontSize: 11.8,
+                      ),
+                    ),
+                    TextSpan(
+                      text: task.clientProject,
+                      style: const TextStyle(
+                        color: Color(0xFF1A79D7),
+                        fontSize: 11.8,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const Spacer(),
