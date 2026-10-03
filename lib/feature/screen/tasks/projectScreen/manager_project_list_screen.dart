@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'package:hrms_app/feature/screen/tasks/projectScreen/manager_project_details_screen.dart';
 
 class ManagerProjectListScreen extends StatefulWidget {
   const ManagerProjectListScreen({super.key});
@@ -467,11 +468,32 @@ class _ProjectListItemState extends State<ProjectListItem> {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      _buildActionButton(Icons.add, 'Task', const Color(0xFF901AEA)),
+                      Expanded(child: _buildActionButton(Icons.add, 'Task', const Color(0xFF901AEA))),
                       const SizedBox(width: 10),
-                      _buildActionButton(Icons.group_outlined, 'Teams', const Color(0xFF00B5AD)),
+                      Expanded(child: _buildActionButton(Icons.group_outlined, 'Teams', const Color(0xFF00B5AD))),
                       const SizedBox(width: 10),
-                      _buildActionButton(Icons.visibility_outlined, 'View', const Color(0xFF4361EE)),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ManagerProjectDetailsScreen(
+                                  title: widget.title,
+                                  description: widget.description,
+                                  logo: widget.logo,
+                                  category: widget.category,
+                                  tasks: widget.tasks,
+                                  teamImages: widget.teamImages,
+                                  estimatedTime: widget.estimatedTime,
+                                  dueDate: widget.dueDate,
+                                ),
+                              ),
+                            );
+                          },
+                          child: _buildActionButton(Icons.visibility_outlined, 'View', const Color(0xFF4361EE)),
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -486,28 +508,26 @@ class _ProjectListItemState extends State<ProjectListItem> {
   }
 
   Widget _buildActionButton(IconData icon, String label, Color color) {
-    return Expanded(
-      child: Container(
-        height: 36,
-        decoration: BoxDecoration(
-          border: Border.all(color: color.withOpacity(0.5)),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 16, color: color),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
+    return Container(
+      height: 36,
+      decoration: BoxDecoration(
+        border: Border.all(color: color.withOpacity(0.5)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 16, color: color),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -243,7 +243,19 @@ class ManagerProjectTaskCard extends StatelessWidget {
 }
 
 class TaskChartCard extends StatelessWidget {
-  const TaskChartCard({super.key});
+  final String totalTasks;
+  final List<ChartData> data;
+
+  const TaskChartCard({
+    super.key,
+    this.totalTasks = '368',
+    this.data = const [
+      ChartData(color: Color(0xFF4361EE), label: 'In Progress', value: '124', percentage: 34.25),
+      ChartData(color: Color(0xFF06D6A0), label: 'Completed', value: '118', percentage: 32.59),
+      ChartData(color: Color(0xFFEF233C), label: 'Overdue', value: '95', percentage: 26.24),
+      ChartData(color: Color(0xFF8D99AE), label: 'To Do', value: '25', percentage: 6.90),
+    ],
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -284,20 +296,20 @@ class TaskChartCard extends StatelessWidget {
                   children: [
                     CustomPaint(
                       size: const Size(140, 140),
-                      painter: DonutChartPainter(),
+                      painter: DonutChartPainter(data: data),
                     ),
-                    const Column(
+                    Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '368',
-                          style: TextStyle(
+                          totalTasks,
+                          style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
-                        Text(
+                        const Text(
                           'Tasks',
                           style: TextStyle(
                             fontSize: 12,
@@ -311,17 +323,19 @@ class TaskChartCard extends StatelessWidget {
               ),
               const SizedBox(width: 24),
               // Legend
-              const Expanded(
+              Expanded(
                 child: Column(
-                  children: [
-                    LegendItem(color: Color(0xFF4361EE), label: 'In Progress', value: '124', percentage: '34.25%'),
-                    SizedBox(height: 12),
-                    LegendItem(color: Color(0xFF06D6A0), label: 'Completed', value: '118', percentage: '32.59%'),
-                    SizedBox(height: 12),
-                    LegendItem(color: Color(0xFFEF233C), label: 'Overdue', value: '95', percentage: '26.24%'),
-                    SizedBox(height: 12),
-                    LegendItem(color: Color(0xFF8D99AE), label: 'To Do', value: '25', percentage: '6.90%'),
-                  ],
+                  children: data.map((item) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: LegendItem(
+                        color: item.color,
+                        label: item.label,
+                        value: item.value,
+                        percentage: '${item.percentage}%',
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
             ],
@@ -332,7 +346,25 @@ class TaskChartCard extends StatelessWidget {
   }
 }
 
+class ChartData {
+  final Color color;
+  final String label;
+  final String value;
+  final double percentage;
+
+  const ChartData({
+    required this.color,
+    required this.label,
+    required this.value,
+    required this.percentage,
+  });
+}
+
 class DonutChartPainter extends CustomPainter {
+  final List<ChartData> data;
+
+  DonutChartPainter({required this.data});
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
@@ -343,32 +375,16 @@ class DonutChartPainter extends CustomPainter {
 
     double startAngle = -pi / 2;
 
-    // In Progress - Blue
-    paint.color = const Color(0xFF4361EE);
-    double sweepAngle = (34.25 / 100) * 2 * pi;
-    canvas.drawArc(Rect.fromCircle(center: center, radius: radius - 10), startAngle, sweepAngle, false, paint);
-    startAngle += sweepAngle;
-
-    // Completed - Green
-    paint.color = const Color(0xFF06D6A0);
-    sweepAngle = (32.59 / 100) * 2 * pi;
-    canvas.drawArc(Rect.fromCircle(center: center, radius: radius - 10), startAngle, sweepAngle, false, paint);
-    startAngle += sweepAngle;
-
-    // Overdue - Red
-    paint.color = const Color(0xFFEF233C);
-    sweepAngle = (26.24 / 100) * 2 * pi;
-    canvas.drawArc(Rect.fromCircle(center: center, radius: radius - 10), startAngle, sweepAngle, false, paint);
-    startAngle += sweepAngle;
-
-    // To Do - Grey
-    paint.color = const Color(0xFF8D99AE);
-    sweepAngle = (6.90 / 100) * 2 * pi;
-    canvas.drawArc(Rect.fromCircle(center: center, radius: radius - 10), startAngle, sweepAngle, false, paint);
+    for (var item in data) {
+      paint.color = item.color;
+      double sweepAngle = (item.percentage / 100) * 2 * pi;
+      canvas.drawArc(Rect.fromCircle(center: center, radius: radius - 10), startAngle, sweepAngle, false, paint);
+      startAngle += sweepAngle;
+    }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
 class LegendItem extends StatelessWidget {
