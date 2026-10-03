@@ -268,45 +268,42 @@ class TaskChartCard extends StatelessWidget {
           Row(
             children: [
               // Donut Chart
-              Expanded(
-                flex: 1,
-                child: SizedBox(
-                  height: 140,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CustomPaint(
-                        size: const Size(140, 140),
-                        painter: DonutChartPainter(),
-                      ),
-                      const Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '368',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
+              SizedBox(
+                height: 140,
+                width: 140,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CustomPaint(
+                      size: const Size(140, 140),
+                      painter: DonutChartPainter(),
+                    ),
+                    const Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '368',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
-                          Text(
-                            'Tasks',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
+                        ),
+                        Text(
+                          'Tasks',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 24),
               // Legend
               const Expanded(
-                flex: 1,
                 child: Column(
                   children: [
                     LegendItem(color: Color(0xFF4361EE), label: 'In Progress', value: '124', percentage: '34.25%'),
@@ -393,15 +390,23 @@ class LegendItem extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            label,
-            style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
-          ),
-        ),
         Text(
-          '$value ($percentage)',
-          style: const TextStyle(fontSize: 11, color: Colors.black, fontWeight: FontWeight.bold),
+          label,
+          style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+        ),
+        const Spacer(),
+
+        RichText(
+          text: TextSpan(
+            style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+            children: [
+              TextSpan(text: value),
+              TextSpan(
+                text: ' ($percentage)',
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -433,8 +438,8 @@ class RecentActivitiesSection extends StatelessWidget {
           const Text(
             'Recent Activities',
             style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
               color: Color(0xFFA020F0),
             ),
           ),
@@ -510,8 +515,8 @@ class RecentActivitiesSection extends StatelessWidget {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                       color: Colors.black,
                     ),
                   ),
