@@ -17,7 +17,7 @@ class ManagerProjectListScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: false,
-        titleSpacing: 0,
+        titleSpacing: -10,
 
         title: const Text(
           'Project Lists',
@@ -30,13 +30,16 @@ class ManagerProjectListScreen extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.add, size: 18, color: Colors.white),
-              label: const Text('Project', style: TextStyle(color: Colors.white)),
+              label: const Text('Project', style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w500)),
+
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF901AEA),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 12),
+                minimumSize: const Size(0, 28),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
             ),
           ),
@@ -169,15 +172,15 @@ class ProjectFilterTabs extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFFA020F0) : Colors.white,
+          color: isActive ? const Color(0xFF901AEA) : Colors.white,
           borderRadius: BorderRadius.circular(8),
         ),
         alignment: Alignment.center,
         child: Text(
           label,
           style: TextStyle(
-            color: isActive ? Colors.white : const Color(0xFFA020F0),
-            fontWeight: FontWeight.bold,
+            color: isActive ? Colors.white : const Color(0xFF901AEA),
+            fontWeight: FontWeight.w700,
             fontSize: 12,
           ),
         ),
@@ -192,17 +195,20 @@ class ProjectSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 50,
       color: Colors.transparent,
-      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
       child: TextField(
+        textAlign: TextAlign.start,
         decoration: InputDecoration(
           hintText: 'Search Projects...',
-          hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
-          prefixIcon: const Icon(Icons.search, color: Colors.grey),
+          hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+          prefixIcon: const Icon(Icons.search, color: Colors.black, size: 20),
+          prefixIconConstraints: const BoxConstraints(minWidth: 40),
           filled: true,
           fillColor: Colors.white,
           isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(vertical: 8),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide.none,
@@ -277,15 +283,15 @@ class ProjectListItem extends StatelessWidget {
                       title,
                       style: const TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Row(
                       children: [
                         Text(
                           tasks,
-                          style: const TextStyle(color: Colors.grey, fontSize: 12),
+                          style: const TextStyle(color: Colors.grey, fontSize: 10),
                         ),
                         const SizedBox(width: 8),
                         Container(
@@ -298,7 +304,7 @@ class ProjectListItem extends StatelessWidget {
                             category,
                             style: const TextStyle(
                               color: Color(0xFFA020F0),
-                              fontSize: 10,
+                              fontSize: 8,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -314,10 +320,10 @@ class ProjectListItem extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           Text(
             description,
-            style: const TextStyle(color: Colors.grey, fontSize: 12, height: 1.4),
+            style: const TextStyle(color: Color(0XFF6B7280), fontSize: 12, fontWeight: FontWeight.w500),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -434,7 +440,7 @@ class DottedDivider extends StatelessWidget {
               width: dashWidth,
               height: 1,
               child: DecoratedBox(
-                decoration: BoxDecoration(color: Colors.grey.shade300),
+                decoration: BoxDecoration(color: Colors.black.withOpacity(0.12)),
               ),
             );
           }),
@@ -471,8 +477,8 @@ class CircularPercentIndicator extends StatelessWidget {
           Text(
             '${(percent * 100).toInt()}%',
             style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
               color: Color(0xFF00C853),
             ),
           ),
