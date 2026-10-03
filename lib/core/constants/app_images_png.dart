@@ -56,6 +56,14 @@ class AppImagesPng {
   static const presentation = "assets/images/presentation.png";
   static const research = "assets/images/research.png";
   static const todo = "assets/images/todo.png";
+  static const completeTask = "assets/images/completeTask.png";
+  static const inProgressTask = "assets/images/inProgressTask.png";
+  static const overdueTask = "assets/images/overdueTask.png";
+  static const taskCompletion = "assets/images/taskCompletion.png";
+  static const teamMember = "assets/images/teamMember.png";
+  static const todoProject = "assets/images/todoProject.png";
+  static const totalAssign = "assets/images/totalAssign.png";
+  static const totalProject = "assets/images/totalProject.png";
 
 
 

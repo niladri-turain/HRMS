@@ -7,6 +7,9 @@ import 'package:hrms_app/feature/provider/login_provider.dart';
 import 'package:hrms_app/feature/screen/loginScreen/login_screen.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hrms_app/feature/screen/tasks/widgets/manager_task_dashboard_widgets.dart';
+import 'package:intl/intl.dart';
+
 class TaskScreenDashboardManager extends StatefulWidget {
   const TaskScreenDashboardManager({super.key});
 
@@ -44,8 +47,8 @@ class _TaskScreenDashboardManagerState extends State<TaskScreenDashboardManager>
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF311040), // 311040 at 0%
-              Color(0x00FFFFFF), // White (FFFFFF) with 0% opacity at 100%
+              Color(0xFF311040),
+              Color(0x00FFFFFF),
             ],
             stops: [0.0, 1.0],
           ),
@@ -54,7 +57,7 @@ class _TaskScreenDashboardManagerState extends State<TaskScreenDashboardManager>
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Header (Same as Manager Dashboard)
+                // Header
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                   child: Row(
@@ -175,8 +178,13 @@ class _TaskScreenDashboardManagerState extends State<TaskScreenDashboardManager>
                     ],
                   ),
                 ),
-                
-                // Dashboard specific content will be added below
+
+                const ManagerProjectTaskGrid(),
+                const SizedBox(height: 16),
+                const TaskChartCard(),
+                const SizedBox(height: 16),
+                const RecentActivitiesSection(),
+                const SizedBox(height: 20),
               ],
             ),
           ),
