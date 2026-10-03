@@ -215,8 +215,8 @@ class ManagerProjectTaskCard extends StatelessWidget {
                     Text(
                       title,
                       style: const TextStyle(
-                        fontSize: 9,
-                        color: Colors.grey,
+                        fontSize: 10,
+                        color: Colors.black,
                         fontWeight: FontWeight.w500,
                       ),
                       maxLines: 1,
