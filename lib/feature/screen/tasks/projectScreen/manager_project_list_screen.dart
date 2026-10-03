@@ -1,11 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 
-class ManagerProjectListScreen extends StatelessWidget {
+class ManagerProjectListScreen extends StatefulWidget {
   const ManagerProjectListScreen({super.key});
 
   @override
+  State<ManagerProjectListScreen> createState() => _ManagerProjectListScreenState();
+}
+
+class _ManagerProjectListScreenState extends State<ManagerProjectListScreen> {
+  int _selectedTabIndex = 0; // 0: All, 1: Active, 2: Completed
+
+  final List<Map<String, dynamic>> allProjects = [
+    {
+      'logo': AppImagesPng.splashLogo,
+      'title': 'HRMS software crm',
+      'tasks': '28 / 120 Tasks',
+      'category': 'HRMS',
+      'progress': 0.23,
+      'description': 'Create high-fidelity UI for employee dashboard as per latest discussion. Follow the approved design system and...',
+      'estimatedTime': '50d 14h',
+      'dueDate': '25 Nov 2026',
+      'teamImages': ['https://i.pravatar.cc/150?u=1', 'https://i.pravatar.cc/150?u=2', 'https://i.pravatar.cc/150?u=3', 'https://i.pravatar.cc/150?u=4'],
+      'status': 'active',
+    },
+    {
+      'logo': AppImagesPng.splashLogo,
+      'title': 'Quick billing application',
+      'tasks': '48 / 54 Tasks',
+      'category': 'Billtrack',
+      'progress': 0.88,
+      'description': 'Create high-fidelity UI for employee dashboard as per latest discussion. Follow the approved design system and...',
+      'estimatedTime': '28h 30m',
+      'dueDate': '30 Sep 2026',
+      'teamImages': ['https://i.pravatar.cc/150?u=5', 'https://i.pravatar.cc/150?u=6', 'https://i.pravatar.cc/150?u=7', 'https://i.pravatar.cc/150?u=8'],
+      'status': 'active',
+    },
+    {
+      'logo': AppImagesPng.splashLogo,
+      'title': 'Website design EV sector',
+      'tasks': '2 / 12 Tasks',
+      'category': 'HRMS',
+      'progress': 0.16,
+      'description': 'Create high-fidelity UI for employee dashboard as per latest discussion. Follow the approved design system and...',
+      'estimatedTime': '48h 30m',
+      'dueDate': '25 Nov 2026',
+      'teamImages': ['https://i.pravatar.cc/150?u=9', 'https://i.pravatar.cc/150?u=10'],
+      'status': 'active',
+    },
+    {
+      'logo': AppImagesPng.splashLogo,
+      'title': 'Website new page create',
+      'tasks': '2 / 2 Tasks',
+      'category': 'Turain',
+      'progress': 1.0,
+      'description': 'Create high-fidelity UI for employee dashboard as per latest discussion. Follow the approved design system and...',
+      'estimatedTime': '13h 30m',
+      'dueDate': '24 Sep 2026',
+      'teamImages': ['https://i.pravatar.cc/150?u=11', 'https://i.pravatar.cc/150?u=12'],
+      'status': 'completed',
+    },
+  ];
+
+  @override
   Widget build(BuildContext context) {
+    List<Map<String, dynamic>> displayedProjects;
+    if (_selectedTabIndex == 1) {
+      // Show only 2 active projects as requested
+      displayedProjects = allProjects.where((p) => p['status'] == 'active').take(2).toList();
+    } else if (_selectedTabIndex == 2) {
+      // Show only 1 completed project (which is 100%)
+      displayedProjects = allProjects.where((p) => p['status'] == 'completed').take(1).toList();
+    } else {
+      displayedProjects = allProjects;
+    }
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
@@ -18,20 +87,17 @@ class ManagerProjectListScreen extends StatelessWidget {
         ),
         centerTitle: false,
         titleSpacing: -10,
-
         title: const Text(
           'Project Lists',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500,fontSize: 18),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18),
         ),
-
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: ElevatedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.add, size: 18, color: Colors.white),
-              label: const Text('Project', style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w500)),
-
+              label: const Text('Project', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF901AEA),
                 shape: RoundedRectangleBorder(
@@ -52,91 +118,41 @@ class ManagerProjectListScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF311040),
-              Color(0x00FFFFFF),
-            ],
+            colors: [Color(0xFF311040), Color(0x00FFFFFF)],
             stops: [0.0, 1.0],
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
-              const ProjectFilterTabs(),
+              ProjectFilterTabs(
+                selectedIndex: _selectedTabIndex,
+                onTabChanged: (index) {
+                  setState(() {
+                    _selectedTabIndex = index;
+                  });
+                },
+              ),
               const ProjectSearchBar(),
               Expanded(
-                child: ListView(
+                child: ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  children: [
-                    ProjectListItem(
-                      logo: AppImagesPng.splashLogo, // Using a placeholder for now
-                      title: 'HRMS software crm',
-                      tasks: '28 / 120 Tasks',
-                      category: 'HRMS',
-                      progress: 0.23,
-                      description:
-                          'Create high-fidelity UI for employee dashboard as per latest discussion. Follow the approved design system and...',
-                      estimatedTime: '50d 14h',
-                      dueDate: '25 Nov 2026',
-                      teamImages: const [
-                        'https://i.pravatar.cc/150?u=1',
-                        'https://i.pravatar.cc/150?u=2',
-                        'https://i.pravatar.cc/150?u=3',
-                        'https://i.pravatar.cc/150?u=4',
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    ProjectListItem(
-                      logo: AppImagesPng.splashLogo, // Placeholder
-                      title: 'Quick billing application',
-                      tasks: '48 / 54 Tasks',
-                      category: 'Billtrack',
-                      progress: 0.88,
-                      description:
-                          'Create high-fidelity UI for employee dashboard as per latest discussion. Follow the approved design system and...',
-                      estimatedTime: '28h 30m',
-                      dueDate: '30 Sep 2026',
-                      teamImages: const [
-                        'https://i.pravatar.cc/150?u=5',
-                        'https://i.pravatar.cc/150?u=6',
-                        'https://i.pravatar.cc/150?u=7',
-                        'https://i.pravatar.cc/150?u=8',
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    ProjectListItem(
-                      logo: AppImagesPng.splashLogo,
-                      title: 'Website design EV sector',
-                      tasks: '2 / 12 Tasks',
-                      category: 'HRMS',
-                      progress: 0.16,
-                      description:
-                          'Create high-fidelity UI for employee dashboard as per latest discussion. Follow the approved design system and...',
-                      estimatedTime: '48h 30m',
-                      dueDate: '25 Nov 2026',
-                      teamImages: const [
-                        'https://i.pravatar.cc/150?u=9',
-                        'https://i.pravatar.cc/150?u=10',
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    ProjectListItem(
-                      logo: AppImagesPng.splashLogo, // Placeholder
-                      title: 'Website new page create',
-                      tasks: '2 / 2 Tasks',
-                      category: 'Turain',
-                      progress: 1.0,
-                      description:
-                          'Create high-fidelity UI for employee dashboard as per latest discussion. Follow the approved design system and...',
-                      estimatedTime: '13h 30m',
-                      dueDate: '24 Sep 2026',
-                      teamImages: const [
-                        'https://i.pravatar.cc/150?u=11',
-                        'https://i.pravatar.cc/150?u=12',
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                  ],
+                  itemCount: displayedProjects.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  itemBuilder: (context, index) {
+                    final project = displayedProjects[index];
+                    return ProjectListItem(
+                      logo: project['logo'],
+                      title: project['title'],
+                      tasks: project['tasks'],
+                      category: project['category'],
+                      progress: project['progress'],
+                      description: project['description'],
+                      estimatedTime: project['estimatedTime'],
+                      dueDate: project['dueDate'],
+                      teamImages: project['teamImages'],
+                    );
+                  },
                 ),
               ),
             ],
@@ -148,7 +164,14 @@ class ManagerProjectListScreen extends StatelessWidget {
 }
 
 class ProjectFilterTabs extends StatelessWidget {
-  const ProjectFilterTabs({super.key});
+  final int selectedIndex;
+  final Function(int) onTabChanged;
+
+  const ProjectFilterTabs({
+    super.key,
+    required this.selectedIndex,
+    required this.onTabChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -157,37 +180,42 @@ class ProjectFilterTabs extends StatelessWidget {
       color: Colors.transparent,
       child: Row(
         children: [
-          _buildTab('All Projects (8)', true),
+          _buildTab('All Projects (8)', 0),
           const SizedBox(width: 8),
-          _buildTab('Active (5)', false),
+          _buildTab('Active (5)', 1),
           const SizedBox(width: 8),
-          _buildTab('Completed (3)', false),
+          _buildTab('Completed (3)', 2),
         ],
       ),
     );
   }
 
-  Widget _buildTab(String label, bool isActive) {
+  Widget _buildTab(String label, int index) {
+    final bool isActive = selectedIndex == index;
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          color: isActive ? const Color(0xFF901AEA) : Colors.white,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isActive ? Colors.white : const Color(0xFF901AEA),
-            fontWeight: FontWeight.w700,
-            fontSize: 12,
+      child: GestureDetector(
+        onTap: () => onTabChanged(index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: isActive ? const Color(0xFF901AEA) : Colors.white,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isActive ? Colors.white : const Color(0xFF901AEA),
+              fontWeight: FontWeight.w700,
+              fontSize: 12,
+            ),
           ),
         ),
       ),
     );
   }
 }
+
 
 class ProjectSearchBar extends StatelessWidget {
   const ProjectSearchBar({super.key});
