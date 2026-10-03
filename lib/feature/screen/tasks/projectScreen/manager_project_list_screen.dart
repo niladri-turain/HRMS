@@ -219,7 +219,7 @@ class ProjectSearchBar extends StatelessWidget {
   }
 }
 
-class ProjectListItem extends StatelessWidget {
+class ProjectListItem extends StatefulWidget {
   final String logo;
   final String title;
   final String tasks;
@@ -244,183 +244,247 @@ class ProjectListItem extends StatelessWidget {
   });
 
   @override
+  State<ProjectListItem> createState() => _ProjectListItemState();
+}
+
+class _ProjectListItemState extends State<ProjectListItem> {
+  bool _isExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade200),
-                  borderRadius: BorderRadius.circular(8),
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isExpanded = !_isExpanded;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade200),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: const EdgeInsets.all(4),
+                  child: Image.asset(widget.logo),
                 ),
-                padding: const EdgeInsets.all(4),
-                child: Image.asset(logo),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        Text(
-                          tasks,
-                          style: const TextStyle(color: Colors.grey, fontSize: 10),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
                         ),
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFA020F0).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(10),
+                      ),
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          Text(
+                            widget.tasks,
+                            style: const TextStyle(color: Colors.grey, fontSize: 10),
                           ),
-                          child: Text(
-                            category,
-                            style: const TextStyle(
-                              color: Color(0xFFA020F0),
-                              fontSize: 8,
-                              fontWeight: FontWeight.bold,
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFA020F0).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(10),
                             ),
+                            child: Text(
+                              widget.category,
+                              style: const TextStyle(
+                                color: Color(0xFFA020F0),
+                                fontSize: 8,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                CircularPercentIndicator(
+                  percent: widget.progress,
+                  progressColor: const Color(0xFF00C853),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              widget.description,
+              style: const TextStyle(color: Color(0XFF6B7280), fontSize: 12, fontWeight: FontWeight.w500),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 16),
+            const DottedDivider(),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  height: 30,
+                  child: Stack(
+                    children: [
+                      for (int i = 0; i < (widget.teamImages.length > 4 ? 4 : widget.teamImages.length); i++)
+                        Positioned(
+                          left: i * 18.0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundImage: NetworkImage(widget.teamImages[i]),
+                            ),
+                          ),
+                        ),
+                      if (widget.teamImages.length > 4)
+                        Positioned(
+                          left: 4 * 18.0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundColor: Colors.grey.shade200,
+                              child: Text(
+                                '+${widget.teamImages.length - 4}',
+                                style: const TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    Icon(Icons.access_time, size: 18, color: Colors.grey.shade600),
+                    const SizedBox(width: 6),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Estimated Time', style: TextStyle(color: Colors.grey, fontSize: 8)),
+                        Text(
+                          widget.estimatedTime,
+                          style: const TextStyle(
+                            color: Color(0xFF4361EE),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-              ),
-              CircularPercentIndicator(
-                percent: progress,
-                progressColor: const Color(0xFF00C853),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            description,
-            style: const TextStyle(color: Color(0XFF6B7280), fontSize: 12, fontWeight: FontWeight.w500),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 16),
-          const DottedDivider(),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              SizedBox(
-                width: 100,
-                height: 24,
-                child: Stack(
+                const SizedBox(width: 16),
+                Row(
                   children: [
-                    for (int i = 0; i < (teamImages.length > 4 ? 4 : teamImages.length); i++)
-                      Positioned(
-                        left: i * 18.0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
-                          child: CircleAvatar(
-                            radius: 12,
-                            backgroundImage: NetworkImage(teamImages[i]),
-                          ),
-                        ),
-                      ),
-                    if (teamImages.length > 4)
-                      Positioned(
-                        left: 4 * 18.0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
-                          child: CircleAvatar(
-                            radius: 12,
-                            backgroundColor: Colors.grey.shade200,
-                            child: Text(
-                              '+${teamImages.length - 4}',
-                              style: const TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold),
-                            ),
+                    Icon(Icons.calendar_today_outlined, size: 18, color: Colors.grey.shade600),
+                    const SizedBox(width: 6),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Due Date', style: TextStyle(color: Colors.grey, fontSize: 8)),
+                        Text(
+                          widget.dueDate,
+                          style: const TextStyle(
+                            color: Color(0xFFD4A017),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
                           ),
                         ),
-                      ),
+                      ],
+                    ),
                   ],
                 ),
-              ),
-              const Spacer(),
-              Row(
+              ],
+            ),
+            AnimatedCrossFade(
+              firstChild: const SizedBox(width: double.infinity),
+              secondChild: Column(
                 children: [
-                  Icon(Icons.access_time, size: 18, color: Colors.grey.shade600),
-                  const SizedBox(width: 6),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(height: 16),
+                  const DottedDivider(),
+                  const SizedBox(height: 16),
+                  Row(
                     children: [
-                      const Text('Estimated Time', style: TextStyle(color: Colors.grey, fontSize: 8)),
-                      Text(
-                        estimatedTime,
-                        style: const TextStyle(
-                          color: Color(0xFF4361EE),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
-                      ),
+                      _buildActionButton(Icons.add, 'Task', const Color(0xFF901AEA)),
+                      const SizedBox(width: 10),
+                      _buildActionButton(Icons.group_outlined, 'Teams', const Color(0xFF00B5AD)),
+                      const SizedBox(width: 10),
+                      _buildActionButton(Icons.visibility_outlined, 'View', const Color(0xFF4361EE)),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(width: 16),
-              Row(
-                children: [
-                  Icon(Icons.calendar_today_outlined, size: 18, color: Colors.grey.shade600),
-                  const SizedBox(width: 6),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Due Date', style: TextStyle(color: Colors.grey, fontSize: 8)),
-                      Text(
-                        dueDate,
-                        style: const TextStyle(
-                          color: Color(0xFFD4A017),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              duration: const Duration(milliseconds: 300),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton(IconData icon, String label, Color color) {
+    return Expanded(
+      child: Container(
+        height: 36,
+        decoration: BoxDecoration(
+          border: Border.all(color: color.withOpacity(0.5)),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 16, color: color),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
+
 
 class DottedDivider extends StatelessWidget {
   const DottedDivider({super.key});
