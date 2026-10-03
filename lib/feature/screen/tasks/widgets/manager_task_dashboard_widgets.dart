@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 
+import 'package:hrms_app/feature/screen/tasks/projectScreen/manager_project_list_screen.dart';
+
 class ManagerProjectTaskGrid extends StatelessWidget {
   const ManagerProjectTaskGrid({super.key});
 
@@ -58,50 +60,58 @@ class ManagerProjectTaskGrid extends StatelessWidget {
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
             childAspectRatio: 2.8,
-            children: const [
+            children: [
               ManagerProjectTaskCard(
-                color: Color(0xFF901AEA),
+                color: const Color(0xFF901AEA),
                 imagePath: AppImagesPng.totalProject,
                 title: 'Total Projects',
                 value: '8',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ManagerProjectListScreen(),
+                    ),
+                  );
+                },
               ),
-              ManagerProjectTaskCard(
+              const ManagerProjectTaskCard(
                 color: Color(0xFF00B4D8),
                 imagePath: AppImagesPng.teamMember,
                 title: 'Team Members',
                 value: '18',
               ),
-              ManagerProjectTaskCard(
+              const ManagerProjectTaskCard(
                 color: Color(0xFF1B1B2F),
                 imagePath: AppImagesPng.totalAssign,
                 title: 'Total Assign Tasks',
                 value: '362',
               ),
-              ManagerProjectTaskCard(
+              const ManagerProjectTaskCard(
                 color: Color(0xFF4361EE),
                 imagePath: AppImagesPng.inProgressTask,
                 title: 'In Progress Tasks',
                 value: '124',
               ),
-              ManagerProjectTaskCard(
+              const ManagerProjectTaskCard(
                 color: Color(0xFF06D6A0),
                 imagePath: AppImagesPng.completeTask,
                 title: 'Completed Tasks',
                 value: '118',
               ),
-              ManagerProjectTaskCard(
+              const ManagerProjectTaskCard(
                 color: Color(0xFFEF233C),
                 imagePath: AppImagesPng.overdueTask,
                 title: 'Overdue Tasks',
                 value: '95',
               ),
-              ManagerProjectTaskCard(
+              const ManagerProjectTaskCard(
                 color: Color(0xFF8D99AE),
                 imagePath: AppImagesPng.todoProject,
                 title: 'To Do Tasks',
                 value: '25',
               ),
-              ManagerProjectTaskCard(
+              const ManagerProjectTaskCard(
                 color: Color(0xFFD4A017),
                 imagePath: AppImagesPng.taskCompletion,
                 title: 'Task Completion',
@@ -168,6 +178,7 @@ class ManagerProjectTaskCard extends StatelessWidget {
   final String imagePath;
   final String title;
   final String value;
+  final VoidCallback? onTap;
 
   const ManagerProjectTaskCard({
     super.key,
@@ -175,60 +186,57 @@ class ManagerProjectTaskCard extends StatelessWidget {
     required this.imagePath,
     required this.title,
     required this.value,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color.withOpacity(0.8), width: 1.2),
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.black.withOpacity(0.05),
-        //     blurRadius: 4,
-        //     offset: const Offset(0, 2),
-        //   ),
-        // ],
-      ),
-      child: Row(
-        children: [
-          ManagerTaskIconContainer(
-            imagePath: imagePath,
-            color: color,
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 9,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: color.withOpacity(0.8), width: 1.2),
+        ),
+        child: Row(
+          children: [
+            ManagerTaskIconContainer(
+              imagePath: imagePath,
+              color: color,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 9,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: color,
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(height: 2),
+                    Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: color,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
