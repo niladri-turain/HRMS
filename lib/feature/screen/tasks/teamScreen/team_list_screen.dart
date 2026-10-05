@@ -238,108 +238,121 @@ class TeamMemberCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(member['image']),
-            fit: BoxFit.cover,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        image: DecorationImage(
+          image: AssetImage(member['image']),
+          fit: BoxFit.cover,
         ),
-        child: Stack(
-          children: [
-            // Status Dot
-            Positioned(
-              top: 10,
-              right: 10,
+      ),
+      child: Stack(
+        children: [
+          // Status Indicator in a white container
+          Positioned(
+            top: 10,
+            right: 10,
+            child: Container(
+              width: 18,
+              height: 16,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              alignment: Alignment.center,
               child: Container(
-                width: 12,
-                height: 12,
+                width: 10,
+                height: 10,
                 decoration: BoxDecoration(
                   color: _getStatusColor(member['status']),
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
                 ),
               ),
             ),
-            // Info Overlay
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.4),
+          ),
+          // Info Overlay (Floating Card with margins)
+          Positioned(
+            left: 8,
+            right: 8,
+            bottom: 10,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.1),
+                      width: 1,
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    member['name'],
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  member['name'],
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
                                   ),
-                                  Text(
-                                    member['role'],
-                                    style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 9,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  member['role'],
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 10,
                                   ),
-                                ],
-                              ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
-                            _buildCircularProgress(member['progress']),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            const Text(
-                              'Task',
-                              style: TextStyle(color: Color(0xFFFFD700), fontSize: 10, fontWeight: FontWeight.bold),
+                          ),
+                          _buildCircularProgress(member['progress']),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Text(
+                            'Task',
+                            style: TextStyle(
+                              color: Color(0xFFFFD700),
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(width: 8),
-                            _buildTaskCount(const Color(0xFF4361EE), member['tasks']['blue']),
-                            const SizedBox(width: 4),
-                            _buildTaskCount(const Color(0xFF06D6A0), member['tasks']['green']),
-                            const SizedBox(width: 4),
-                            _buildTaskCount(const Color(0xFFEF233C), member['tasks']['red']),
-                            const SizedBox(width: 4),
-                            _buildTaskCount(const Color(0xFF8D99AE), member['tasks']['grey']),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                          const SizedBox(width: 8),
+                          _buildTaskCount(const Color(0xFF4361EE), member['tasks']['blue']),
+                          const SizedBox(width: 6),
+                          _buildTaskCount(const Color(0xFF06D6A0), member['tasks']['green']),
+                          const SizedBox(width: 6),
+                          _buildTaskCount(const Color(0xFFEF233C), member['tasks']['red']),
+                          const SizedBox(width: 6),
+                          _buildTaskCount(const Color(0xFF8D99AE), member['tasks']['grey']),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -354,7 +367,7 @@ class TeamMemberCard extends StatelessWidget {
           CircularProgressIndicator(
             value: progress,
             strokeWidth: 2.5,
-            backgroundColor: Colors.white24,
+            backgroundColor: Colors.white,
             valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF06D6A0)),
           ),
           Text(
