@@ -508,12 +508,13 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
       child: GestureDetector(
         onTap: () => setState(() => _selectedVisibility = label),
         child: Container(
-          height: 45,
+          height: 40,
           decoration: BoxDecoration(
             color: isSelected ? const Color(0xFFEBF5FF) : Colors.white,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isSelected ? const Color(0xFF4361EE) : const Color(0xFFE5E7EB),
+              color: isSelected ? const Color(0xFF1A79D7) : const Color(0xFFE5E7EB),
+              width: 0.8
             ),
           ),
           child: Row(
@@ -522,13 +523,13 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
               Icon(
                 icon,
                 size: 20,
-                color: isSelected ? const Color(0xFF4361EE) : const Color(0xFF9CA3AF),
+                color: isSelected ? const Color(0xFF1A79D7) : const Color(0xFF9CA3AF),
               ),
               const SizedBox(width: 8),
               Text(
                 label,
                 style: TextStyle(
-                  color: isSelected ? const Color(0xFF4361EE) : const Color(0xFF9CA3AF),
+                  color: isSelected ? const Color(0xFF1A79D7) : const Color(0xFF9CA3AF),
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
