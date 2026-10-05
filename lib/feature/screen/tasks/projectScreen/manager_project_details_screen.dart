@@ -329,7 +329,7 @@ class ManagerProjectDetailsScreen extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
-            childAspectRatio: 2.2,
+            childAspectRatio: 2.8,
             children: [
               ManagerProjectTaskCard(
                 color: const Color(0xFF4361EE),
