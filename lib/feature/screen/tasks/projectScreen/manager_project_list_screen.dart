@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 import 'package:hrms_app/feature/screen/tasks/projectScreen/manager_project_details_screen.dart';
 
+import 'manager_project_create_screen.dart';
+
 class ManagerProjectListScreen extends StatefulWidget {
   const ManagerProjectListScreen({super.key});
 
@@ -96,7 +98,14 @@ class _ManagerProjectListScreenState extends State<ManagerProjectListScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ManagerProjectCreateScreen(),
+                  ),
+                );
+              },
               icon: const Icon(Icons.add, size: 18, color: Colors.white),
               label: const Text('Project', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
               style: ElevatedButton.styleFrom(
