@@ -3,6 +3,7 @@ import 'package:hrms_app/core/constants/app_images_png.dart';
 import 'package:hrms_app/feature/screen/tasks/projectScreen/manager_project_details_screen.dart';
 
 import 'manager_project_create_screen.dart';
+import '../manager_project_task_create_screen.dart';
 
 class ManagerProjectListScreen extends StatefulWidget {
   const ManagerProjectListScreen({super.key});
@@ -478,7 +479,19 @@ class _ProjectListItemState extends State<ProjectListItem> {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      Expanded(child: _buildActionButton(Icons.add, 'Task', const Color(0xFF901AEA))),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ManagerProjectTaskCreateScreen(projectName: widget.title),
+                              ),
+                            );
+                          },
+                          child: _buildActionButton(Icons.add, 'Task', const Color(0xFF901AEA)),
+                        ),
+                      ),
                       const SizedBox(width: 10),
                       Expanded(child: _buildActionButton(Icons.group_outlined, 'Teams', const Color(0xFF00B5AD))),
                       const SizedBox(width: 10),

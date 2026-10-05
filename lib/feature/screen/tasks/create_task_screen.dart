@@ -80,7 +80,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             end: Alignment.bottomCenter,
             colors: [
               const Color(0xFF311040),
-              const Color(0xFF311040).withOpacity(0.6),
+              const Color(0xFF311040).withValues(alpha: 0.6),
             ],
             stops: const [0.0, 0.45],
           ),

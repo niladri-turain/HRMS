@@ -18,7 +18,7 @@ class ManagerProjectTaskGrid extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -32,7 +32,7 @@ class ManagerProjectTaskGrid extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: Color(0xFFA020F0),
+              color: const Color(0xFF901AEA),
             ),
           ),
           const SizedBox(height: 12),
@@ -204,9 +204,9 @@ class ManagerProjectTaskCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: color.withOpacity(0.08),
+          color: color.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: color.withOpacity(0.8), width: 1.2),
+          border: Border.all(color: color.withValues(alpha: 0.8), width: 1.2),
         ),
         child: Row(
           children: [
@@ -276,7 +276,7 @@ class TaskChartCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -290,7 +290,7 @@ class TaskChartCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: Color(0xFFA020F0),
+              color: const Color(0xFF901AEA),
             ),
           ),
           const SizedBox(height: 20),
@@ -459,7 +459,7 @@ class RecentActivitiesSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -473,7 +473,7 @@ class RecentActivitiesSection extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: Color(0xFFA020F0),
+              color: const Color(0xFF901AEA),
             ),
           ),
           const SizedBox(height: 16),

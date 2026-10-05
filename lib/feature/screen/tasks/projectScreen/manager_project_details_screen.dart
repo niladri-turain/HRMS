@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 import 'package:hrms_app/feature/screen/tasks/widgets/manager_task_dashboard_widgets.dart';
+import '../manager_project_task_create_screen.dart';
 
 import 'manager_project_list_screen.dart';
 
@@ -48,7 +49,14 @@ class ManagerProjectDetailsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ManagerProjectTaskCreateScreen(projectName: title),
+                  ),
+                );
+              },
               icon: const Icon(Icons.add, size: 18, color: Colors.white),
               label: const Text('Task', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
               style: ElevatedButton.styleFrom(
@@ -71,7 +79,7 @@ class ManagerProjectDetailsScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF311040), Color(0x00FFFFFF)],
+            colors: [Color(0xFF311040), Color(0xFFFFFFFF)],
             stops: [0.0, 1.0],
           ),
         ),
@@ -114,7 +122,7 @@ class ManagerProjectDetailsScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -144,30 +152,30 @@ class ManagerProjectDetailsScreen extends StatelessWidget {
                     Text(
                       title,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Row(
                       children: [
                         Text(
                           tasks,
-                          style: const TextStyle(color: Colors.grey, fontSize: 12),
+                          style: const TextStyle(color: Color(0xFF6B7280), fontSize: 10, fontWeight: FontWeight.w500),
                         ),
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFA020F0).withOpacity(0.1),
+                            color: const Color(0xFF901AEA).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
                             category,
                             style: const TextStyle(
-                              color: Color(0xFFA020F0),
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF901AEA),
+                              fontSize: 8,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
@@ -305,7 +313,7 @@ class ManagerProjectDetailsScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -319,7 +327,7 @@ class ManagerProjectDetailsScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: Color(0xFFA020F0),
+              color: Color(0xFF901AEA),
             ),
           ),
           const SizedBox(height: 16),

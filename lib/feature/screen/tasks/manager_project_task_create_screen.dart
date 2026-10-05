@@ -1,34 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 
-class ManagerProjectCreateScreen extends StatefulWidget {
-  const ManagerProjectCreateScreen({super.key});
+class ManagerProjectTaskCreateScreen extends StatefulWidget {
+  final String projectName;
+  const ManagerProjectTaskCreateScreen({super.key, required this.projectName});
 
   @override
-  State<ManagerProjectCreateScreen> createState() => _ManagerProjectCreateScreenState();
+  State<ManagerProjectTaskCreateScreen> createState() => _ManagerProjectTaskCreateScreenState();
 }
 
-class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen> {
-  final TextEditingController _projectNameController = TextEditingController(text: 'HRMS software CRM');
-  final TextEditingController _projectCodeController = TextEditingController();
+class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreateScreen> {
+  final TextEditingController _taskTitleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _durationController = TextEditingController(text: '150');
+  final TextEditingController _durationController = TextEditingController();
 
-  String _selectedTaskCategory = 'Low';
-  String _selectedVisibility = 'Public';
-  String _selectedCategory = 'Website';
-
-  bool _enableSubtasks = true;
-  bool _enableMilestones = true;
-  bool _enableTimetracking = false;
-  bool _enableFileSharing = true;
-  bool _enableNotification = true;
+  String _selectedPriority = 'Low';
+  String _selectedCategory = 'Development';
 
   final List<Map<String, String>> _selectedMembers = [
     {'name': 'Biswajit', 'image': AppImagesPng.six},
     {'name': 'Bikash', 'image': AppImagesPng.four},
     {'name': 'Manoj', 'image': AppImagesPng.five},
-    {'name': 'Moulina', 'image': AppImagesPng.three},
+    {'name': 'Moulina', 'image': AppImagesPng.one},
   ];
 
   @override
@@ -45,7 +38,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
         ),
         titleSpacing: -10,
         title: const Text(
-          'Create Project',
+          'Create Project Task',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18),
         ),
         centerTitle: false,
@@ -76,31 +69,33 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildLabel('Project Name', isRequired: true),
-                  _buildTextField(
-                    controller: _projectNameController,
-                    hintText: 'Enter Project Name',
-                    prefixIcon: Icons.language,
-                  ),
+                  _buildLabel('Project', isRequired: true),
+                  _buildDropdown('HRMS software CRM', Icons.language),
                   const SizedBox(height: 16),
-                  _buildLabel('Project Code'),
+                  _buildLabel('Project Module (Optional)'),
+                  _buildDropdown('Select Project Module', Icons.language),
+                  const SizedBox(height: 16),
+                  _buildLabel('Task Title', isRequired: true),
                   _buildTextField(
-                    controller: _projectCodeController,
-                    hintText: 'Enter Project Code',
+                    controller: _taskTitleController,
+                    hintText: 'Select Project Module', // Matching image hint exactly
                     prefixIcon: Icons.edit_outlined,
                   ),
                   const SizedBox(height: 16),
-                  _buildLabel('Description'),
+                  _buildLabel('Task Description'),
                   _buildDescriptionField(),
                   const SizedBox(height: 16),
                   _buildLabel('Team Members'),
                   _buildTeamMembersSection(),
                   const SizedBox(height: 16),
-                  _buildLabel('Project Category', isRequired: true),
-                  _buildProjectCategoryGrid(),
+                  _buildLabel('Default Task Status'),
+                  _buildDropdown('To Do', Icons.language),
                   const SizedBox(height: 16),
                   _buildLabel('Task Category', isRequired: true),
-                  _buildTaskCategorySelector(),
+                  _buildProjectCategoryGrid(),
+                  const SizedBox(height: 16),
+                  _buildLabel('Task Category', isRequired: true), // Image has duplicate label name for priorities
+                  _buildTaskPrioritySelector(),
                   const SizedBox(height: 16),
                   Row(
                     children: [
@@ -128,26 +123,15 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
                     hintText: '150',
                     suffixText: 'hours',
                   ),
-                  const SizedBox(height: 16),
-                  _buildLabel('Project Visibility'),
-                  _buildVisibilitySelector(),
-                  const SizedBox(height: 16),
-                  _buildLabel('Default Task Status'),
-                  _buildDropdown('To Do', Icons.public),
-                  const SizedBox(height: 16),
-                  _buildSwitchRow('Enable Subtasks', _enableSubtasks, (v) => setState(() => _enableSubtasks = v)),
-                  _buildSwitchRow('Enable Milestones', _enableMilestones, (v) => setState(() => _enableMilestones = v)),
-                  _buildSwitchRow('Enable Timetracking', _enableTimetracking, (v) => setState(() => _enableTimetracking = v)),
-                  _buildSwitchRow('Enable File Sharing', _enableFileSharing, (v) => setState(() => _enableFileSharing = v)),
-                  _buildSwitchRow('Enable Notification to Team', _enableNotification, (v) => setState(() => _enableNotification = v)),
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
-                    height: 43,
+                    height: 48,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => Navigator.pop(context),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF901AEA),
+                        elevation: 0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
                       child: const Text(
@@ -168,14 +152,14 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
 
   Widget _buildLabel(String text, {bool isRequired = false}) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: 6.0),
       child: RichText(
         text: TextSpan(
           text: text,
           style: const TextStyle(
             color: Color(0xFF1F2937),
             fontSize: 12,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
           ),
           children: isRequired
               ? [
@@ -197,7 +181,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
     String? suffixText,
   }) {
     return Container(
-      height: 40,
+      height: 44,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -205,20 +189,20 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
       ),
       child: TextField(
         controller: controller,
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+          hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
           prefixIcon: prefixIcon != null
               ? Padding(
-                  padding: const EdgeInsets.only(left: 6.0, right: 0.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Icon(prefixIcon, size: 18, color: const Color(0xFF9CA3AF)),
                 )
               : null,
           prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
           suffixIcon: suffixText != null
               ? Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
                   child: Text(suffixText, style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13)),
                 )
               : null,
@@ -227,7 +211,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
             left: prefixIcon != null ? 0 : 12,
             right: 12,
             top: 0,
-            bottom: 10,
+            bottom: 0,
           ),
         ),
       ),
@@ -249,8 +233,8 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
             maxLines: 4,
             style: const TextStyle(fontSize: 13),
             decoration: const InputDecoration(
-              hintText: 'Enter project details, objective, expected etc..',
-              hintStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+              hintText: 'Enter task details, objective, expected etc..',
+              hintStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
               border: InputBorder.none,
               contentPadding: EdgeInsets.all(12),
             ),
@@ -268,72 +252,81 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
   }
 
   Widget _buildTeamMembersSection() {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFFE5E7EB)),
-          ),
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _selectedMembers.map((member) {
-              return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF3F4F6),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircleAvatar(
-                      radius: 10,
-                      backgroundImage: AssetImage(member['image']!),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      member['name']!,
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(width: 4),
-                    const Icon(Icons.close, size: 12, color: Colors.grey),
-                  ],
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-        const SizedBox(height: 8),
-        _buildDropdown('Select Employee', Icons.group_outlined),
-      ],
-    );
-  }
-
-  Widget _buildDropdown(String text, IconData icon) {
     return Container(
-      height: 40,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: const Color(0xFFE5E7EB)),
       ),
+      child: Column(
+        children: [
+          if (_selectedMembers.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: _selectedMembers.map((member) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF3F4F6),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: const Color(0xFFE5E7EB)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircleAvatar(
+                          radius: 9,
+                          backgroundImage: AssetImage(member['image']!),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          member['name']!,
+                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(Icons.close, size: 12, color: Color(0xFF6B7280)),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          const Divider(height: 1, color: Color(0xFFE5E7EB)),
+          _buildDropdown('Select Employee', Icons.group_outlined, showBorder: false),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDropdown(String text, IconData icon, {bool showBorder = true}) {
+    final bool isHint = text.startsWith('Select');
+    return Container(
+      height: 44,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: showBorder ? BorderRadius.circular(8) : null,
+        border: showBorder ? Border.all(color: const Color(0xFFE5E7EB)) : null,
+      ),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: const Color(0xFF9CA3AF)),
+          Icon(icon, size: 18, color: const Color(0xFF9CA3AF)),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+              style: TextStyle(
+                color: isHint ? const Color(0xFF9CA3AF) : const Color(0xFF1F2937),
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-          const Icon(Icons.keyboard_arrow_down, color: Colors.black87),
+          const Icon(Icons.keyboard_arrow_down, color: Color(0xFF6B7280), size: 20),
         ],
       ),
     );
@@ -341,15 +334,15 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
 
   Widget _buildProjectCategoryGrid() {
     final categories = [
-      {'name': 'Website', 'icon': Icons.computer},
-      {'name': 'CRM', 'icon': Icons.track_changes},
-      {'name': 'ERP', 'icon': Icons.settings_input_component},
-      {'name': 'Finance', 'icon': Icons.account_balance_wallet_outlined},
-      {'name': 'MLM', 'icon': Icons.search},
-      {'name': 'Automation', 'icon': Icons.people_outline},
-      {'name': 'Cpaas', 'icon': Icons.home_work_outlined},
-      {'name': 'SaaS', 'icon': Icons.dashboard_customize_outlined},
-      {'name': 'Others', 'icon': Icons.grid_view},
+      {'name': 'Development', 'icon': Icons.computer_outlined},
+      {'name': 'Design', 'icon': Icons.colorize_outlined},
+      {'name': 'Testing', 'icon': Icons.bug_report_outlined},
+      {'name': 'Documentation', 'icon': Icons.assignment_outlined},
+      {'name': 'Research', 'icon': Icons.search},
+      {'name': 'Meeting', 'icon': Icons.groups_outlined},
+      {'name': 'Client Visit', 'icon': Icons.business_outlined},
+      {'name': 'Presentation', 'icon': Icons.co_present_outlined},
+      {'name': 'Others', 'icon': Icons.grid_view_outlined},
     ];
 
     return GridView.builder(
@@ -357,7 +350,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        childAspectRatio: 1.9,
+        childAspectRatio: 1.8,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
@@ -369,7 +362,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
           onTap: () => setState(() => _selectedCategory = category['name'] as String),
           child: Container(
             decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFFF5E6FF) : Colors.white,
+              color: isSelected ? const Color(0xFF901AEA).withValues(alpha: 0.05) : Colors.white,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: isSelected ? const Color(0xFF901AEA) : const Color(0xFFE5E7EB),
@@ -380,14 +373,14 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
               children: [
                 Icon(
                   category['icon'] as IconData,
-                  size: 15,
+                  size: 18,
                   color: isSelected ? const Color(0xFF901AEA) : const Color(0xFF6B7280),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   category['name'] as String,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     color: isSelected ? const Color(0xFF901AEA) : const Color(0xFF6B7280),
                   ),
@@ -400,34 +393,34 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
     );
   }
 
-  Widget _buildTaskCategorySelector() {
-    final types = [
-      {'label': 'Low', 'color': const Color(0xFF1BA6F1)},
-      {'label': 'Normal', 'color': const Color(0xFFDFC900)},
-      {'label': 'High', 'color': const Color(0xFFDF8D00)},
-      {'label': 'Urgent', 'color': const Color(0xFFFF0000)},
+  Widget _buildTaskPrioritySelector() {
+    final priorities = [
+      {'label': 'Low', 'color': const Color(0xFF3B82F6)},
+      {'label': 'Normal', 'color': const Color(0xFFDFAF00)},
+      {'label': 'High', 'color': const Color(0xFFF97316)},
+      {'label': 'Urgent', 'color': const Color(0xFFEF4444)},
     ];
 
     return Row(
-      children: types.map((type) {
-        final bool isSelected = _selectedTaskCategory == type['label'];
-        final color = type['color'] as Color;
+      children: priorities.map((p) {
+        final bool isSelected = _selectedPriority == p['label'];
+        final color = p['color'] as Color;
         return Expanded(
           child: GestureDetector(
-            onTap: () => setState(() => _selectedTaskCategory = type['label'] as String),
+            onTap: () => setState(() => _selectedPriority = p['label'] as String),
             child: Container(
               margin: const EdgeInsets.only(right: 8),
               height: 36,
               decoration: BoxDecoration(
-                color: isSelected ? color.withValues(alpha: 0.1) : Colors.white,
-                borderRadius: BorderRadius.circular(6),
+                color: isSelected ? color.withValues(alpha: 0.05) : Colors.white,
+                borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: isSelected ? color : const Color(0xFFE5E7EB)),
               ),
               alignment: Alignment.center,
               child: Text(
-                type['label'] as String,
+                p['label'] as String,
                 style: TextStyle(
-                  color: isSelected ? color : const Color(0xFF9CA3AF),
+                  color: isSelected ? color : const Color(0xFF6B7280),
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
@@ -444,17 +437,17 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
       height: 40,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFF4B5563)),
+        border: Border.all(color: const Color(0xFF9CA3AF)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 18, color: const Color(0xFF4B5563)),
+          Icon(icon, size: 18, color: const Color(0xFF6B7280)),
           const SizedBox(width: 8),
           Text(
             label,
             style: const TextStyle(
-              color: Color(0xFF4B5563),
+              color: Color(0xFF6B7280),
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
@@ -470,7 +463,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
       children: [
         _buildLabel(label),
         Container(
-          height: 40,
+          height: 44,
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -483,93 +476,12 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
               const SizedBox(width: 8),
               Text(
                 date,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500,color: Color(0xFF111827)),
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(0xFF1F2937)),
               ),
             ],
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildVisibilitySelector() {
-    return Row(
-      children: [
-        _buildVisibilityOption('Public', Icons.group_outlined),
-        const SizedBox(width: 12),
-        _buildVisibilityOption('Private', Icons.lock_outline),
-      ],
-    );
-  }
-
-  Widget _buildVisibilityOption(String label, IconData icon) {
-    final bool isSelected = _selectedVisibility == label;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => setState(() => _selectedVisibility = label),
-        child: Container(
-          height: 40,
-          decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFFEBF5FF) : Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: isSelected ? const Color(0xFF1A79D7) : const Color(0xFFE5E7EB),
-              width: 0.8
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 20,
-                color: isSelected ? const Color(0xFF1A79D7) : const Color(0xFF9CA3AF),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: TextStyle(
-                  color: isSelected ? const Color(0xFF1A79D7) : const Color(0xFF9CA3AF),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSwitchRow(String label, bool value, Function(bool) onChanged) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF374151),
-            ),
-          ),
-          Transform.scale(
-            scale: 0.6,
-            alignment: Alignment.centerRight,
-            child: Switch(
-              value: value,
-              onChanged: onChanged,
-              activeColor: Colors.white,
-              activeTrackColor: const Color(0xFF4361EE),
-              inactiveThumbColor: Colors.white,
-              inactiveTrackColor: Colors.grey.shade300,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -22,7 +22,7 @@ class PriorityItem extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected ? color.withOpacity(0.05) : Colors.white,
+            color: isSelected ? color.withValues(alpha: 0.05) : Colors.white,
             borderRadius: BorderRadius.circular(6),
             border: Border.all(
               color: isSelected ? color : const Color(0xFFE5E7EB),
@@ -35,7 +35,7 @@ class PriorityItem extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: isSelected ? color : color.withOpacity(0.7),
+              color: isSelected ? color : color.withValues(alpha: 0.7),
             ),
           ),
         ),
