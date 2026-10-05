@@ -43,6 +43,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
+        titleSpacing: -10,
         title: const Text(
           'Create Project',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18),
@@ -57,7 +58,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [Color(0xFF311040), Color(0xFFFFFFFF)],
-            stops: [0.0, 0.3], // Adjusting gradient to be mostly white at bottom
+            stops: [0.0, 1.0],
           ),
         ),
         child: SafeArea(
@@ -196,7 +197,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
     String? suffixText,
   }) {
     return Container(
-      height: 45,
+      height: 40,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -204,11 +205,17 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
       ),
       child: TextField(
         controller: controller,
-        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
-          prefixIcon: prefixIcon != null ? Icon(prefixIcon, size: 20, color: const Color(0xFF9CA3AF)) : null,
+          hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+          prefixIcon: prefixIcon != null
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 6.0, right: 0.0),
+                  child: Icon(prefixIcon, size: 18, color: const Color(0xFF9CA3AF)),
+                )
+              : null,
+          prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
           suffixIcon: suffixText != null
               ? Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -216,7 +223,12 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          contentPadding: EdgeInsets.only(
+            left: prefixIcon != null ? 0 : 12,
+            right: 12,
+            top: 0,
+            bottom: 10,
+          ),
         ),
       ),
     );
@@ -238,7 +250,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
             style: const TextStyle(fontSize: 13),
             decoration: const InputDecoration(
               hintText: 'Enter project details, objective, expected etc..',
-              hintStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+              hintStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
               border: InputBorder.none,
               contentPadding: EdgeInsets.all(12),
             ),
@@ -304,7 +316,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
 
   Widget _buildDropdown(String text, IconData icon) {
     return Container(
-      height: 45,
+      height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -318,10 +330,10 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+              style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
             ),
           ),
-          const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+          const Icon(Icons.keyboard_arrow_down, color: Colors.black87),
         ],
       ),
     );
@@ -345,7 +357,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        childAspectRatio: 1.5,
+        childAspectRatio: 1.9,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
@@ -368,14 +380,14 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
               children: [
                 Icon(
                   category['icon'] as IconData,
-                  size: 20,
+                  size: 15,
                   color: isSelected ? const Color(0xFF901AEA) : const Color(0xFF6B7280),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   category['name'] as String,
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     color: isSelected ? const Color(0xFF901AEA) : const Color(0xFF6B7280),
                   ),

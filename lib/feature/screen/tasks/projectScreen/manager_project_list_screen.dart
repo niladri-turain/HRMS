@@ -128,7 +128,7 @@ class _ManagerProjectListScreenState extends State<ManagerProjectListScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF311040), Color(0x00FFFFFF)],
+            colors: [Color(0xFF311040), Color(0xFFFFFFFF)],
             stops: [0.0, 1.0],
           ),
         ),
@@ -146,7 +146,7 @@ class _ManagerProjectListScreenState extends State<ManagerProjectListScreen> {
               const ProjectSearchBar(),
               Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   itemCount: displayedProjects.length,
                   separatorBuilder: (context, index) => const SizedBox(height: 16),
                   itemBuilder: (context, index) {
@@ -186,7 +186,7 @@ class ProjectFilterTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       color: Colors.transparent,
       child: Row(
         children: [
@@ -241,7 +241,7 @@ class ProjectSearchBar extends StatelessWidget {
         decoration: InputDecoration(
           hintText: 'Search Projects...',
           hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
-          prefixIcon: const Icon(Icons.search, color: Colors.black, size: 20),
+          prefixIcon: const Icon(Icons.search, color: Color(0xFF9CA3AF), size: 20),
           prefixIconConstraints: const BoxConstraints(minWidth: 40),
           filled: true,
           fillColor: Colors.white,
@@ -304,7 +304,7 @@ class _ProjectListItemState extends State<ProjectListItem> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -334,8 +334,9 @@ class _ProjectListItemState extends State<ProjectListItem> {
                       Text(
                         widget.title,
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.w700,
+                          color: Color(0xFF1F2937),
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -343,21 +344,21 @@ class _ProjectListItemState extends State<ProjectListItem> {
                         children: [
                           Text(
                             widget.tasks,
-                            style: const TextStyle(color: Colors.grey, fontSize: 10),
+                            style: const TextStyle(color: Color(0xFF6B7280), fontSize: 10, fontWeight: FontWeight.w500),
                           ),
                           const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFA020F0).withOpacity(0.1),
+                              color: const Color(0xFF901AEA).withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
                               widget.category,
                               style: const TextStyle(
-                                color: Color(0xFFA020F0),
+                                color: Color(0xFF901AEA),
                                 fontSize: 8,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ),
@@ -520,7 +521,7 @@ class _ProjectListItemState extends State<ProjectListItem> {
     return Container(
       height: 36,
       decoration: BoxDecoration(
-        border: Border.all(color: color.withOpacity(0.5)),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -561,7 +562,7 @@ class DottedDivider extends StatelessWidget {
               width: dashWidth,
               height: 1,
               child: DecoratedBox(
-                decoration: BoxDecoration(color: Colors.black.withOpacity(0.12)),
+                decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.12)),
               ),
             );
           }),
