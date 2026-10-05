@@ -4,6 +4,7 @@ import 'package:hrms_app/feature/screen/tasks/projectScreen/manager_project_deta
 
 import 'manager_project_create_screen.dart';
 import '../manager_project_task_create_screen.dart';
+import '../teamScreen/team_list_screen.dart';
 
 class ManagerProjectListScreen extends StatefulWidget {
   const ManagerProjectListScreen({super.key});
@@ -493,7 +494,19 @@ class _ProjectListItemState extends State<ProjectListItem> {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Expanded(child: _buildActionButton(Icons.group_outlined, 'Teams', const Color(0xFF00B5AD))),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const TeamListScreen(),
+                              ),
+                            );
+                          },
+                          child: _buildActionButton(Icons.group_outlined, 'Teams', const Color(0xFF00B5AD)),
+                        ),
+                      ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: GestureDetector(

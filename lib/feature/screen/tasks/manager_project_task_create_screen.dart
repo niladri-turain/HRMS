@@ -69,10 +69,16 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildLabel('Project', isRequired: true),
+                  _buildDropdown(widget.projectName, Icons.inventory_2_outlined),
+                  const SizedBox(height: 16),
+                  _buildLabel('Project Module (Optional)'),
+                  _buildDropdown('Select Project Module', Icons.inventory_2_outlined),
+                  const SizedBox(height: 16),
                   _buildLabel('Task Title', isRequired: true),
                   _buildTextField(
                     controller: _taskTitleController,
-                    hintText: 'Select Project Module', // Matching image hint exactly
+                    hintText: 'Select Project Module',
                     prefixIcon: Icons.edit_outlined,
                   ),
                   const SizedBox(height: 16),
@@ -81,8 +87,6 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
                   const SizedBox(height: 16),
                   _buildLabel('Team Members'),
                   _buildTeamMembersSection(),
-                  const SizedBox(height: 12),
-                  _buildDropdown('Select Employee', Icons.groups_outlined, showBorder: false),
                   const SizedBox(height: 16),
                   _buildLabel('Default Task Status'),
                   _buildDropdown('To Do', Icons.language),
@@ -90,7 +94,7 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
                   _buildLabel('Task Category', isRequired: true),
                   _buildProjectCategoryGrid(),
                   const SizedBox(height: 16),
-                  _buildLabel('Task Category', isRequired: true), // Image 9:41 had duplicate label for priorities
+                  _buildLabel('Task Category', isRequired: true),
                   _buildTaskPrioritySelector(),
                   const SizedBox(height: 16),
                   Row(
@@ -177,7 +181,7 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
     String? suffixText,
   }) {
     return Container(
-      height: 40,
+      height: 44,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -206,7 +210,7 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
           contentPadding: EdgeInsets.only(
             left: prefixIcon != null ? 0 : 12,
             right: 12,
-            top: -5,
+            top: 0,
             bottom: 0,
           ),
         ),
@@ -267,7 +271,7 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
                 alignment: WrapAlignment.start,
                 children: _selectedMembers.map((member) {
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF3F4F6),
                       borderRadius: BorderRadius.circular(20),
@@ -277,7 +281,7 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CircleAvatar(
-                          radius: 9,
+                          radius: 10,
                           backgroundImage: AssetImage(member['image']!),
                         ),
                         const SizedBox(width: 6),
@@ -293,8 +297,8 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
                 }).toList(),
               ),
             ),
-
-
+          const Divider(height: 1, color: Color(0xFFE5E7EB)),
+          _buildDropdown('Select Employee', Icons.groups_outlined, showBorder: false),
         ],
       ),
     );
@@ -303,12 +307,12 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
   Widget _buildDropdown(String text, IconData icon, {bool showBorder = true}) {
     final bool isHint = text.startsWith('Select');
     return Container(
-      height: 40,
+      height: 44,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border:  Border.all(color: const Color(0xFFE5E7EB)) ,
+        borderRadius: showBorder ? BorderRadius.circular(8) : null,
+        border: showBorder ? Border.all(color: const Color(0xFFE5E7EB)) : null,
       ),
       child: Row(
         children: [
