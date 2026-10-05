@@ -14,8 +14,8 @@ class _TeamListScreenState extends State<TeamListScreen> {
 
   final List<Map<String, dynamic>> teamMembers = [
     {
-      'name': 'Subrata Poriya',
-      'role': 'Frontend Designer',
+      'name': 'Niladri Roy',
+      'role': 'Flutter Developer',
       'image': AppImagesPng.one,
       'progress': 0.35,
       'status': 'online',
@@ -129,9 +129,9 @@ class _TeamListScreenState extends State<TeamListScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 0.7,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.85,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
                   ),
                   itemCount: teamMembers.length,
                   itemBuilder: (context, index) {
@@ -303,8 +303,8 @@ class TeamMemberCard extends StatelessWidget {
                                   member['name'],
                                   style: const TextStyle(
                                     color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12,
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -313,8 +313,9 @@ class TeamMemberCard extends StatelessWidget {
                                 Text(
                                   member['role'],
                                   style: const TextStyle(
-                                    color: Colors.white70,
+                                    color: Colors.white,
                                     fontSize: 10,
+                                    fontWeight: FontWeight.w500
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -366,7 +367,7 @@ class TeamMemberCard extends StatelessWidget {
         children: [
           CircularProgressIndicator(
             value: progress,
-            strokeWidth: 2.5,
+            strokeWidth: 4.2,
             backgroundColor: Colors.white,
             valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF06D6A0)),
           ),
