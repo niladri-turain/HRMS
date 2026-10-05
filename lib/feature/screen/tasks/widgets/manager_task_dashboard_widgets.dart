@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
 
 import 'package:hrms_app/feature/screen/tasks/projectScreen/manager_project_list_screen.dart';
+import 'package:hrms_app/feature/screen/tasks/teamScreen/team_list_screen.dart';
 
 class ManagerProjectTaskGrid extends StatelessWidget {
   const ManagerProjectTaskGrid({super.key});
@@ -75,11 +76,19 @@ class ManagerProjectTaskGrid extends StatelessWidget {
                   );
                 },
               ),
-              const ManagerProjectTaskCard(
-                color: Color(0xFF00B4D8),
+              ManagerProjectTaskCard(
+                color: const Color(0xFF00B4D8),
                 imagePath: AppImagesPng.teamMember,
                 title: 'Team Members',
                 value: '18',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TeamListScreen(),
+                    ),
+                  );
+                },
               ),
               const ManagerProjectTaskCard(
                 color: Color(0xFF1B1B2F),

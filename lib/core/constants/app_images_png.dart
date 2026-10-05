@@ -64,6 +64,12 @@ class AppImagesPng {
   static const todoProject = "assets/images/todoProject.png";
   static const totalAssign = "assets/images/totalAssign.png";
   static const totalProject = "assets/images/totalProject.png";
+  static const one  = "assets/images/1.jpeg";
+  static const two = "assets/images/2.png";
+  static const three = "assets/images/3.png";
+  static const four = "assets/images/4.png";
+  static const five = "assets/images/5.png";
+  static const six = "assets/images/6.png";
 
 
 
