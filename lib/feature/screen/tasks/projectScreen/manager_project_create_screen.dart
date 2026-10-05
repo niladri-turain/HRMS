@@ -402,10 +402,10 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
 
   Widget _buildTaskCategorySelector() {
     final types = [
-      {'label': 'Low', 'color': const Color(0xFF4361EE)},
-      {'label': 'Normal', 'color': const Color(0xFFFFD700)},
-      {'label': 'High', 'color': const Color(0xFFFF8C00)},
-      {'label': 'Urgent', 'color': const Color(0xFFEF233C)},
+      {'label': 'Low', 'color': const Color(0xFF1BA6F1)},
+      {'label': 'Normal', 'color': const Color(0xFFDFC900)},
+      {'label': 'High', 'color': const Color(0xFFDF8D00)},
+      {'label': 'Urgent', 'color': const Color(0xFFFF0000)},
     ];
 
     return Row(
@@ -428,7 +428,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
                 type['label'] as String,
                 style: TextStyle(
                   color: isSelected ? color : const Color(0xFF9CA3AF),
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -470,7 +470,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
       children: [
         _buildLabel(label),
         Container(
-          height: 45,
+          height: 40,
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -483,7 +483,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
               const SizedBox(width: 8),
               Text(
                 date,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500,color: Color(0xFF111827)),
               ),
             ],
           ),
@@ -529,7 +529,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
                 label,
                 style: TextStyle(
                   color: isSelected ? const Color(0xFF4361EE) : const Color(0xFF9CA3AF),
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
               ),
