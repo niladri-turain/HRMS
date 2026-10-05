@@ -87,7 +87,10 @@ class _TeamListScreenState extends State<TeamListScreen> {
             child: ElevatedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.add, size: 18, color: Colors.white),
-              label: const Text('Employee', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
+              label: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: const Text('Employee', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF901AEA),
                 shape: RoundedRectangleBorder(
@@ -129,7 +132,7 @@ class _TeamListScreenState extends State<TeamListScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 0.85,
+                    childAspectRatio: 0.92,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
@@ -253,16 +256,16 @@ class TeamMemberCard extends StatelessWidget {
             top: 10,
             right: 10,
             child: Container(
-              width: 18,
-              height: 16,
+              width: 20,
+              height: 20,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(6),
               ),
               alignment: Alignment.center,
               child: Container(
-                width: 10,
-                height: 10,
+                width: 12,
+                height: 12,
                 decoration: BoxDecoration(
                   color: _getStatusColor(member['status']),
                   shape: BoxShape.circle,
@@ -280,7 +283,6 @@ class TeamMemberCard extends StatelessWidget {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Container(
-                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(15),
@@ -292,60 +294,72 @@ class TeamMemberCard extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  member['name'],
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 12,
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    member['name'],
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  member['role'],
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    member['role'],
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          _buildCircularProgress(member['progress']),
-                        ],
+                            _buildCircularProgress(member['progress']),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Text(
-                            'Task',
-                            style: TextStyle(
-                              color: Color(0xFFFFD700),
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(15),
+                            bottomRight: Radius.circular(15),
                           ),
-                          const SizedBox(width: 8),
-                          _buildTaskCount(const Color(0xFF4361EE), member['tasks']['blue']),
-                          const SizedBox(width: 6),
-                          _buildTaskCount(const Color(0xFF06D6A0), member['tasks']['green']),
-                          const SizedBox(width: 6),
-                          _buildTaskCount(const Color(0xFFEF233C), member['tasks']['red']),
-                          const SizedBox(width: 6),
-                          _buildTaskCount(const Color(0xFF8D99AE), member['tasks']['grey']),
-                        ],
+                        ),
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Task',
+                              style: TextStyle(
+                                color: Color(0xFFFFD700),
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            _buildTaskCount(const Color(0xFF4361EE), member['tasks']['blue']),
+                            const SizedBox(width: 6),
+                            _buildTaskCount(const Color(0xFF06D6A0), member['tasks']['green']),
+                            const SizedBox(width: 6),
+                            _buildTaskCount(const Color(0xFFEF233C), member['tasks']['red']),
+                            const SizedBox(width: 6),
+                            _buildTaskCount(const Color(0xFF8D99AE), member['tasks']['grey']),
+                          ],
+                        ),
                       ),
                     ],
                   ),
