@@ -111,8 +111,8 @@ class _TeamListScreenState extends State<TeamListScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF311040), Color(0xFFF5F5F5)],
-            stops: [0.0, 0.4],
+            colors: [Color(0xFF311040), Color(0xFFFFFFFF)],
+            stops: [0.0, 1.0],
           ),
         ),
         child: SafeArea(
@@ -284,10 +284,10 @@ class TeamMemberCard extends StatelessWidget {
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.4),
+                    color: Colors.black.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.2),
                       width: 1,
                     ),
                   ),
@@ -308,18 +308,18 @@ class TeamMemberCard extends StatelessWidget {
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w700,
-                                      fontSize: 12,
+                                      fontSize: 13,
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(height: 2),
+                                  const SizedBox(height: 1),
                                   Text(
                                     member['role'],
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: Colors.white.withValues(alpha: 0.8),
                                       fontSize: 10,
-                                      fontWeight: FontWeight.w500
+                                      fontWeight: FontWeight.w400,
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -334,7 +334,7 @@ class TeamMemberCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
+                          color: Colors.white.withValues(alpha: 0.1),
                           borderRadius: const BorderRadius.only(
                             bottomLeft: Radius.circular(15),
                             bottomRight: Radius.circular(15),
@@ -346,8 +346,8 @@ class TeamMemberCard extends StatelessWidget {
                               'Task',
                               style: TextStyle(
                                 color: Color(0xFFFFD700),
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -408,7 +408,7 @@ class TeamMemberCard extends StatelessWidget {
         const SizedBox(width: 2),
         Text(
           '$count',
-          style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w500),
+          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600),
         ),
       ],
     );
