@@ -69,12 +69,6 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildLabel('Project', isRequired: true),
-                  _buildDropdown('HRMS software CRM', Icons.language),
-                  const SizedBox(height: 16),
-                  _buildLabel('Project Module (Optional)'),
-                  _buildDropdown('Select Project Module', Icons.language),
-                  const SizedBox(height: 16),
                   _buildLabel('Task Title', isRequired: true),
                   _buildTextField(
                     controller: _taskTitleController,
@@ -87,6 +81,8 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
                   const SizedBox(height: 16),
                   _buildLabel('Team Members'),
                   _buildTeamMembersSection(),
+                  const SizedBox(height: 12),
+                  _buildDropdown('Select Employee', Icons.groups_outlined, showBorder: false),
                   const SizedBox(height: 16),
                   _buildLabel('Default Task Status'),
                   _buildDropdown('To Do', Icons.language),
@@ -94,7 +90,7 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
                   _buildLabel('Task Category', isRequired: true),
                   _buildProjectCategoryGrid(),
                   const SizedBox(height: 16),
-                  _buildLabel('Task Category', isRequired: true), // Image has duplicate label name for priorities
+                  _buildLabel('Task Category', isRequired: true), // Image 9:41 had duplicate label for priorities
                   _buildTaskPrioritySelector(),
                   const SizedBox(height: 16),
                   Row(
@@ -181,7 +177,7 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
     String? suffixText,
   }) {
     return Container(
-      height: 44,
+      height: 40,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -210,7 +206,7 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
           contentPadding: EdgeInsets.only(
             left: prefixIcon != null ? 0 : 12,
             right: 12,
-            top: 0,
+            top: -5,
             bottom: 0,
           ),
         ),
@@ -260,16 +256,18 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
         border: Border.all(color: const Color(0xFFE5E7EB)),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (_selectedMembers.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
               child: Wrap(
                 spacing: 8,
                 runSpacing: 8,
+                alignment: WrapAlignment.start,
                 children: _selectedMembers.map((member) {
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF3F4F6),
                       borderRadius: BorderRadius.circular(20),
@@ -282,21 +280,21 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
                           radius: 9,
                           backgroundImage: AssetImage(member['image']!),
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 6),
                         Text(
                           member['name']!,
-                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color(0xFF374151)),
                         ),
                         const SizedBox(width: 4),
-                        const Icon(Icons.close, size: 12, color: Color(0xFF6B7280)),
+                        const Icon(Icons.close, size: 14, color: Color(0xFF6B7280)),
                       ],
                     ),
                   );
                 }).toList(),
               ),
             ),
-          const Divider(height: 1, color: Color(0xFFE5E7EB)),
-          _buildDropdown('Select Employee', Icons.group_outlined, showBorder: false),
+
+
         ],
       ),
     );
@@ -305,12 +303,12 @@ class _ManagerProjectTaskCreateScreenState extends State<ManagerProjectTaskCreat
   Widget _buildDropdown(String text, IconData icon, {bool showBorder = true}) {
     final bool isHint = text.startsWith('Select');
     return Container(
-      height: 44,
+      height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: showBorder ? BorderRadius.circular(8) : null,
-        border: showBorder ? Border.all(color: const Color(0xFFE5E7EB)) : null,
+        borderRadius: BorderRadius.circular(8),
+        border:  Border.all(color: const Color(0xFFE5E7EB)) ,
       ),
       child: Row(
         children: [
