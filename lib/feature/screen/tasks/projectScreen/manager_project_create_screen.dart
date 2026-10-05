@@ -143,7 +143,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
-                    height: 50,
+                    height: 43,
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
@@ -543,20 +543,21 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
 
   Widget _buildSwitchRow(String label, bool value, Function(bool) onChanged) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 0.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
             style: const TextStyle(
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: FontWeight.w500,
               color: Color(0xFF374151),
             ),
           ),
-          SizedBox(
-            height: 30,
+          Transform.scale(
+            scale: 0.6,
+            alignment: Alignment.centerRight,
             child: Switch(
               value: value,
               onChanged: onChanged,
@@ -564,6 +565,7 @@ class _ManagerProjectCreateScreenState extends State<ManagerProjectCreateScreen>
               activeTrackColor: const Color(0xFF4361EE),
               inactiveThumbColor: Colors.white,
               inactiveTrackColor: Colors.grey.shade300,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
           ),
         ],
