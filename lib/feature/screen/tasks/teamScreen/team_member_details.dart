@@ -85,11 +85,11 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
 
   Widget _buildMemberProfileCard() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         children: [
@@ -118,9 +118,9 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
                 Text(
                   widget.member['role'],
                   style: const TextStyle(
-                    fontSize: 12,
+                    fontSize: 10,
                     color: Color(0xFF901AEA),
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -130,7 +130,7 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
                     const SizedBox(width: 4),
                     const Text(
                       '91 9932985137',
-                      style: TextStyle(fontSize: 10, color: Colors.grey),
+                      style: TextStyle(fontSize: 10, color: Color(0xFF6B7280),fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(width: 12),
                     const Icon(Icons.email_outlined, size: 14, color: Colors.grey),
@@ -138,7 +138,7 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
                     Expanded(
                       child: Text(
                         '${widget.member['name'].toLowerCase().replaceAll(' ', '')}@gmail.com',
-                        style: const TextStyle(fontSize: 10, color: Colors.grey),
+                        style: const TextStyle(fontSize: 10, color: Color(0xFF6B7280),fontWeight: FontWeight.w500),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
