@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'team_member_details.dart';
 
 class TeamListScreen extends StatefulWidget {
   const TeamListScreen({super.key});
@@ -139,7 +140,17 @@ class _TeamListScreenState extends State<TeamListScreen> {
                   itemCount: teamMembers.length,
                   itemBuilder: (context, index) {
                     final member = teamMembers[index];
-                    return TeamMemberCard(member: member);
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TeamMemberDetailsScreen(member: member),
+                          ),
+                        );
+                      },
+                      child: TeamMemberCard(member: member),
+                    );
                   },
                 ),
               ),
