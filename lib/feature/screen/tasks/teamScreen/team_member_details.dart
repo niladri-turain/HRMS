@@ -437,18 +437,11 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
       itemBuilder: (context, index) {
         final project = projects[index];
         return Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFFC6C6C6).withValues(alpha: 0.20),
-                blurRadius: 2,
-                offset: const Offset(0, 2),
-                spreadRadius: 0,
-              ),
-            ],
+            color: Color(0xFFF9F9F9),
+            borderRadius: BorderRadius.circular(10),
+
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -460,6 +453,7 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
+
                       border: Border.all(color: Colors.grey.shade200),
                       borderRadius: BorderRadius.circular(8),
                     ),
