@@ -39,15 +39,9 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF311040), Color(0xFFFFFFFF)],
-            stops: [0.0, 1.0],
-          ),
-        ),
+        color: const Color(0xFF311040),
         child: SafeArea(
+          bottom: false,
           child: Column(
             children: [
               _buildMemberProfileCard(),
@@ -56,7 +50,7 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
                 child: Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
-                    color: Color(0xFFF9FAFB),
+                    color: Colors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15),
@@ -240,6 +234,7 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
         ),
         const SizedBox(height: 20),
         const RecentActivitiesSection(),
+        const SizedBox(height: 20),
       ],
     );
   }
@@ -439,9 +434,8 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
         return Container(
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
-            color: Color(0xFFF9F9F9),
+            color: const Color(0xFFF9F9F9),
             borderRadius: BorderRadius.circular(10),
-
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -518,40 +512,24 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
               const DottedDivider(),
               const SizedBox(height: 16),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CircleAvatar(
-                    radius: 14,
-                    backgroundImage: NetworkImage(project['assignedByImage']),
-                  ),
-                  const SizedBox(width: 8),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Assigned By', style: TextStyle(color: Colors.grey, fontSize: 8)),
-                      Text(
-                        project['assignedBy'],
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
                   Row(
                     children: [
-                      Icon(Icons.access_time, size: 16, color: Colors.grey.shade600),
-                      const SizedBox(width: 4),
+                      CircleAvatar(
+                        radius: 14,
+                        backgroundImage: NetworkImage(project['assignedByImage']),
+                      ),
+                      const SizedBox(width: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Estimated Time', style: TextStyle(color: Colors.grey, fontSize: 8)),
+                          const Text('Assigned By', style: TextStyle(color: Color(0xFF6B7280), fontSize: 8, fontWeight: FontWeight.w500)),
                           Text(
-                            project['estimatedTime'],
+                            project['assignedBy'],
                             style: const TextStyle(
-                              color: Color(0xFF4361EE),
-                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
                               fontSize: 10,
                             ),
                           ),
@@ -559,20 +537,39 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(width: 12),
                   Row(
                     children: [
-                      Icon(Icons.calendar_today_outlined, size: 16, color: Colors.grey.shade600),
+                      const Icon(Icons.access_time, size: 20, color: Color(0xFF6B7280)),
                       const SizedBox(width: 4),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Due Date', style: TextStyle(color: Colors.grey, fontSize: 8)),
+                          const Text('Estimated Time', style: TextStyle(color: Color(0xFF6B7280), fontSize: 8, fontWeight: FontWeight.w500)),
+                          Text(
+                            project['estimatedTime'],
+                            style: const TextStyle(
+                              color: Color(0xFF1A79D7),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_today_outlined, size: 20, color: Color(0xFF6B7280)),
+                      const SizedBox(width: 4),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Due Date', style: TextStyle(color: Color(0xFF6B7280), fontSize: 8, fontWeight: FontWeight.w500)),
                           Text(
                             project['dueDate'],
                             style: const TextStyle(
-                              color: Color(0xFFD4A017),
-                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFDFAF00),
+                              fontWeight: FontWeight.w700,
                               fontSize: 10,
                             ),
                           ),
