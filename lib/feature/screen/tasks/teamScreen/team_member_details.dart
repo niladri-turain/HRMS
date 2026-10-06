@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
+import 'package:hrms_app/core/constants/app_sizes.dart';
 import 'package:hrms_app/feature/screen/tasks/widgets/manager_task_dashboard_widgets.dart';
 
 import '../projectScreen/manager_project_list_screen.dart';
@@ -50,21 +51,32 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
           child: Column(
             children: [
               _buildMemberProfileCard(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Expanded(
                 child: Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     color: Color(0xFFF9FAFB),
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15),
                     ),
                   ),
                   child: Column(
                     children: [
-                      const SizedBox(height: 20),
-                      _buildTabSection(),
+
+                      Container(
+
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 15),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF901AEA).withValues(alpha: 0.05),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                            ),
+                          ),
+                          child: _buildTabSection()),
                       const SizedBox(height: 8),
                       Expanded(
                         child: SingleChildScrollView(
@@ -153,19 +165,21 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
   }
 
   Widget _buildTabSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildTabItem('Overview', 0),
-          const SizedBox(width: 8),
-          _buildTabItem('Projects', 1),
-          const SizedBox(width: 8),
-          _buildTabItem('Tasks', 2),
-        ],
-      ),
-    );
+    return
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildTabItem('Overview', 0),
+            const SizedBox(width: 8),
+            _buildTabItem('Projects', 1),
+            const SizedBox(width: 8),
+            _buildTabItem('Tasks', 2),
+          ],
+
+            ),
+      );
   }
 
   Widget _buildTabItem(String title, int index) {
@@ -174,21 +188,14 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
       child: GestureDetector(
         onTap: () => setState(() => _selectedTabIndex = index),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 6),
           decoration: BoxDecoration(
             color: isSelected ? const Color(0xFF901AEA) : Colors.white,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(5),
             border: Border.all(
               color: isSelected ? Colors.transparent : const Color(0xFF901AEA).withValues(alpha: 0.2),
             ),
-            boxShadow: [
-              if (isSelected)
-                BoxShadow(
-                  color: const Color(0xFF901AEA).withValues(alpha: 0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-            ],
+
           ),
           alignment: Alignment.center,
           child: Text(
@@ -244,11 +251,13 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFF3F4F6)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: const Color(0xFFC6C6C6).withValues(alpha: 0.20),
+            blurRadius: 2,
+            offset: const Offset(0, 2),
+            spreadRadius: 0,
           ),
         ],
       ),
@@ -263,7 +272,7 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
               color: Color(0xFF901AEA),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
@@ -273,25 +282,25 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
             childAspectRatio: 2.8,
             children: [
               _buildOverviewProjectCard(
-                color: const Color(0xFF901AEA),
+                color: const Color(0xFF7C45DA),
                 icon: AppImagesPng.totalProject,
                 title: 'Total Projects',
                 value: '6',
               ),
               _buildOverviewProjectCard(
-                color: const Color(0xFF1B1B2F),
+                color: const Color(0xFF111827),
                 icon: AppImagesPng.totalAssign,
                 title: 'Total Assign Tasks',
                 value: '120',
               ),
               _buildOverviewProjectCard(
-                color: const Color(0xFF06D6A0),
+                color: const Color(0xFF03C95A),
                 icon: AppImagesPng.completeTask,
                 title: 'Completed Project',
                 value: '2',
               ),
               _buildOverviewProjectCard(
-                color: const Color(0xFF4361EE),
+                color: const Color(0xFF1A79D7),
                 icon: AppImagesPng.inProgressTask,
                 title: 'In Progress Tasks',
                 value: '18',
@@ -311,41 +320,34 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: color.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: color, width: 0.5),
       ),
       child: Row(
         children: [
           Container(
-            width: 45,
+            width: 48,
             height: double.infinity,
             decoration: BoxDecoration(
               color: color,
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(0),
-                bottomLeft: Radius.circular(0),
+                topLeft: Radius.circular(9),
+                bottomLeft: Radius.circular(9),
                 topRight: Radius.circular(40),
                 bottomRight: Radius.circular(40),
               ),
             ),
             child: Center(
               child: Container(
-                width: 24,
-                height: 24,
+                width: 26,
+                height: 26,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(6),
                   child: Image.asset(icon, color: color),
                 ),
               ),
@@ -360,13 +362,21 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(fontSize: 9, color: Colors.black, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     value,
-                    style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w800),
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: color,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ],
               ),
@@ -433,9 +443,10 @@ class _TeamMemberDetailsScreenState extends State<TeamMemberDetailsScreen> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+                color: const Color(0xFFC6C6C6).withValues(alpha: 0.20),
+                blurRadius: 2,
+                offset: const Offset(0, 2),
+                spreadRadius: 0,
               ),
             ],
           ),
