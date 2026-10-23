@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
-
 import 'package:hrms_app/feature/screen/tasks/projectScreen/manager_project_list_screen.dart';
 import 'package:hrms_app/feature/screen/tasks/teamScreen/team_list_screen.dart';
+import 'package:hrms_app/feature/screen/tasks/managerTask/manager_task_list_screen.dart';
 
 class ManagerProjectTaskGrid extends StatelessWidget {
   const ManagerProjectTaskGrid({super.key});
@@ -90,11 +90,19 @@ class ManagerProjectTaskGrid extends StatelessWidget {
                   );
                 },
               ),
-              const ManagerProjectTaskCard(
-                color: Color(0xFF1B1B2F),
+              ManagerProjectTaskCard(
+                color: const Color(0xFF1B1B2F),
                 imagePath: AppImagesPng.totalAssign,
                 title: 'Total Assign Tasks',
                 value: '362',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ManagerTaskListScreen(),
+                    ),
+                  );
+                },
               ),
               const ManagerProjectTaskCard(
                 color: Color(0xFF4361EE),
