@@ -171,106 +171,130 @@ class _ManagerTaskListScreenState extends State<ManagerTaskListScreen> {
             stops: [0.0, 1.0],
           ),
         ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 8),
-
-              // Main Tabs (My Task | Team Task)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _buildMainTabItem('My Task (0)', 0),
-                      ),
-                      Expanded(
-                        child: _buildMainTabItem('Team Task (120)', 1),
-                      ),
-                    ],
+        child: Column(
+          children: [
+            const SafeArea(bottom: false, child: SizedBox(height: 30)),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
                   ),
                 ),
-              ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 24),
 
-              const SizedBox(height: 12),
-
-              // Status Tabs
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  child: Row(
-                    children: [
-                      _buildStatusTabItem('All Jobs (120)', 0),
-                      const SizedBox(width: 8),
-                      _buildStatusTabItem('To Do (92)', 1),
-                      const SizedBox(width: 8),
-                      _buildStatusTabItem('In Progress (18)', 2),
-                      const SizedBox(width: 8),
-                      _buildStatusTabItem('Complete (10)', 3),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Search Bar
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SizedBox(
-                  height: 40,
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: (value) => setState(() {}),
-                    decoration: InputDecoration(
-                      hintText: 'Search tasks by title, project or clients...',
-                      hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
-                      prefixIcon: const Icon(Icons.search, color: Color(0xFF9CA3AF), size: 20),
-                      filled: true,
-                      fillColor: Colors.white,
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none,
+                    // Main Tabs (My Task | Team Task)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: const Color(0xFFE5E7EB)),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: _buildMainTabItem('My Task (0)', 0),
+                            ),
+                            Expanded(
+                              child: _buildMainTabItem('Team Task (120)', 1),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
+
+                    const SizedBox(height: 16),
+
+                    // Status Tabs
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
+                        child: Row(
+                          children: [
+                            _buildStatusTabItem('All Jobs (120)', 0),
+                            const SizedBox(width: 8),
+                            _buildStatusTabItem('To Do (92)', 1),
+                            const SizedBox(width: 8),
+                            _buildStatusTabItem('In Progress (18)', 2),
+                            const SizedBox(width: 8),
+                            _buildStatusTabItem('Complete (10)', 3),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Search Bar
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: SizedBox(
+                        height: 44,
+                        child: TextField(
+                          controller: _searchController,
+                          onChanged: (value) => setState(() {}),
+                          decoration: InputDecoration(
+                            hintText: 'Search tasks by title, project or clients...',
+                            hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+                            prefixIcon: const Icon(Icons.search, color: Color(0xFF9CA3AF), size: 20),
+                            filled: true,
+                            fillColor: Colors.white,
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(color: Color(0xFF901AEA)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Tasks List
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        itemCount: _filteredTasks.length,
+                        itemBuilder: (context, index) {
+                          final task = _filteredTasks[index];
+                          final isExpanded = _expandedIndex == index;
+                          return ManagerTaskItemWidget(
+                            task: task,
+                            isExpanded: isExpanded,
+                            onTap: () {
+                              setState(() {
+                                _expandedIndex = isExpanded ? -1 : index;
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-
-              const SizedBox(height: 12),
-
-              // Tasks List
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  itemCount: _filteredTasks.length,
-                  itemBuilder: (context, index) {
-                    final task = _filteredTasks[index];
-                    final isExpanded = _expandedIndex == index;
-                    return ManagerTaskItemWidget(
-                      task: task,
-                      isExpanded: isExpanded,
-                      onTap: () {
-                        setState(() {
-                          _expandedIndex = isExpanded ? -1 : index;
-                        });
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -282,9 +306,9 @@ class _ManagerTaskListScreenState extends State<ManagerTaskListScreen> {
     return GestureDetector(
       onTap: () => setState(() => _selectedMainTab = index),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF901AEA) : Colors.white,
+          color: isSelected ? const Color(0xFF901AEA) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Center(
@@ -310,6 +334,9 @@ class _ManagerTaskListScreenState extends State<ManagerTaskListScreen> {
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFF901AEA) : Colors.white,
           borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF901AEA) : const Color(0xFF901AEA).withOpacity(0.3),
+          ),
         ),
         child: Text(
           label,
