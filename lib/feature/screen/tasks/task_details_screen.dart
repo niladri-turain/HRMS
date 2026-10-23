@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hrms_app/feature/screen/tasks/tasks_screen.dart';
+import 'package:hrms_app/feature/model/tasks/task_model.dart';
 import 'widgets/task_details_widgets.dart';
 
 class TaskDetailsScreen extends StatelessWidget {

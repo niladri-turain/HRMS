@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_colors.dart';
+import 'package:hrms_app/feature/model/tasks/task_model.dart';
 
 import '../../../core/constants/app_images_png.dart';
 import 'create_task_screen.dart';
@@ -786,58 +787,4 @@ class TaskItemWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-// Priority Config Helper Class
-class PriorityConfig {
-  final Color textColor;
-  final Color bgColor;
-  final Color borderColor;
-  final Color leftBarColor;
-
-  PriorityConfig({
-    required this.textColor,
-    required this.bgColor,
-    required this.borderColor,
-    required this.leftBarColor,
-  });
-}
-
-// Task Model Helper Data structure
-class TaskModel {
-  final String id;
-  final String clientProject;
-  final String title;
-  final String assignBy;
-  final String assignInitials;
-  final String dueDate;
-  final String status;
-  final String priority;
-  final String subTasksCount;
-  final double progress;
-  final int commentsCount;
-  final int attachmentsCount;
-  final String assignedOn;
-  final String estimatedTime;
-  final String durationCover;
-  final String description;
-
-  TaskModel({
-    required this.id,
-    required this.clientProject,
-    required this.title,
-    required this.assignBy,
-    required this.assignInitials,
-    required this.dueDate,
-    required this.status,
-    required this.priority,
-    required this.subTasksCount,
-    required this.progress,
-    required this.commentsCount,
-    required this.attachmentsCount,
-    required this.assignedOn,
-    required this.estimatedTime,
-    required this.durationCover,
-    required this.description,
-  });
 }

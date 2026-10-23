@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class TaskModel {
   final String id;
   final String clientProject;
@@ -37,6 +39,21 @@ class TaskModel {
     required this.description,
     this.userImageUrl,
     this.timeAgo,
+  });
+}
+
+// Priority Config Helper Class
+class PriorityConfig {
+  final Color textColor;
+  final Color bgColor;
+  final Color borderColor;
+  final Color leftBarColor;
+
+  PriorityConfig({
+    required this.textColor,
+    required this.bgColor,
+    required this.borderColor,
+    required this.leftBarColor,
   });
 }
 

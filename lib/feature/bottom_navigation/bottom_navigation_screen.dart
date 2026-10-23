@@ -38,10 +38,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
   }
 
   List<Widget> get _screens {
-    final bool isManager = _designationCode == 'MKT-HEAD';
+    final bool isManager = _designationCode == 'DESG123';
+    print("_designationCode: $_designationCode");
     return [
       isManager ? const ManagerDashboardScreen() : const DashboardScreen(role: 'employee'),
-      ClientVisitScreen(role: isManager ? "manager" : "employee"),
+      ClientVisitScreen(role: isManager ? "manager" : "manager"),
       const AttendanceScreen(),
       isManager ? const TaskScreenDashboardManager() : const TasksScreen(),
       const AccountScreen(),

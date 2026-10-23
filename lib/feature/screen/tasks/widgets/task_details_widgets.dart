@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/core/constants/app_images_png.dart';
-import '../tasks_screen.dart';
+import 'package:hrms_app/feature/model/tasks/task_model.dart';
 
 class TaskHeaderCard extends StatelessWidget {
   final TaskModel task;
