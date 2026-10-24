@@ -32,7 +32,7 @@ class AttendanceTimelineCard extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           _buildTimelineItem(
-            icon: Icons.login,
+            icon: Icons.login_rounded,
             title: 'Login',
             time: '10:28 AM',
             status: 'On Time',
@@ -60,24 +60,28 @@ class AttendanceTimelineCard extends StatelessWidget {
             isCompleted: false,
           ),
           _buildTimelineItem(
-            icon: Icons.logout,
+            icon: Icons.logout_rounded,
             title: 'Logout',
             time: '19:00 PM',
             status: 'Upcoming',
-            color: const Color(0xFF111827),
-            bgColor: const Color(0xFFF9FAFB),
+            color: const Color(0xFF6B7280),
+            bgColor: const Color(0xFFF3F4F6),
             isLast: true,
             isCompleted: false,
           ),
           const SizedBox(height: 16),
           Row(
             children: [
-              const Icon(Icons.info_outline, size: 16, color: Color(0xFF144098)),
+              const Icon(Icons.info_outline, size: 20, color: Color(0xFF144098)),
               const SizedBox(width: 8),
               const Expanded(
                 child: Text(
                   'Timeline will update as per your attendance activity.',
-                  style: TextStyle(fontSize: 11, color: Color(0xFF144098),fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFF144098),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
@@ -103,24 +107,30 @@ class AttendanceTimelineCard extends StatelessWidget {
         children: [
           Column(
             children: [
+              Container(
+                width: 2,
+                height: 25,
+                color: isFirst ? Colors.transparent : const Color(0xFFE5E7EB),
+              ),
               if (isCompleted)
-                const Icon(Icons.check_circle, size: 16, color: Color(0xFF10B981))
+                const Icon(Icons.check_circle, size: 22, color: Color(0xFF10B981))
               else
-                Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: const Color(0xFFE5E7EB), width: 2),
-                  ),
-                ),
-              if (!isLast)
-                Expanded(
+                SizedBox(
                   child: Container(
-                    width: 2,
-                    color: const Color(0xFFE5E7EB),
+                    width: 18,
+                    height: 18,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: const Color(0xFFE5E7EB), width: 2),
+                    ),
                   ),
                 ),
+              Expanded(
+                child: Container(
+                  width: 2,
+                  color: isLast ? Colors.transparent : const Color(0xFFE5E7EB),
+                ),
+              ),
             ],
           ),
           const SizedBox(width: 12),
@@ -130,15 +140,15 @@ class AttendanceTimelineCard extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: bgColor,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
+                    padding: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(6),
+                      shape: BoxShape.circle,
                     ),
                     child: Icon(icon, size: 20, color: color),
                   ),
@@ -150,15 +160,15 @@ class AttendanceTimelineCard extends StatelessWidget {
                         Text(
                           title,
                           style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: color,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: isCompleted ? color : const Color(0xFF1F2937),
                           ),
                         ),
                         Text(
                           time,
                           style: const TextStyle(
-                            fontSize: 11,
+                            fontSize: 12,
                             fontWeight: FontWeight.w700,
                             color: Color(0xFF1F2937),
                           ),
@@ -167,18 +177,21 @@ class AttendanceTimelineCard extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: isCompleted ? const Color(0xFF10B981) : Colors.white,
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: isCompleted ? Colors.transparent : const Color(0xFFE5E7EB)),
+                      color: isCompleted ? color : Colors.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(
+                        color: isCompleted ? Colors.transparent : color,
+                        width: 1.5,
+                      ),
                     ),
                     child: Text(
                       status,
                       style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        color: isCompleted ? Colors.white : const Color(0xFF6B7280),
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: isCompleted ? Colors.white : color,
                       ),
                     ),
                   ),
