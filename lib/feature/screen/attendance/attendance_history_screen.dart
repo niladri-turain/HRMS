@@ -122,7 +122,6 @@ class AttendanceHistoryScreen extends StatelessWidget {
                               logoutTime: '19:12 PM',
                               workingHours: '06h 35m',
                             ),
-                            _buildDivider(),
                             const AttendanceHistoryItem(
                               date: '06 Aug - Wednesday',
                               status: 'Present',
@@ -132,7 +131,6 @@ class AttendanceHistoryScreen extends StatelessWidget {
                               logoutTime: '19:21 PM',
                               workingHours: '08h 41m',
                             ),
-                            _buildDivider(),
                             const AttendanceHistoryItem(
                               date: '05 Aug - Tuesday',
                               status: 'Late',
@@ -142,7 +140,6 @@ class AttendanceHistoryScreen extends StatelessWidget {
                               logoutTime: '19:02 PM',
                               workingHours: '08h 22m',
                             ),
-                            _buildDivider(),
                             const AttendanceHistoryItem(
                               date: '04 Aug - Monday',
                               status: 'Present',
@@ -152,7 +149,6 @@ class AttendanceHistoryScreen extends StatelessWidget {
                               logoutTime: '19:15 PM',
                               workingHours: '08h 55m',
                             ),
-                            _buildDivider(),
                             const AttendanceHistoryItem(
                               date: '03 Aug - Sunday',
                               status: 'Weekly Off',
@@ -162,7 +158,6 @@ class AttendanceHistoryScreen extends StatelessWidget {
                               logoutTime: '--:--',
                               workingHours: '--:--',
                             ),
-                            _buildDivider(),
                             const AttendanceHistoryItem(
                               date: '02 Aug - Saturday',
                               status: 'Present',
@@ -172,7 +167,6 @@ class AttendanceHistoryScreen extends StatelessWidget {
                               logoutTime: '19:02 PM',
                               workingHours: '08h 32m',
                             ),
-                            _buildDivider(),
                             const AttendanceHistoryItem(
                               date: '01 Aug - Friday',
                               status: 'Present',
@@ -200,7 +194,27 @@ class AttendanceHistoryScreen extends StatelessWidget {
   Widget _buildDivider() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Divider(height: 1, color: Colors.grey.withOpacity(0.1)),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final boxWidth = constraints.constrainWidth();
+          const dashWidth = 2.5;
+          const dashHeight = 1.0;
+          const dashSpace = 2.5;
+          final dashCount = (boxWidth / (dashWidth + dashSpace)).floor();
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(dashCount, (_) {
+              return SizedBox(
+                width: dashWidth,
+                height: dashHeight,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: Colors.grey.withOpacity(0.4)),
+                ),
+              );
+            }),
+          );
+        },
+      ),
     );
   }
 }
