@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hrms_app/feature/screen/attendance/attendance_history_screen.dart';
 
 class AttendanceOverviewCard extends StatelessWidget {
-  const AttendanceOverviewCard({super.key});
+  final bool showHistoryLink;
+  const AttendanceOverviewCard({super.key, this.showHistoryLink = true});
 
   @override
   Widget build(BuildContext context) {
@@ -108,24 +110,34 @@ class AttendanceOverviewCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          const Divider(height: 1, color: Color(0xFFF3F4F6)),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'View Full Attendance History',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF2563EB),
-                ),
+          if (showHistoryLink) ...[
+            const SizedBox(height: 16),
+            const Divider(height: 1, color: Color(0xFFF3F4F6)),
+            const SizedBox(height: 12),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AttendanceHistoryScreen()),
+                );
+              },
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'View Full Attendance History',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF2563EB),
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Icon(Icons.arrow_forward, size: 16, color: Color(0xFF2563EB)),
+                ],
               ),
-              const SizedBox(width: 8),
-              const Icon(Icons.arrow_forward, size: 16, color: Color(0xFF2563EB)),
-            ],
-          ),
+            ),
+          ],
         ],
       ),
     );
