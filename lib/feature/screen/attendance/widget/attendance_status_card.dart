@@ -21,99 +21,107 @@ class AttendanceStatusCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Text(
-                        '11:55',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1F2937),
+          // Top section inside a container with 5% opacity background
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF03C95A).withOpacity(0.09),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          '11:55',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1F2937),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 2),
-                      const Text(
-                        'AM',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF6B7280),
+                        const SizedBox(width: 2),
+                        const Text(
+                          'AM',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF6B7280),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          '01:37:20',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF03C95A),
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Text(
+                          'Work Time',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Color(0xFF000000),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF03C95A),
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                  Row(
+                  child: Row(
                     children: [
-                      const Text(
-                        '01:37:20',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF03C95A),
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFFFFFFF),
+                          shape: BoxShape.circle,
                         ),
                       ),
                       const SizedBox(width: 4),
                       const Text(
-                        'Work Time',
+                        'On Time',
                         style: TextStyle(
                           fontSize: 10,
-                          color: Color(0xFF000000),
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFFFFFFFF),
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF03C95A),
-                  borderRadius: BorderRadius.circular(4),
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFFFFFFF),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    const Text(
-                      'On Time',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFFFFFFFF),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 20),
           Row(
             children: [
               _buildInfoItem(
-                icon: Icons.access_time,
+                icon: Icons.access_time_outlined,
                 label: 'Login Time',
                 value: '10:28 AM',
-                valueColor: const Color(0xFF10B981),
+                valueColor: const Color(0xFF03C95A),
               ),
               _buildInfoItem(
-                icon: Icons.access_time,
                 label: 'Logout Time',
                 value: '--:--',
                 valueColor: const Color(0xFF1F2937),
+                isRightAligned: true,
               ),
             ],
           ),
@@ -121,7 +129,7 @@ class AttendanceStatusCard extends StatelessWidget {
           Row(
             children: [
               _buildInfoItem(
-                icon: Icons.phone_android,
+                icon: Icons.phone_android_outlined,
                 label: 'Login Form',
                 value: 'Mobile (Android)',
                 valueColor: const Color(0xFF1B2CF1),
@@ -131,15 +139,15 @@ class AttendanceStatusCard extends StatelessWidget {
                 label: 'GPS Status',
                 value: 'Captured',
                 valueColor: const Color(0xFF03C95A),
-                isGps: true,
+                isRightAligned: true,
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.location_on_outlined, size: 20, color: Color(0xFFD4A017)),
+              const Icon(Icons.location_on_outlined, size: 24, color: Color(0xFFD4A017)),
               const SizedBox(width: 8),
               const Expanded(
                 child: Column(
@@ -147,7 +155,7 @@ class AttendanceStatusCard extends StatelessWidget {
                   children: [
                     Text(
                       'Location',
-                      style: TextStyle(fontSize: 12, color: Color(0xFF746F77),fontWeight: FontWeight.w500),
+                      style: TextStyle(fontSize: 12, color: Color(0xFF746F77), fontWeight: FontWeight.w500),
                     ),
                     Text(
                       'Salt Lake Sector V, Kolkata, West Bengal',
@@ -168,39 +176,44 @@ class AttendanceStatusCard extends StatelessWidget {
   }
 
   Widget _buildInfoItem({
-    required IconData icon,
+    IconData? icon,
     required String label,
     required String value,
     required Color valueColor,
-    bool isGps = false,
+    bool isRightAligned = false,
   }) {
     return Expanded(
       child: Row(
+        mainAxisAlignment: isRightAligned ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: const Color(0xFF592680)),
-          const SizedBox(width: 8),
+          if (icon != null) ...[
+            Icon(
+              icon,
+              size: 28,
+              color: isRightAligned ? valueColor : const Color(0xFF592680),
+            ),
+            const SizedBox(width: 5),
+          ],
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment:
+                isRightAligned ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               Text(
                 label,
-                style: const TextStyle(fontSize: 12, color: Color(0xFF746F77),fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF746F77),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-              Row(
-                children: [
-                  if (isGps) ...[
-                    const Icon(Icons.check_circle, size: 16, color: Color(0xFF03C95A),fontWeight: FontWeight.w600),
-                    const SizedBox(width: 4),
-                  ],
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: valueColor,
-                    ),
-                  ),
-                ],
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: valueColor,
+                ),
               ),
             ],
           ),
