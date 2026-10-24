@@ -28,7 +28,7 @@ class AttendanceOverviewCard extends StatelessWidget {
                 'This Month Overview',
                 style: TextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w700,
                   color: Color(0xFF901AEA),
                 ),
               ),
@@ -38,11 +38,11 @@ class AttendanceOverviewCard extends StatelessWidget {
                     'August 2026',
                     style: TextStyle(
                       fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF2563EB),
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF1A79D7),
                     ),
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 6),
                   Container(
                     padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
@@ -62,34 +62,34 @@ class AttendanceOverviewCard extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
-            childAspectRatio: 2.2,
+            childAspectRatio: 2.6,
             children: [
               _buildOverviewItem(
                 icon: Icons.check_circle,
                 label: 'Present Days',
                 value: '9',
-                color: const Color(0xFF10B981),
+                color: const Color(0xFF03C95A),
                 bgColor: const Color(0xFFECFDF5),
               ),
               _buildOverviewItem(
                 icon: Icons.access_time_filled,
                 label: 'Late Days',
                 value: '2',
-                color: const Color(0xFFD47A17),
+                color: const Color(0xFFDF6C00),
                 bgColor: const Color(0xFFFFFBEB),
               ),
               _buildOverviewItem(
                 icon: Icons.pause_circle_filled,
                 label: 'Half Days',
                 value: '0',
-                color: const Color(0xFFD4A017),
+                color: const Color(0xFFEDAA00),
                 bgColor: const Color(0xFFFEFCE8),
               ),
               _buildOverviewItem(
                 icon: Icons.cancel,
                 label: 'Absent Days',
                 value: '1',
-                color: const Color(0xFFEF4444),
+                color: const Color(0xFFFF0000),
                 bgColor: const Color(0xFFFEF2F2),
               ),
               _buildOverviewItem(
@@ -103,7 +103,7 @@ class AttendanceOverviewCard extends StatelessWidget {
                 icon: Icons.access_time_filled,
                 label: 'Total Working Hours',
                 value: '89h 15m',
-                color: const Color(0xFF901AEA),
+                color: const Color(0xFF7C45DA),
                 bgColor: const Color(0xFFF5F3FF),
               ),
             ],
@@ -143,11 +143,11 @@ class AttendanceOverviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.1)),
+        border: Border.all(color: color.withOpacity(0.4)),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 24, color: color),
+          Icon(icon, size: 30, color: color),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -156,12 +156,12 @@ class AttendanceOverviewCard extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(fontSize: 9, color: Color(0xFF6B7280), fontWeight: FontWeight.w500),
+                  style: const TextStyle(fontSize: 10, color: Color(0xFF000000), fontWeight: FontWeight.w500),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   value,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
                 ),
               ],
             ),
