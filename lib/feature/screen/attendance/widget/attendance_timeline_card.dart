@@ -105,33 +105,34 @@ class AttendanceTimelineCard extends StatelessWidget {
     return IntrinsicHeight(
       child: Row(
         children: [
-          Column(
-            children: [
-              Container(
-                width: 2,
-                height: 25,
-                color: isFirst ? Colors.transparent : const Color(0xFFE5E7EB),
-              ),
-              if (isCompleted)
-                const Icon(Icons.check_circle, size: 22, color: Color(0xFF10B981))
-              else
-                SizedBox(
+          SizedBox(
+            width: 22,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 2,
+                  height: 20 , // Increased line height above the icon/circle
+                  color: isFirst ? Colors.transparent : const Color(0xFFE5E7EB),
+                ),
+                isCompleted
+                    ? const Icon(Icons.check_circle, size: 22, color: Color(0xFF10B981))
+                    : Container(
+                        width: 18,
+                        height: 18,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: const Color(0xFFE5E7EB), width: 2),
+                        ),
+                      ),
+                Expanded(
                   child: Container(
-                    width: 18,
-                    height: 18,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFFE5E7EB), width: 2),
-                    ),
+                    width: 2,
+                    color: isLast ? Colors.transparent : const Color(0xFFE5E7EB),
                   ),
                 ),
-              Expanded(
-                child: Container(
-                  width: 2,
-                  color: isLast ? Colors.transparent : const Color(0xFFE5E7EB),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -160,8 +161,8 @@ class AttendanceTimelineCard extends StatelessWidget {
                         Text(
                           title,
                           style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
                             color: isCompleted ? color : const Color(0xFF1F2937),
                           ),
                         ),
@@ -169,7 +170,7 @@ class AttendanceTimelineCard extends StatelessWidget {
                           time,
                           style: const TextStyle(
                             fontSize: 12,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w500,
                             color: Color(0xFF1F2937),
                           ),
                         ),
@@ -183,7 +184,7 @@ class AttendanceTimelineCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(
                         color: isCompleted ? Colors.transparent : color,
-                        width: 1.5,
+                        width: 1,
                       ),
                     ),
                     child: Text(
