@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hrms_app/feature/screen/attendance/widget/attendance_overview_card.dart';
 import 'package:hrms_app/feature/screen/attendance/widget/attendance_history_item.dart';
+import 'package:hrms_app/feature/screen/attendance/widget/attendance_filter_dialog.dart';
 
 class AttendanceHistoryScreen extends StatelessWidget {
   const AttendanceHistoryScreen({super.key});
@@ -67,13 +68,21 @@ class AttendanceHistoryScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     // Filter Button
-                    Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF901AEA),
-                        borderRadius: BorderRadius.circular(8),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const AttendanceFilterDialog(),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF901AEA),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(Icons.tune, size: 20, color: Colors.white),
                       ),
-                      child: const Icon(Icons.tune, size: 20, color: Colors.white),
                     ),
                   ],
                 ),
