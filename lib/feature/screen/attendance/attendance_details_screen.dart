@@ -53,7 +53,7 @@ class AttendanceDetailsScreen extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
@@ -96,8 +96,8 @@ class AttendanceDetailsScreen extends StatelessWidget {
                                 child: Text(
                                   date,
                                   style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
                                     color: Color(0xFF1F2937),
                                   ),
                                 ),
@@ -153,11 +153,26 @@ class AttendanceDetailsScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
 
-                        // Summary Rows
-                        _buildSummaryRow('Total Working Hours', workingHours),
-                        _buildSummaryRow('Break Time', workingHours == '--:--' ? '--:--' : '00h 30m'),
-                        _buildSummaryRow('First Login', loginTime),
-                        _buildSummaryRow('Last Logout', logoutTime),
+                        // Summary Section
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF9FAFB),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFFC6C6C6), width: 0.5),
+                          ),
+                          child: Column(
+                            children: [
+                              _buildSummaryRow('Total Working Hours', workingHours),
+                              _buildDottedDivider(),
+                              _buildSummaryRow('Break Time', workingHours == '--:--' ? '--:--' : '00h 30m'),
+                              _buildDottedDivider(),
+                              _buildSummaryRow('First Login', loginTime),
+                              _buildDottedDivider(),
+                              _buildSummaryRow('Last Logout', logoutTime),
+                            ],
+                          ),
+                        ),
                         
                         const SizedBox(height: 24),
 
@@ -165,21 +180,21 @@ class AttendanceDetailsScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF0F2FF),
+                            color: const Color(0xFFD9DCF7),
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: const Color(0xFFD1D5DB).withOpacity(0.5)),
                           ),
                           child: const Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(Icons.error_outline, color: Color(0xFF3F37C9), size: 20),
+                              Icon(Icons.info_outline, color: Color(0xFF1B2CF1), size: 20),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   'Attendance is based on your login and logout times. For any discrepancy, please contact HR.',
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Color(0xFF1F2937),
+                                    color: Color(0xFF144098),
+                                    fontWeight: FontWeight.w500,
                                     height: 1.4,
                                   ),
                                 ),
@@ -244,7 +259,7 @@ class AttendanceDetailsScreen extends StatelessWidget {
                     ),
                     Text(
                       time,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1F2937)),
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF6B7280)),
                     ),
                   ],
                 ),
@@ -290,7 +305,7 @@ class AttendanceDetailsScreen extends StatelessWidget {
             Expanded(
               child: Text(
                 value,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF374151)),
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color(0xFF000000)),
               ),
             ),
           ],
@@ -300,24 +315,44 @@ class AttendanceDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildSummaryRow(String label, String value) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xFFF3F4F6), width: 1)),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 14),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280), fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280), fontWeight: FontWeight.w500),
           ),
           Text(
             value,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1F2937)),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.black),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDottedDivider() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final boxWidth = constraints.constrainWidth();
+        const dashWidth = 3.0;
+        const dashSpace = 3.0;
+        final dashCount = (boxWidth / (dashWidth + dashSpace)).floor();
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(dashCount, (_) {
+            return SizedBox(
+              width: dashWidth,
+              height: 1,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: const Color(0xFFC6C6C6).withOpacity(0.5)),
+              ),
+            );
+          }),
+        );
+      },
     );
   }
 }
